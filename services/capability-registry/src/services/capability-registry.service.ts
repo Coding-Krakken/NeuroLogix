@@ -4,6 +4,7 @@ import {
   CapabilityInstallRequest,
   CapabilityUpdateRequest,
   CapabilityQuery,
+  CapabilityQuerySchema,
   CapabilityRegistryResponse,
   CapabilityHealth,
   RegistryStats
@@ -43,20 +44,23 @@ export class CapabilityRegistryService {
    * List capabilities with filtering and pagination
    */
   async listCapabilities(query: CapabilityQuery): Promise<CapabilityRegistryResponse> {
+    // Parse and validate query with defaults
+    const validatedQuery = CapabilityQuerySchema.parse(query);
+    
     let filtered = Array.from(this.capabilities.values());
 
     // Apply filters
-    if (query.type) {
-      filtered = filtered.filter(cap => cap.type === query.type);
+    if (validatedQuery.type) {
+      filtered = filtered.filter(cap => cap.type === validatedQuery.type);
     }
-    if (query.status) {
-      filtered = filtered.filter(cap => cap.status === query.status);
+    if (validatedQuery.status) {
+      filtered = filtered.filter(cap => cap.status === validatedQuery.status);
     }
-    if (query.zone) {
-      filtered = filtered.filter(cap => cap.zones.includes(query.zone));
+    if (validatedQuery.zone) {
+      filtered = filtered.filter(cap => cap.zones.includes(validatedQuery.zone!));
     }
-    if (query.search) {
-      const searchLower = query.search.toLowerCase();
+    if (validatedQuery.search) {
+      const searchLower = validatedQuery.search.toLowerCase();
       filtered = filtered.filter(cap => 
         cap.name.toLowerCase().includes(searchLower) ||
         cap.displayName.toLowerCase().includes(searchLower) ||
@@ -67,7 +71,7 @@ export class CapabilityRegistryService {
     // Apply sorting
     filtered.sort((a, b) => {
       let comparison = 0;
-      switch (query.sortBy) {
+      switch (validatedQuery.sortBy) {
         case 'name':
           comparison = a.name.localeCompare(b.name);
           break;
@@ -84,19 +88,19 @@ export class CapabilityRegistryService {
           comparison = a.lastUpdated.getTime() - b.lastUpdated.getTime();
           break;
       }
-      return query.sortOrder === 'desc' ? -comparison : comparison;
+      return validatedQuery.sortOrder === 'desc' ? -comparison : comparison;
     });
 
     // Apply pagination
     const total = filtered.length;
-    const paginatedResults = filtered.slice(query.offset, query.offset + query.limit);
+    const paginatedResults = filtered.slice(validatedQuery.offset, validatedQuery.offset + validatedQuery.limit);
 
     return {
       capabilities: paginatedResults,
       total,
-      limit: query.limit,
-      offset: query.offset,
-      hasMore: query.offset + query.limit < total,
+      limit: validatedQuery.limit,
+      offset: validatedQuery.offset,
+      hasMore: validatedQuery.offset + validatedQuery.limit < total,
     };
   }
 
