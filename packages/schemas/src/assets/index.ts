@@ -2,4 +2,4 @@
  * @fileoverview Asset schemas for industrial equipment
  */
 
-export * from '@neurologix/core';
+// Placeholder - will be implemented in Phase 2

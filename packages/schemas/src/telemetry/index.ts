@@ -1,9 +1,34 @@
 import { z } from 'zod';
-import { ASSET_TYPES, ASSET_STATUS, DATA_QUALITY } from '@neurologix/core';
 
 /**
  * Telemetry schemas for real-time data collection and processing
  */
+
+// Asset types enum for validation
+export const ASSET_TYPES = {
+  PLC: 'plc',
+  CAMERA: 'camera',
+  SENSOR: 'sensor',
+  CONVEYOR: 'conveyor',
+  ROBOT: 'robot',
+  DOCK: 'dock',
+  WORKSTATION: 'workstation',
+} as const;
+
+// Asset status enum
+export const ASSET_STATUS = {
+  ONLINE: 'online',
+  OFFLINE: 'offline',
+  MAINTENANCE: 'maintenance',
+  ERROR: 'error',
+} as const;
+
+// Data quality enum
+export const DATA_QUALITY = {
+  GOOD: 'good',
+  BAD: 'bad',
+  UNCERTAIN: 'uncertain',
+} as const;
 
 // Base telemetry point schema
 export const TelemetryPointSchema = z.object({

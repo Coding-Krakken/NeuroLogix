@@ -2,4 +2,4 @@
  * @fileoverview API schemas for REST and GraphQL endpoints
  */
 
-export * from '@neurologix/core';
+// Placeholder - will be implemented in Phase 2

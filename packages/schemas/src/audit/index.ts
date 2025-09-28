@@ -2,4 +2,4 @@
  * @fileoverview Audit schemas for compliance and security
  */
 
-export * from '@neurologix/core';
+// Placeholder - will be implemented in Phase 2

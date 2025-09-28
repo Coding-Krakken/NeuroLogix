@@ -2,4 +2,4 @@
  * @fileoverview Recipe schemas for automation sequences
  */
 
-export * from '@neurologix/core';
+// Placeholder - will be implemented in Phase 2
