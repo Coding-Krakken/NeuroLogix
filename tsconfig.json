@@ -9,7 +9,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -17,7 +17,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "incremental": true,
-    "composite": false,
+    "composite": true,
     "baseUrl": ".",
     "paths": {
       "@neurologix/core": ["./packages/core/src"],

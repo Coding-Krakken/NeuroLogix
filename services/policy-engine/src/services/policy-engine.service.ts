@@ -616,6 +616,15 @@ export class PolicyEngineService {
         };
       }
       
+      // Check for approval_required pattern in Rego rules
+      if (policy.regoRules.includes('approval_required') && 
+          policy.regoRules.includes(`input.action == "${request.action}"`)) {
+        return {
+          decision: 'approval_required',
+          reasoning: `Action ${request.action} requires approval as per policy`
+        };
+      }
+      
       if (policy.regoRules.includes('plc_interlocks') && 
           request.context.plc_interlocks && 
           Array.isArray(request.context.plc_interlocks) &&
