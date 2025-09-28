@@ -114,21 +114,13 @@ export function throttle<T extends (...args: any[]) => any>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
-  let lastFunc: NodeJS.Timeout;
-  let lastRan: number;
+  let inThrottle: boolean;
 
   return (...args: Parameters<T>) => {
-    if (!lastRan) {
+    if (!inThrottle) {
       func(...args);
-      lastRan = Date.now();
-    } else {
-      clearTimeout(lastFunc);
-      lastFunc = setTimeout(() => {
-        if (Date.now() - lastRan >= limit) {
-          func(...args);
-          lastRan = Date.now();
-        }
-      }, limit - (Date.now() - lastRan));
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
     }
   };
 }

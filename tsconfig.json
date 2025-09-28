@@ -36,7 +36,10 @@
       "@neurologix/ui/*": ["./packages/ui/src/*"]
     }
   },
-  "include": [],
+  "include": [
+    "packages/*/src/**/*",
+    "services/*/src/**/*"
+  ],
   "exclude": [
     "node_modules",
     "build",
