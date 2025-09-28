@@ -6,7 +6,6 @@ describe('CapabilityRegistryService', () => {
 
   beforeEach(() => {
     service = new CapabilityRegistryService();
-    service.clearCapabilities(); // Ensure clean state
   });
 
   describe('Installation and Management', () => {
@@ -193,9 +192,7 @@ describe('CapabilityRegistryService', () => {
 
   describe('Querying and Filtering', () => {
     beforeEach(async () => {
-      service.clearCapabilities(); // Clear state first
-      
-      // Install multiple test capabilities
+      // Install multiple test capabilities for this test suite
       const capabilities = [
         {
           name: 'modbus-adapter',
@@ -226,10 +223,6 @@ describe('CapabilityRegistryService', () => {
     });
 
     it('should list all capabilities', async () => {
-      // Debug: check if capabilities were installed
-      const allCaps = service.getAllCapabilities();
-      console.log('All capabilities before query:', allCaps.map(c => c.name));
-      
       const response = await service.listCapabilities({});
 
       expect(response.capabilities).toHaveLength(3);
@@ -325,8 +318,7 @@ describe('CapabilityRegistryService', () => {
 
   describe('Registry Statistics', () => {
     beforeEach(async () => {
-      service.clearCapabilities(); // Clear state first
-      
+      // Install test capabilities for statistics
       const capabilities = [
         { name: 'adapter-1', version: '1.0.0', autoEnable: true },
         { name: 'adapter-2', version: '1.0.0', autoEnable: false },
