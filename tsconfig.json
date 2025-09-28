@@ -13,12 +13,11 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "incremental": true,
-    "composite": true,
+    "composite": false,
     "baseUrl": ".",
     "paths": {
       "@neurologix/core": ["./packages/core/src"],
@@ -37,7 +36,7 @@
       "@neurologix/ui/*": ["./packages/ui/src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+  "include": [],
   "exclude": [
     "node_modules",
     "build",
@@ -48,20 +47,5 @@
     "**/*.test.tsx",
     "**/*.spec.ts",
     "**/*.spec.tsx"
-  ],
-  "references": [
-    { "path": "./packages/core" },
-    { "path": "./packages/schemas" },
-    { "path": "./packages/security" },
-    { "path": "./packages/observability" },
-    { "path": "./packages/adapters" },
-    { "path": "./packages/ai" },
-    { "path": "./packages/ui" },
-    { "path": "./apps/mission-control" },
-    { "path": "./apps/edge-gateway" },
-    { "path": "./services/capability-registry" },
-    { "path": "./services/policy-engine" },
-    { "path": "./services/recipe-executor" },
-    { "path": "./services/digital-twin" }
   ]
 }

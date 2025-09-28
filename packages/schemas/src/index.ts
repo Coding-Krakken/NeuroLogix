@@ -1,0 +1,16 @@
+/**
+ * @fileoverview Comprehensive data schemas for NeuroLogix Industrial Control System
+ * @version 0.1.0
+ * @license PROPRIETARY
+ * 
+ * This module defines all data contracts and validation schemas for the platform,
+ * ensuring type safety and data integrity across all system boundaries.
+ */
+
+export * from './telemetry/index.js';
+export * from './intents/index.js';
+export * from './recipes/index.js';
+export * from './assets/index.js';
+export * from './audit/index.js';
+export * from './api/index.js';
+export * from './sparkplug/index.js';

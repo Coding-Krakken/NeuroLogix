@@ -1,7 +1,7 @@
 {
-  "name": "@neurologix/core",
+  "name": "@neurologix/schemas",
   "version": "0.1.0",
-  "description": "Core utilities and types for NeuroLogix platform",
+  "description": "Data schemas and validation for NeuroLogix platform",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -21,19 +21,18 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ci": "vitest run --coverage",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "generate:json-schema": "typescript-json-schema tsconfig.json '*' --out schemas.json"
   },
   "dependencies": {
     "zod": "^3.22.4",
-    "date-fns": "^2.30.0",
-    "uuid": "^9.0.1",
-    "winston": "^3.11.0"
+    "@neurologix/core": "*"
   },
   "devDependencies": {
-    "@types/uuid": "^9.0.7",
     "@types/node": "^20.10.0",
 
     "typescript": "^5.3.2",
+    "typescript-json-schema": "^0.63.0",
     "vitest": "^1.0.4",
     "@vitest/coverage-v8": "^1.0.4"
   },
