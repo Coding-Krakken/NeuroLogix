@@ -1,0 +1,68 @@
+{
+  "name": "@neurologix/root",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Enterprise-grade AI-powered Industrial Control System for warehouse/industrial automation",
+  "keywords": [
+    "industrial-automation",
+    "ai-control-system",
+    "plc-integration",
+    "warehouse-management",
+    "iec-62443",
+    "industrial-iot"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coding-Krakken/NeuroLogix.git"
+  },
+  "license": "PROPRIETARY",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "build:all": "turbo run build --force",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "test": "turbo run test",
+    "test:ci": "turbo run test:ci --force",
+    "test:e2e": "turbo run test:e2e",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,yaml,yml}\"",
+    "security:audit": "npm audit && turbo run security:audit",
+    "security:scan": "turbo run security:scan",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build lint test:ci && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-security": "^1.7.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.0",
+    "turbo": "^1.10.16",
+    "typescript": "^5.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "volta": {
+    "node": "20.10.0",
+    "npm": "10.2.5"
+  }
+}
