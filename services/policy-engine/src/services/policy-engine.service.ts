@@ -332,7 +332,8 @@ export class PolicyEngineService {
       // Get applicable policies
       const applicablePolicies = this.getApplicablePolicies(validatedRequest);
       const policyMatches: PolicyEvaluationResult['policyMatches'] = [];
-      let overallDecision: 'allow' | 'deny' | 'approval_required' = this.config.defaultDecision;
+      let overallDecision: 'allow' | 'deny' | 'approval_required' = 'allow'; // Start optimistic
+      let criticalDenyFound = false;
       let requiresApproval = false;
       const approvers: string[] = [];
       let minApprovals = 0;
@@ -353,6 +354,7 @@ export class PolicyEngineService {
 
         // Apply policy decision logic
         if (policyResult.decision === 'deny' && policy.priority === 'critical') {
+          criticalDenyFound = true;
           overallDecision = 'deny';
           break; // Critical deny overrides everything
         } else if (policyResult.decision === 'approval_required') {
@@ -363,17 +365,21 @@ export class PolicyEngineService {
           if (policy.metadata.emergencyOverride) {
             emergencyOverrideEnabled = true;
           }
-        } else if (policyResult.decision === 'allow' && overallDecision !== 'deny') {
-          if (!requiresApproval) {
-            overallDecision = 'allow';
-          }
+        } else if (policyResult.decision === 'deny') {
+          overallDecision = this.config.defaultDecision; // Use configured default for non-critical denies
         }
       }
 
       // Final decision logic
-      if (requiresApproval && overallDecision !== 'deny') {
+      if (criticalDenyFound) {
+        overallDecision = 'deny';
+      } else if (requiresApproval) {
         overallDecision = 'approval_required';
+      } else if (applicablePolicies.length === 0) {
+        // No policies found, use default
+        overallDecision = this.config.defaultDecision;
       }
+      // Otherwise keep 'allow' from initialization
 
       const result: PolicyEvaluationResult = PolicyEvaluationResultSchema.parse({
         requestId: validatedRequest.requestId,
@@ -617,12 +623,21 @@ export class PolicyEngineService {
       }
       
       // Check for approval_required pattern in Rego rules
-      if (policy.regoRules.includes('approval_required') && 
-          policy.regoRules.includes(`input.action == "${request.action}"`)) {
-        return {
-          decision: 'approval_required',
-          reasoning: `Action ${request.action} requires approval as per policy`
-        };
+      if (policy.regoRules.includes('approval_required')) {
+        // More flexible pattern matching for different quote styles
+        const actionPatterns = [
+          `input.action == "${request.action}"`,
+          `input.action == '${request.action}'`,
+          `input.action=="${request.action}"`,
+          `input.action=='${request.action}'`,
+        ];
+        
+        if (actionPatterns.some(pattern => policy.regoRules.includes(pattern))) {
+          return {
+            decision: 'approval_required',
+            reasoning: `Action ${request.action} requires approval as per policy`
+          };
+        }
       }
       
       if (policy.regoRules.includes('plc_interlocks') && 

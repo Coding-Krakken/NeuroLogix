@@ -45,10 +45,6 @@
     "build",
     "dist",
     ".next",
-    "coverage",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx"
+    "coverage"
   ]
 }
