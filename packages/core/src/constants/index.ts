@@ -109,10 +109,10 @@ export const INTENT_TYPES = {
 // Application Configuration
 export const APP_CONFIG = {
   NAME: 'NeuroLogix',
-  VERSION: process.env.npm_package_version || '0.1.0',
-  ENVIRONMENT: process.env.NODE_ENV || 'development',
-  PORT: parseInt(process.env.PORT || '3000', 10),
-  CORS_ORIGINS: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
+  VERSION: process.env.npm_package_version ?? '0.1.0',
+  ENVIRONMENT: process.env.NODE_ENV ?? 'development',
+  PORT: parseInt(process.env.PORT ?? '3000', 10),
+  CORS_ORIGINS: process.env.CORS_ORIGINS?.split(',') ?? ['http://localhost:3000'],
 } as const;
 
 // Message Queue Topics
