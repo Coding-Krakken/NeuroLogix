@@ -16,7 +16,7 @@
     "dev": "tsc --build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --build --force --pretty false",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
   "dependencies": {

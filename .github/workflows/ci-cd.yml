@@ -58,9 +58,11 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
-
       - name: Check Prettier formatting
         run: npm run format:check
+
+      - name: Build project references
+        run: npm run build
 
       - name: TypeScript type check
         run: npm run type-check
