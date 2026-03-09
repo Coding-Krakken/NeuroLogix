@@ -4,7 +4,8 @@ Version: 2.0.0
 Package: `@subzero/framework`  
 Location: `.github/framework/`
 
-This package provides deterministic orchestration primitives, GitHub-native handoff tooling, and telemetry/analysis utilities for multi-agent workflows.
+This package provides deterministic orchestration primitives, GitHub-native
+handoff tooling, and telemetry/analysis utilities for multi-agent workflows.
 
 ## What Is Shipped
 
@@ -15,7 +16,9 @@ The public package API is exported from `src/index.ts`:
 - `analyzeHandoffWorkflow(entries)`
 - `workflowTelemetry()`
 
-Repository workflows also use non-exported modules in this folder for dispatching, handoff delivery, quality gates, scheduling, and governance enforcement.
+Repository workflows also use non-exported modules in this folder for
+dispatching, handoff delivery, quality gates, scheduling, and governance
+enforcement.
 
 ## Prerequisites
 
@@ -50,7 +53,8 @@ npm --prefix .github/framework run handoff:report -- --input qa-evidence/handoff
 npm --prefix .github/framework run build
 ```
 
-Use this path for daily validation and historical dispatch-chain analysis without requiring a live framework runtime.
+Use this path for daily validation and historical dispatch-chain analysis
+without requiring a live framework runtime.
 
 ## Daily Commands
 
@@ -82,7 +86,8 @@ npm --prefix .github/framework run handoff:report -- --input qa-evidence/handoff
 
 ## Telemetry and Analysis (Detailed)
 
-This is the canonical guide for telemetry capture, analysis logging, and historical forensic review.
+This is the canonical guide for telemetry capture, analysis logging, and
+historical forensic review.
 
 ### 1) Task Telemetry with `WorkflowTelemetry`
 
@@ -105,26 +110,35 @@ Computed metrics (`getMetrics(taskId)`):
 - `timeToPrMinutes`
 - `reviewIterations`
 
-Final summary (`buildFinalSummary(taskId)`) includes issue, branch, PR, commit list, and metrics.
+Final summary (`buildFinalSummary(taskId)`) includes issue, branch, PR, commit
+list, and metrics.
 
 Example:
 
 ```ts
-import { workflowTelemetry } from "@subzero/framework"
+import { workflowTelemetry } from '@subzero/framework';
 
-const telemetry = workflowTelemetry()
-const taskId = "issue-<WORK_ITEM_ID>-task-<TASK_ID>"
+const telemetry = workflowTelemetry();
+const taskId = 'issue-<WORK_ITEM_ID>-task-<TASK_ID>';
 
-telemetry.markTaskStart(taskId)
-telemetry.trackIssueCreated(taskId, 42, "https://github.com/<ORGANIZATION_NAME>/<REPOSITORY_NAME>/issues/<WORK_ITEM_ID>")
-telemetry.trackBranchCreated(taskId, "feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>")
-telemetry.trackCommit(taskId, "abc1234", "feat(framework): add API checks")
-telemetry.trackReviewIteration(taskId)
-telemetry.trackPrOpened(taskId, 17, "https://github.com/<ORGANIZATION_NAME>/<REPOSITORY_NAME>/pull/<PR_ID>")
-telemetry.markTaskCompleted(taskId)
+telemetry.markTaskStart(taskId);
+telemetry.trackIssueCreated(
+  taskId,
+  42,
+  'https://github.com/<ORGANIZATION_NAME>/<REPOSITORY_NAME>/issues/<WORK_ITEM_ID>'
+);
+telemetry.trackBranchCreated(taskId, 'feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>');
+telemetry.trackCommit(taskId, 'abc1234', 'feat(framework): add API checks');
+telemetry.trackReviewIteration(taskId);
+telemetry.trackPrOpened(
+  taskId,
+  17,
+  'https://github.com/<ORGANIZATION_NAME>/<REPOSITORY_NAME>/pull/<PR_ID>'
+);
+telemetry.markTaskCompleted(taskId);
 
-const metrics = telemetry.getMetrics(taskId)
-const summary = telemetry.buildFinalSummary(taskId)
+const metrics = telemetry.getMetrics(taskId);
+const summary = telemetry.buildFinalSummary(taskId);
 ```
 
 ### 2) Hybrid Dispatch Telemetry
@@ -143,11 +157,13 @@ Methods:
 - `getHybridDispatchEvents(taskId)`
 - `getHybridDispatchSummary(taskId)`
 
-This aligns with runtime outputs from `parallel-dispatch-controller.ts` and `wave-scheduler.ts`.
+This aligns with runtime outputs from `parallel-dispatch-controller.ts` and
+`wave-scheduler.ts`.
 
 ### 3) Framework Audit API (`runFrameworkAudit`)
 
-`runFrameworkAudit` is a lightweight audit utility that validates lifecycle state and emits completion-ready result metadata.
+`runFrameworkAudit` is a lightweight audit utility that validates lifecycle
+state and emits completion-ready result metadata.
 
 Behavior:
 
@@ -168,12 +184,12 @@ Accepted lifecycle states:
 Example:
 
 ```ts
-import { runFrameworkAudit } from "@subzero/framework"
+import { runFrameworkAudit } from '@subzero/framework';
 
 const result = await runFrameworkAudit({
-  taskId: "issue-<WORK_ITEM_ID>-smoke",
-  lifecycle: "smoke_validated",
-})
+  taskId: 'issue-<WORK_ITEM_ID>-smoke',
+  lifecycle: 'smoke_validated',
+});
 ```
 
 ### 4) Handoff Workflow Analysis Tool
@@ -241,9 +257,11 @@ Step 3: Correlate events with handoff artifacts.
 Get-ChildItem .github/.handoffs -Recurse -File -Filter "handoff-*.md"
 ```
 
-Step 4: Re-run `handoff:report` on each evidence file containing command matches.
+Step 4: Re-run `handoff:report` on each evidence file containing command
+matches.
 
-This is the canonical post-run forensic workflow for chain continuity checks, dispatch failure checks, and missing handoff artifact detection.
+This is the canonical post-run forensic workflow for chain continuity checks,
+dispatch failure checks, and missing handoff artifact detection.
 
 ### 6) Environment Variables for Analysis/Gates
 
@@ -273,13 +291,15 @@ Recommended pattern:
 1. Store quality gate outputs in `.github/framework/qa-evidence/`.
 2. Store handoff artifacts in `.github/.handoffs/<agent>/`.
 3. For each milestone, persist `handoff:report --json` output as evidence.
-4. Persist telemetry snapshots from `buildFinalSummary(taskId)` for issue-level traceability.
+4. Persist telemetry snapshots from `buildFinalSummary(taskId)` for issue-level
+   traceability.
 5. Include GitHub comment URLs in evidence bundles for external auditability.
 
 ## Troubleshooting
 
 - `Failed to read input file` with `handoff:report`:
-  - Use path relative to `.github/framework` because the CLI resolves from package context.
+  - Use path relative to `.github/framework` because the CLI resolves from
+    package context.
   - Example valid input: `qa-evidence/handoff-workflow-sample.log`
 - `gh auth` errors:
   - Run `gh auth login`
@@ -305,4 +325,3 @@ npm --prefix .github/framework run build
 - `API-CONTRACTS.md`
 - `.github/.developer/README.md`
 - `.github/AGENTS.md`
-

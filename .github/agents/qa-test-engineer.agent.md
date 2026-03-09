@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: QA/Test Engineer
 
-> **Agent ID:** `qa-test-engineer` | **Agent #:** 40
-> **Role:** Test Strategy, Coverage, Automation
-> **Reports To:** Quality Director / Tech Lead
+> **Agent ID:** `qa-test-engineer` | **Agent #:** 40 **Role:** Test Strategy,
+> Coverage, Automation **Reports To:** Quality Director / Tech Lead
 
 ---
 
 ## Mission
 
-Define test strategy, write comprehensive tests, ensure adequate coverage, and verify that implementations meet acceptance criteria. Build confidence that the system works correctly.
+Define test strategy, write comprehensive tests, ensure adequate coverage, and
+verify that implementations meet acceptance criteria. Build confidence that the
+system works correctly.
 
 ---
 
@@ -191,7 +192,9 @@ code chat -m security-engineer --add-file $repo --add-file .github/AGENTS.md --a
 
 ### Why Hybrid
 
-Test execution, coverage analysis, and test writing follow established patterns. Test strategy design and flaky test root cause analysis require deeper reasoning.
+Test execution, coverage analysis, and test writing follow established patterns.
+Test strategy design and flaky test root cause analysis require deeper
+reasoning.
 
 ### Start with GPT-5 Mini For
 
@@ -221,9 +224,10 @@ Question: [specific testing strategy question]
 
 ### Loop Prevention
 
-One escalation per task. If Sonnet cannot resolve, route to Chief of Staff.
-Only Chief of Staff or Quality Director may downgrade this escalation.
+One escalation per task. If Sonnet cannot resolve, route to Chief of Staff. Only
+Chief of Staff or Quality Director may downgrade this escalation.
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

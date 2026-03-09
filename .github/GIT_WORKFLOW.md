@@ -9,7 +9,9 @@
 
 ## 🎯 Purpose
 
-This document defines **strict git/GitHub project management workflows** for the Core-3 operating model (with specialist escalation). Every significant work item must be tracked in version control and GitHub project management systems.
+This document defines **strict git/GitHub project management workflows** for the
+Core-3 operating model (with specialist escalation). Every significant work item
+must be tracked in version control and GitHub project management systems.
 
 **Core Principle:** Code not committed is code that doesn't exist.
 
@@ -37,29 +39,34 @@ PR merged → Close GitHub Issue
 
 ### Delivery Lanes (Risk-Based)
 
-| Lane | Risk | Required Path |
-| --- | --- | --- |
-| Fast Lane | Low | Orchestrator → Implementer → Assurance targeted review → PR |
-| Balanced Lane | Medium | Orchestrator → Implementer → Assurance review → PR |
+| Lane                | Risk          | Required Path                                                                          |
+| ------------------- | ------------- | -------------------------------------------------------------------------------------- |
+| Fast Lane           | Low           | Orchestrator → Implementer → Assurance targeted review → PR                            |
+| Balanced Lane       | Medium        | Orchestrator → Implementer → Assurance review → PR                                     |
 | Full Assurance Lane | High/Critical | Orchestrator → Implementer → Assurance full validation + Quality Director PR + signoff |
 
 Rules:
 
 - Security and traceability checks remain mandatory in all lanes.
 - Any risk escalation immediately transitions to the next stricter lane.
-- Quality Director remains final ship/no-ship authority for high/critical changes.
+- Quality Director remains final ship/no-ship authority for high/critical
+  changes.
 
 ### Dual-Loop Execution (Creative + Verification)
 
-- **Creative loop:** human/agent reasoning work (design, implementation, remediation strategy).
+- **Creative loop:** human/agent reasoning work (design, implementation,
+  remediation strategy).
 - **Verification loop:** automated checks and failure-context extraction.
 
 Rules:
 
-1. Agents do not repeatedly run the same deterministic checks once CI has produced a verification bundle for the same SHA.
+1. Agents do not repeatedly run the same deterministic checks once CI has
+   produced a verification bundle for the same SHA.
 2. Verification loop emits compact failure bundles and suggested owner agents.
-3. Creative loop remediation consumes the bundle, fixes root cause, and pushes a new SHA.
-4. Merge eligibility requires loop-coupling gate success (both loops complete for the same head SHA).
+3. Creative loop remediation consumes the bundle, fixes root cause, and pushes a
+   new SHA.
+4. Merge eligibility requires loop-coupling gate success (both loops complete
+   for the same head SHA).
 
 ### Runaway Mitigation Policy
 
@@ -67,17 +74,21 @@ Rules:
 - Verification loop is idempotent per SHA to prevent duplicate churn.
 - `verification-blocked` state routes to Quality Director adjudication.
 - `verification-blocked-sla` enforces owner assignment within 4 hours.
-- `scorecard-metrics-collector` publishes weekly automation load and loop reliability snapshots.
+- `scorecard-metrics-collector` publishes weekly automation load and loop
+  reliability snapshots.
 - A PR cannot be considered complete while verification is unresolved.
 
 ### Context Continuity Policy (Discovery Once)
 
-- Create one machine-readable context snapshot per issue and refresh it at each major handoff.
-- Every receiving agent must consume the context snapshot before running discovery prompts.
-- Full discovery is allowed only if snapshot evidence is stale, missing, or contradictory.
+- Create one machine-readable context snapshot per issue and refresh it at each
+  major handoff.
+- Every receiving agent must consume the context snapshot before running
+  discovery prompts.
+- Full discovery is allowed only if snapshot evidence is stale, missing, or
+  contradictory.
 - Preferred automation:
-    - `./.github/scripts/generate-agent-context.ps1 -IssueNumber <id> -Repo <owner/repo>`
-    - `./.github/scripts/dispatch-agent.ps1 -IssueNumber <id> -TargetAgent <agent-id> -Repo <owner/repo>`
+  - `./.github/scripts/generate-agent-context.ps1 -IssueNumber <id> -Repo <owner/repo>`
+  - `./.github/scripts/dispatch-agent.ps1 -IssueNumber <id> -TargetAgent <agent-id> -Repo <owner/repo>`
 
 ---
 
@@ -106,29 +117,33 @@ Examples:
 
 ### Branch Authority
 
-| Agent Role | Can Create Branches | Can Merge to Main |
-| --- | --- | --- |
-| Orchestrator (`00-chief-of-staff`) | ✅ Yes | ✅ Yes (emergency only) |
-| Implementer (`11-tech-lead`) | ✅ Yes (delegated) | ⛔ No |
-| Assurance (`99-quality-director`) | ✅ Yes (via PR) | ✅ Yes (via PR approval) |
-| Specialist Agents | ⛔ No | ⛔ No |
+| Agent Role                         | Can Create Branches | Can Merge to Main        |
+| ---------------------------------- | ------------------- | ------------------------ |
+| Orchestrator (`00-chief-of-staff`) | ✅ Yes              | ✅ Yes (emergency only)  |
+| Implementer (`11-tech-lead`)       | ✅ Yes (delegated)  | ⛔ No                    |
+| Assurance (`99-quality-director`)  | ✅ Yes (via PR)     | ✅ Yes (via PR approval) |
+| Specialist Agents                  | ⛔ No               | ⛔ No                    |
 
-**Rule:** Branch creation authority is held by the Orchestrator and optionally delegated to Implementer for low/medium work.
+**Rule:** Branch creation authority is held by the Orchestrator and optionally
+delegated to Implementer for low/medium work.
 
 ### Pull Request Creation Authority
 
-| Risk Level | PR Creation Authority | Review Requirement |
-| --- | --- | --- |
-| Low | Orchestrator-authorized engineering lead | At least 1 qualified reviewer |
-| Medium | Orchestrator-authorized engineering lead | At least 1 qualified reviewer + QA evidence |
-| High | Quality Director | Full quality gate evidence + security review |
-| Critical | Quality Director | Full gate evidence + executive/security escalation as applicable |
+| Risk Level | PR Creation Authority                    | Review Requirement                                               |
+| ---------- | ---------------------------------------- | ---------------------------------------------------------------- |
+| Low        | Orchestrator-authorized engineering lead | At least 1 qualified reviewer                                    |
+| Medium     | Orchestrator-authorized engineering lead | At least 1 qualified reviewer + QA evidence                      |
+| High       | Quality Director                         | Full quality gate evidence + security review                     |
+| Critical   | Quality Director                         | Full gate evidence + executive/security escalation as applicable |
 
-**Rule:** Quality Director-only PR creation is reserved for high/critical risk work to reduce queueing latency on low/medium-risk delivery.
+**Rule:** Quality Director-only PR creation is reserved for high/critical risk
+work to reduce queueing latency on low/medium-risk delivery.
 
-**Automation:** `governance-pr` enforces this rule using GitHub login allowlists in `.github/framework-config/pr-authority-allowlists.json`.
+**Automation:** `governance-pr` enforces this rule using GitHub login allowlists
+in `.github/framework-config/pr-authority-allowlists.json`.
 
-**Validation runbook:** `.github/.developer/PR_AUTHORITY_SIMULATION_CHECKLIST.md`
+**Validation runbook:**
+`.github/.developer/PR_AUTHORITY_SIMULATION_CHECKLIST.md`
 
 ---
 
@@ -153,17 +168,17 @@ Examples:
 
 ### Commit Authority by Agent
 
-| Agent Role                 | Commit Authority            | What to Commit                                                               |
-| -------------------------- | --------------------------- | ---------------------------------------------------------------------------- |
-| **Solution Architect**     | Model files only            | `.github/.system-state/`, `.github/.developer/DECISIONS/`                                    |
-| **Tech Lead**              | Planning files + code       | `.github/.system-state/plan/`, implementation slices                                 |
-| **Frontend Engineer**      | React/<WEB_FRAMEWORK> code + tests  | `src/app/`, `src/components/`, `src/lib/seo/`                                |
-| **Backend Engineer**       | API routes + tests          | `src/app/api/`, `src/lib/<payment-provider>/`, `src/app/sitemap.ts`, `src/app/robots.ts` |
-| **Platform Engineer**      | Infrastructure + deployment | `<deployment-config>.json`, CI/CD configs                                    |
-| **QA Test Engineer**       | Test files + evidence       | `src/**/__tests__/`, test reports, coverage                                  |
-| **Security Engineer**      | Security audits + reports   | `.github/SECURITY.md`, audit reports                                         |
-| **Documentation Engineer** | Docs + READMEs              | `.customer/`, `.github/.developer/`, `README.md`                                     |
-| **Quality Director**       | Final approval artifacts    | Final validation evidence before PR                                          |
+| Agent Role                 | Commit Authority                   | What to Commit                                                                           |
+| -------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------- |
+| **Solution Architect**     | Model files only                   | `.github/.system-state/`, `.github/.developer/DECISIONS/`                                |
+| **Tech Lead**              | Planning files + code              | `.github/.system-state/plan/`, implementation slices                                     |
+| **Frontend Engineer**      | React/<WEB_FRAMEWORK> code + tests | `src/app/`, `src/components/`, `src/lib/seo/`                                            |
+| **Backend Engineer**       | API routes + tests                 | `src/app/api/`, `src/lib/<payment-provider>/`, `src/app/sitemap.ts`, `src/app/robots.ts` |
+| **Platform Engineer**      | Infrastructure + deployment        | `<deployment-config>.json`, CI/CD configs                                                |
+| **QA Test Engineer**       | Test files + evidence              | `src/**/__tests__/`, test reports, coverage                                              |
+| **Security Engineer**      | Security audits + reports          | `.github/SECURITY.md`, audit reports                                                     |
+| **Documentation Engineer** | Docs + READMEs                     | `.customer/`, `.github/.developer/`, `README.md`                                         |
+| **Quality Director**       | Final approval artifacts           | Final validation evidence before PR                                                      |
 
 ### Commit Message Format (Conventional Commits)
 
@@ -336,7 +351,8 @@ gh issue close 42 --comment "Completed via #123"
 
 ### When to Create PRs
 
-Quality Director performs final signoff after delegated domain approvals validate:
+Quality Director performs final signoff after delegated domain approvals
+validate:
 
 - ✅ All quality gates pass (G1-G10)
 - ✅ All tests pass (≥80% coverage)
@@ -452,7 +468,8 @@ None
 **Rule:** Minimum 2 approvals required:
 
 1. **Quality Director** (mandatory final signoff)
-2. **Chief of Staff** OR **Tech Lead** OR **Security Engineer** (at least one delegated approval)
+2. **Chief of Staff** OR **Tech Lead** OR **Security Engineer** (at least one
+   delegated approval)
 
 **PowerShell Commands:**
 
@@ -496,8 +513,10 @@ gh issue create --title "feat: SEO Foundation (E009)" --body-file .github/issue-
 
 **Solution Architect Actions:**
 
-1. Updates `.github/.system-state/model/system_state_model.yaml` (adds SEO invariants)
-2. Updates `.github/.system-state/contracts/api.yaml` (adds /sitemap.xml, /robots.txt)
+1. Updates `.github/.system-state/model/system_state_model.yaml` (adds SEO
+   invariants)
+2. Updates `.github/.system-state/contracts/api.yaml` (adds /sitemap.xml,
+   /robots.txt)
 3. Creates `.github/.developer/DECISIONS/ADR-007-seo-approach.md`
 4. **Commits model changes**
 5. Dispatches to Tech Lead
@@ -740,8 +759,7 @@ gh pr create \
 gh pr edit 123 --add-reviewer "00-chief-of-staff,security-engineer"
 ```
 
-**PR Body (generated):**
-See "PR Format" section above for complete template.
+**PR Body (generated):** See "PR Format" section above for complete template.
 
 ---
 
@@ -780,7 +798,8 @@ gh issue close 42 --comment "Completed via PR #123. All quality gates passed."
 Agent dispatches without posting handoff comments → chain executes → no auditable context in Issue/PR
 ```
 
-**Result:** Work exists only in local filesystem. Not tracked, not reviewable, not recoverable.
+**Result:** Work exists only in local filesystem. Not tracked, not reviewable,
+not recoverable.
 
 **Good:**
 
@@ -811,7 +830,8 @@ git push origin feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>
 gh pr create  # Creates PR for review
 ```
 
-**Exception:** **Solution Architect** and **Chief of Staff** can push model-only commits to main for governance changes.
+**Exception:** **Solution Architect** and **Chief of Staff** can push model-only
+commits to main for governance changes.
 
 ---
 
@@ -904,7 +924,8 @@ git commit -m "feat(seo): enforce INV-SEO-3 sitemap coverage"
 | PR reverts               | 0         | >1 per month         |
 | Missing handoff comments | 0         | >1                   |
 
-**Dashboard Location:** `.github/.developer/METRICS/git-workflow-metrics.md` (generated weekly)
+**Dashboard Location:** `.github/.developer/METRICS/git-workflow-metrics.md`
+(generated weekly)
 
 ---
 
@@ -1025,13 +1046,20 @@ gh pr view 123
 
 The framework applies the following guardrails before and during implementation:
 
-- **No work without work item:** If no issue is linked, block implementation (except tiny `hotfix/` branches that touch ≤2 files and are documented).
-- **Review before coding:** Agent must review issue acceptance criteria and existing PR context before coding starts.
-- **Branch-per-issue required:** Branch name must include issue number (`feature/<issue>-slug`, `bugfix/<issue>-slug`).
-- **Commit checkpoint required:** Force commit when elapsed time or changed-file threshold is exceeded.
-- **PR threshold required:** Open PR when branch divergence exceeds configured limits.
-- **DoD gate required:** Tests, lint/typecheck, docs, PR quality notes, and acceptance criteria completion are mandatory.
-- **Review gate required:** Self-review + independent reviewer + tester validation + security review (when relevant) before merge.
+- **No work without work item:** If no issue is linked, block implementation
+  (except tiny `hotfix/` branches that touch ≤2 files and are documented).
+- **Review before coding:** Agent must review issue acceptance criteria and
+  existing PR context before coding starts.
+- **Branch-per-issue required:** Branch name must include issue number
+  (`feature/<issue>-slug`, `bugfix/<issue>-slug`).
+- **Commit checkpoint required:** Force commit when elapsed time or changed-file
+  threshold is exceeded.
+- **PR threshold required:** Open PR when branch divergence exceeds configured
+  limits.
+- **DoD gate required:** Tests, lint/typecheck, docs, PR quality notes, and
+  acceptance criteria completion are mandatory.
+- **Review gate required:** Self-review + independent reviewer + tester
+  validation + security review (when relevant) before merge.
 
 Reference implementation:
 
@@ -1064,7 +1092,8 @@ Reference implementation:
 - [ ] All commits pushed to remote
 - [ ] Handoff comment posted (Issue/PR) with dispatch metadata
 - [ ] Dispatch message includes `Handoff URL`
-- [ ] Dispatch includes context pack via `--add-file` (`$repo` + at least 2 relevant auxiliary files)
+- [ ] Dispatch includes context pack via `--add-file` (`$repo` + at least 2
+      relevant auxiliary files)
 - [ ] Next agent dispatched with branch reference
 
 ### Before PR Creation (Risk-Based Authority)
@@ -1082,16 +1111,20 @@ Reference implementation:
 
 - [AGENTS.md](AGENTS.md) — Agent roster and dispatch protocol
 - [QUALITY-GATES.md](QUALITY-GATES.md) — G1-G10 quality gate definitions
-- [pull_request_template.md](pull_request_template.md) — Default pull request template
-- [ISSUE_TEMPLATE/deterministic-feature.yml](ISSUE_TEMPLATE/deterministic-feature.yml) — Canonical feature intake
-- [ISSUE_TEMPLATE/deterministic-bug.yml](ISSUE_TEMPLATE/deterministic-bug.yml) — Canonical bug intake
-- [ISSUE_TEMPLATE/deterministic-security.yml](ISSUE_TEMPLATE/deterministic-security.yml) — Canonical security intake
+- [pull_request_template.md](pull_request_template.md) — Default pull request
+  template
+- [ISSUE_TEMPLATE/deterministic-feature.yml](ISSUE_TEMPLATE/deterministic-feature.yml)
+  — Canonical feature intake
+- [ISSUE_TEMPLATE/deterministic-bug.yml](ISSUE_TEMPLATE/deterministic-bug.yml) —
+  Canonical bug intake
+- [ISSUE_TEMPLATE/deterministic-security.yml](ISSUE_TEMPLATE/deterministic-security.yml)
+  — Canonical security intake
 - [README.md](README.md) — Canonical governance index
 - [copilot-instructions.md](copilot-instructions.md) — Complete agent governance
 
 ---
 
-**🤖 This workflow ensures every piece of work is tracked, reviewed, and integrated into the codebase systematically.**
+**🤖 This workflow ensures every piece of work is tracked, reviewed, and
+integrated into the codebase systematically.**
 
 **Version 1.0.0 | Effective 2026-02-25 | Owner: Chief of Staff**
-

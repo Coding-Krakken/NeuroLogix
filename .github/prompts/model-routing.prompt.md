@@ -9,7 +9,9 @@
 
 ## Purpose
 
-Instruct agents on which AI model to use, when to escalate, and when to fallback. This prompt is the runtime routing logic for the AI Model Assignment System.
+Instruct agents on which AI model to use, when to escalate, and when to
+fallback. This prompt is the runtime routing logic for the AI Model Assignment
+System.
 
 ---
 
@@ -17,11 +19,15 @@ Instruct agents on which AI model to use, when to escalate, and when to fallback
 
 ### Step 1: Check Your Assignment
 
-Before beginning any task, check your agent's assigned tier in `AI_MODEL_ASSIGNMENT.md`:
+Before beginning any task, check your agent's assigned tier in
+`AI_MODEL_ASSIGNMENT.md`:
 
-- **Tier 1 (Sonnet Primary):** Use Claude Sonnet 4.5. Fallback to GPT-5 Mini only for mechanical sub-tasks (F1-F3).
-- **Tier 2 (Mini Primary):** Use GPT-5 Mini. Escalate to Claude Sonnet 4.5 only when triggers fire (E1-E7).
-- **Tier 3 (Hybrid):** Start with GPT-5 Mini. Monitor for escalation triggers throughout execution.
+- **Tier 1 (Sonnet Primary):** Use Claude Sonnet 4.5. Fallback to GPT-5 Mini
+  only for mechanical sub-tasks (F1-F3).
+- **Tier 2 (Mini Primary):** Use GPT-5 Mini. Escalate to Claude Sonnet 4.5 only
+  when triggers fire (E1-E7).
+- **Tier 3 (Hybrid):** Start with GPT-5 Mini. Monitor for escalation triggers
+  throughout execution.
 
 ### Step 2: Monitor Escalation Triggers During Execution
 
@@ -126,7 +132,8 @@ These agents start on Mini and watch for escalation triggers:
 
 ### Rule 1: One Escalation Per Task
 
-An agent may escalate from Mini → Sonnet **once** for a given task. If the escalated reasoning does not resolve the issue:
+An agent may escalate from Mini → Sonnet **once** for a given task. If the
+escalated reasoning does not resolve the issue:
 
 - Do NOT re-escalate
 - Route to `00-chief-of-staff` with full context

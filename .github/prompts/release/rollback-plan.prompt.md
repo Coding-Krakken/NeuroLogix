@@ -1,13 +1,13 @@
 # Rollback Plan
 
-> **Category:** Release
-> **File:** `release/rollback-plan.prompt.md`
+> **Category:** Release **File:** `release/rollback-plan.prompt.md`
 
 ---
 
 ## Purpose
 
-Define a concrete, tested rollback plan for a deployment. Ensure the team can revert to a known-good state within minutes if issues are detected.
+Define a concrete, tested rollback plan for a deployment. Ensure the team can
+revert to a known-good state within minutes if issues are detected.
 
 ## When to Use
 
@@ -108,4 +108,3 @@ Define a concrete, tested rollback plan for a deployment. Ensure the team can re
 - Last known good deployment identified
 - Monitoring dashboards accessible
 - Communication channels ready
-

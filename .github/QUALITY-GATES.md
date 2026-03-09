@@ -1,13 +1,15 @@
 # Quality Gates
 
-> **Version:** 1.0.0 | **Updated:** 2026-02-25
-> **Standard:** Microsoft/NASA/Google Engineering Grade
+> **Version:** 1.0.0 | **Updated:** 2026-02-25 **Standard:**
+> Microsoft/NASA/Google Engineering Grade
 
 ---
 
 ## Gate Overview
 
-Every change must pass through a series of quality gates before reaching production. Gates are **non-negotiable** — no bypass without Chief of Staff + Quality Director joint approval with documented ADR.
+Every change must pass through a series of quality gates before reaching
+production. Gates are **non-negotiable** — no bypass without Chief of Staff +
+Quality Director joint approval with documented ADR.
 
 ```
 Code → [G1: Lint] → [G2: Format] → [G3: Type] → [G4: Test] → [G5: Build]
@@ -16,58 +18,82 @@ Code → [G1: Lint] → [G2: Format] → [G3: Type] → [G4: Test] → [G5: Buil
 
 ### Risk-Based Gate Profiles
 
-To improve delivery speed while preserving control, gate execution is profile-driven by deterministic risk classification.
+To improve delivery speed while preserving control, gate execution is
+profile-driven by deterministic risk classification.
 
-| Profile | Risk | Gate Behavior |
-| --- | --- | --- |
-| `fast` | Low | Runs core correctness/security/traceability checks, skips non-critical latency-heavy checks (e.g., format/build/docs/perf prechecks) |
-| `balanced` | Medium | Runs full standard gate stack except strict-only escalations |
-| `strict` | High/Critical | Runs full gate stack with strict enforcement behavior |
+| Profile    | Risk          | Gate Behavior                                                                                                                        |
+| ---------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `fast`     | Low           | Runs core correctness/security/traceability checks, skips non-critical latency-heavy checks (e.g., format/build/docs/perf prechecks) |
+| `balanced` | Medium        | Runs full standard gate stack except strict-only escalations                                                                         |
+| `strict`   | High/Critical | Runs full gate stack with strict enforcement behavior                                                                                |
 
-**Non-bypass controls in all profiles:** traceability, deterministic routing, and security gating remain mandatory.
+**Non-bypass controls in all profiles:** traceability, deterministic routing,
+and security gating remain mandatory.
 
 ### Core-3 Segregation of Duties (Mandatory)
 
-- **Orchestrator** owns intake/routing/planning and cannot self-approve high/critical delivery outcomes.
+- **Orchestrator** owns intake/routing/planning and cannot self-approve
+  high/critical delivery outcomes.
 - **Implementer** owns changes, tests, docs, and remediation execution.
-- **Assurance** performs independent validation and is the only role that can finalize high/critical ship decisions.
-- For high/critical risk, Implementer and Assurance must map to distinct approver identities.
+- **Assurance** performs independent validation and is the only role that can
+  finalize high/critical ship decisions.
+- For high/critical risk, Implementer and Assurance must map to distinct
+  approver identities.
 
 ### Path-Aware Gate Execution
 
-To reduce unnecessary CI latency, implementation gates that operate on `.github/framework/**` run only when framework code is changed in the PR.
+To reduce unnecessary CI latency, implementation gates that operate on
+`.github/framework/**` run only when framework code is changed in the PR.
 
-- Always-on: deterministic routing, policy conformance, model completeness (phased), framework boundary enforcement, governance report.
-- Path-aware: lint, format, typecheck, test, build, dependency audit for framework runtime.
+- Always-on: deterministic routing, policy conformance, model completeness
+  (phased), framework boundary enforcement, governance report.
+- Path-aware: lint, format, typecheck, test, build, dependency audit for
+  framework runtime.
 
-This preserves governance and traceability while eliminating non-value waiting time for unrelated product/docs changes.
+This preserves governance and traceability while eliminating non-value waiting
+time for unrelated product/docs changes.
 
 ### Two-Loop Operating Model
 
-- **Creative loop (agents):** planning, implementation, remediation decisions, and stakeholder-level tradeoffs.
-- **Verification loop (automation-first):** deterministic checks, compact failure bundle generation, and owner-agent recommendation.
+- **Creative loop (agents):** planning, implementation, remediation decisions,
+  and stakeholder-level tradeoffs.
+- **Verification loop (automation-first):** deterministic checks, compact
+  failure bundle generation, and owner-agent recommendation.
 
 Automation policy:
 
 - Deterministic/non-creative tasks run in the verification loop by default.
-- Agents consume verification bundles and focus on diagnosis/remediation instead of repeating mechanical checks.
+- Agents consume verification bundles and focus on diagnosis/remediation instead
+  of repeating mechanical checks.
 
 ### Runaway Loop Safeguards
 
-1. **Idempotency by commit SHA:** verification loop processes each head SHA once.
-2. **Retry budget:** maximum 3 verification attempts per PR before blocking escalation.
-3. **Escalation on exhaustion:** unresolved verification state escalates to `99-quality-director` with blocking label.
+1. **Idempotency by commit SHA:** verification loop processes each head SHA
+   once.
+2. **Retry budget:** maximum 3 verification attempts per PR before blocking
+   escalation.
+3. **Escalation on exhaustion:** unresolved verification state escalates to
+   `99-quality-director` with blocking label.
 4. **Coupled completion rule:**
-  - Creative loop cannot complete while verification status is `ACTION_REQUIRED` or `BLOCKED`.
-  - Verification loop cannot declare `COMPLETE` unless creative-loop governance checks for that SHA pass.
-5. **Sync gate enforcement:** a dedicated coupling gate must be green before merge.
-6. **Triage SLA:** `verification-blocked` issues require owner assignment within 4 hours.
+
+- Creative loop cannot complete while verification status is `ACTION_REQUIRED`
+  or `BLOCKED`.
+- Verification loop cannot declare `COMPLETE` unless creative-loop governance
+  checks for that SHA pass.
+
+5. **Sync gate enforcement:** a dedicated coupling gate must be green before
+   merge.
+6. **Triage SLA:** `verification-blocked` issues require owner assignment within
+   4 hours.
 
 ### Verification Telemetry and KPI Automation
 
-- `verification-mesh` generates compact failure bundles and owner-agent recommendations.
-- `verification-blocked-sla` enforces blocked-issue ownership SLA and labels breaches.
-- `scorecard-metrics-collector` posts weekly mechanical-loop and reliability snapshots to scorecard review issues.
+- `verification-mesh` generates compact failure bundles and owner-agent
+  recommendations.
+- `verification-blocked-sla` enforces blocked-issue ownership SLA and labels
+  breaches.
+- `scorecard-metrics-collector` posts weekly mechanical-loop and reliability
+  snapshots to scorecard review issues.
 
 ---
 
@@ -173,8 +199,8 @@ npm test -- --coverage # With coverage report
 
 ## G5: Build Gate
 
-| Check            | Tool    | Threshold     | Blocking |
-| ---------------- | ------- | ------------- | -------- |
+| Check            | Tool            | Threshold     | Blocking |
+| ---------------- | --------------- | ------------- | -------- |
 | Production build | <WEB_FRAMEWORK> | Successful    | YES      |
 | Build warnings   | <WEB_FRAMEWORK> | 0 critical    | YES      |
 | Bundle size      | <WEB_FRAMEWORK> | Within budget | YES      |
@@ -246,20 +272,21 @@ npx gitleaks detect   # Must find 0 secrets
 
 ## G8: PR Completeness Gate
 
-| Check                 | Criterion                  | Threshold              | Blocking |
-| --------------------- | -------------------------- | ---------------------- | -------- |
-| PR title              | Conventional commit format | Compliant              | YES      |
-| PR description        | Template filled            | Complete               | YES      |
-| Linked issue          | Issue or ADR reference     | Present                | YES      |
-| Handoff context       | Context snapshot reference | Required in handoff comments | YES |
-| All CI green          | All automated checks       | Passing                | YES      |
-| Review approval       | Qualified reviewer         | ≥1 approval            | YES      |
-| No unresolved threads | All conversations          | Resolved               | YES      |
-| No TODO/FIXME         | Without linked issue       | 0 orphaned             | YES      |
-| PR size               | Lines changed              | <500 (warning >200)    | WARNING  |
-| Commits               | Clean history              | Squash or clean rebase | YES      |
+| Check                 | Criterion                  | Threshold                    | Blocking |
+| --------------------- | -------------------------- | ---------------------------- | -------- |
+| PR title              | Conventional commit format | Compliant                    | YES      |
+| PR description        | Template filled            | Complete                     | YES      |
+| Linked issue          | Issue or ADR reference     | Present                      | YES      |
+| Handoff context       | Context snapshot reference | Required in handoff comments | YES      |
+| All CI green          | All automated checks       | Passing                      | YES      |
+| Review approval       | Qualified reviewer         | ≥1 approval                  | YES      |
+| No unresolved threads | All conversations          | Resolved                     | YES      |
+| No TODO/FIXME         | Without linked issue       | 0 orphaned                   | YES      |
+| PR size               | Lines changed              | <500 (warning >200)          | WARNING  |
+| Commits               | Clean history              | Squash or clean rebase       | YES      |
 
-**Automation Enforcement:** `.github/workflows/handoff-context-gate.yml` fails handoff/dispatch comments that do not include a context snapshot reference.
+**Automation Enforcement:** `.github/workflows/handoff-context-gate.yml` fails
+handoff/dispatch comments that do not include a context snapshot reference.
 
 ### Failure Response
 
@@ -309,7 +336,8 @@ npx gitleaks detect   # Must find 0 secrets
 
 - Return to appropriate agent for remediation
 - Document blockers and communicate ETA
-- Quality Director has VETO authority on any release, and is the required ship authority for high/critical risk changes
+- Quality Director has VETO authority on any release, and is the required ship
+  authority for high/critical risk changes
 
 ---
 

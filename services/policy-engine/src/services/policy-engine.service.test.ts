@@ -262,7 +262,7 @@ describe('PolicyEngineService', () => {
 
       expect(firstPage.policies.length).toBeLessThanOrEqual(2);
       expect(firstPage.page).toBe(1);
-      
+
       if (secondPage.policies.length > 0) {
         expect(secondPage.page).toBe(2);
         // Ensure different policies on different pages
@@ -276,17 +276,20 @@ describe('PolicyEngineService', () => {
       const result = await service.queryPolicies({ sortBy: 'name', sortOrder: 'asc' });
 
       for (let i = 1; i < result.policies.length; i++) {
-        expect(result.policies[i].name.localeCompare(result.policies[i - 1].name)).toBeGreaterThanOrEqual(0);
+        expect(
+          result.policies[i].name.localeCompare(result.policies[i - 1].name)
+        ).toBeGreaterThanOrEqual(0);
       }
     });
 
     it('should sort policies by priority descending', async () => {
       const result = await service.queryPolicies({ sortBy: 'priority', sortOrder: 'desc' });
-      
+
       const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
       for (let i = 1; i < result.policies.length; i++) {
-        expect(priorityOrder[result.policies[i].priority])
-          .toBeLessThanOrEqual(priorityOrder[result.policies[i - 1].priority]);
+        expect(priorityOrder[result.policies[i].priority]).toBeLessThanOrEqual(
+          priorityOrder[result.policies[i - 1].priority]
+        );
       }
     });
   });
@@ -320,7 +323,7 @@ describe('PolicyEngineService', () => {
         action: 'recipe.execute',
         resource: 'conveyor/line1',
         context: {
-          plc_interlocks: [{ name: 'safety_gate', active: true }]
+          plc_interlocks: [{ name: 'safety_gate', active: true }],
         },
         subject: {
           userId: 'operator123',
@@ -405,7 +408,7 @@ describe('PolicyEngineService', () => {
       // Second evaluation (should be from cache)
       const result2 = await service.evaluateRequest({
         ...request,
-        requestId: '550e8400-e29b-41d4-a716-446655440006'
+        requestId: '550e8400-e29b-41d4-a716-446655440006',
       });
 
       expect(result1.decision).toBe(result2.decision);
@@ -517,8 +520,11 @@ describe('PolicyEngineService', () => {
       const stats = await service.getStatistics();
 
       expect(stats.evaluationsLast24h).toBeGreaterThan(0);
-      expect(stats.decisionsLast24h.allow + stats.decisionsLast24h.deny + stats.decisionsLast24h.approval_required)
-        .toBe(stats.evaluationsLast24h);
+      expect(
+        stats.decisionsLast24h.allow +
+          stats.decisionsLast24h.deny +
+          stats.decisionsLast24h.approval_required
+      ).toBe(stats.evaluationsLast24h);
     });
   });
 });

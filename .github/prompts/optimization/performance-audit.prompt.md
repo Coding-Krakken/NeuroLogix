@@ -1,13 +1,15 @@
 # Performance Audit
 
-> **Category:** Optimization
-> **File:** `optimization/performance-audit.prompt.md`
+> **Category:** Optimization **File:**
+> `optimization/performance-audit.prompt.md`
 
 ---
 
 ## Purpose
 
-Conduct a comprehensive performance audit of the application. Measure Core Web Vitals, analyze bundle sizes, identify rendering bottlenecks, and produce optimization recommendations.
+Conduct a comprehensive performance audit of the application. Measure Core Web
+Vitals, analyze bundle sizes, identify rendering bottlenecks, and produce
+optimization recommendations.
 
 ## When to Use
 

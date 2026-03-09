@@ -1,4 +1,4 @@
-export type LogLevel = "info" | "error";
+export type LogLevel = 'info' | 'error';
 
 const formatMessage = (level: LogLevel, message: string): string => {
   return `[${new Date().toISOString()}] [${level.toUpperCase()}] ${message}`;
@@ -6,7 +6,7 @@ const formatMessage = (level: LogLevel, message: string): string => {
 
 const writeLine = (level: LogLevel, message: string): void => {
   const line = `${formatMessage(level, message)}\n`;
-  if (level === "error") {
+  if (level === 'error') {
     process.stderr.write(line);
     return;
   }
@@ -15,9 +15,9 @@ const writeLine = (level: LogLevel, message: string): void => {
 };
 
 export const logInfo = (message: string): void => {
-  writeLine("info", message);
+  writeLine('info', message);
 };
 
 export const logError = (message: string): void => {
-  writeLine("error", message);
+  writeLine('error', message);
 };

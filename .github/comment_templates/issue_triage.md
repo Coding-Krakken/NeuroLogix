@@ -1,6 +1,6 @@
 # Issue Triage Template
 
-<!-- 
+<!--
 Template for triaging new issues
 -->
 
@@ -8,7 +8,9 @@ Template for triaging new issues
 
 **Issue:** #{{ISSUE_NUMBER}}  
 **Timestamp:** {{TIMESTAMP}}  
-**Triage Decision:** {{DECISION}} <!-- ✅ Accepted | ⚠️ Needs Info | ❌ Rejected | 🔄 Duplicate -->
+**Triage Decision:** {{DECISION}}
+
+<!-- ✅ Accepted | ⚠️ Needs Info | ❌ Rejected | 🔄 Duplicate -->
 
 ---
 
@@ -61,7 +63,8 @@ Template for triaging new issues
 **Business Impact:**
 
 - **Revenue Impact:** {{REVENUE_IMPACT}} <!-- High | Medium | Low | None -->
-- **Reputation Impact:** {{REPUTATION_IMPACT}} <!-- High | Medium | Low | None -->
+- **Reputation Impact:** {{REPUTATION_IMPACT}}
+  <!-- High | Medium | Low | None -->
 - **Compliance Impact:** {{COMPLIANCE_IMPACT}} <!-- Yes | No -->
 
 ---
@@ -75,7 +78,9 @@ Template for triaging new issues
 - {{DEPENDENCY_1}}
 - {{DEPENDENCY_2}}
 
-**Estimated Effort:** {{ESTIMATED_EFFORT}} <!-- 1-2 days | 3-5 days | 1-2 weeks | >2 weeks -->
+**Estimated Effort:** {{ESTIMATED_EFFORT}}
+
+<!-- 1-2 days | 3-5 days | 1-2 weeks | >2 weeks -->
 
 **Risks:**
 
@@ -90,7 +95,8 @@ Template for triaging new issues
 
 **Criteria Provided:** ✅ Yes | ❌ No
 
-**Criteria Quality:** ✅ Clear & Testable | ⚠️ Needs Refinement | ❌ Insufficient
+**Criteria Quality:** ✅ Clear & Testable | ⚠️ Needs Refinement | ❌
+Insufficient
 
 **Missing Criteria:**
 
@@ -101,7 +107,9 @@ Template for triaging new issues
 
 ### Routing Decision
 
-**Assigned To:** `{{ASSIGNED_AGENT}}` <!-- e.g., tech-lead, solution-architect -->
+**Assigned To:** `{{ASSIGNED_AGENT}}`
+
+<!-- e.g., tech-lead, solution-architect -->
 
 **Reasoning:** {{ROUTING_REASONING}}
 
@@ -113,15 +121,13 @@ Template for triaging new issues
 
 <!-- If information is missing -->
 
-{{#if NEEDS_INFO}}
-@{{REPORTER}}, please provide the following information:
+{{#if NEEDS_INFO}} @{{REPORTER}}, please provide the following information:
 
 1. {{QUESTION_1}}
 2. {{QUESTION_2}}
 3. {{QUESTION_3}}
 
-**Status:** Waiting for reporter response
-{{/if}}
+**Status:** Waiting for reporter response {{/if}}
 
 ---
 
@@ -129,8 +135,7 @@ Template for triaging new issues
 
 **Is Duplicate:** ✅ Yes | ❌ No
 
-{{#if IS_DUPLICATE}}
-**Duplicate Of:** Issue #{{DUPLICATE_OF}}
+{{#if IS_DUPLICATE}} **Duplicate Of:** Issue #{{DUPLICATE_OF}}
 
 **Action:** Closing as duplicate. Please see #{{DUPLICATE_OF}} for updates.
 {{/if}}

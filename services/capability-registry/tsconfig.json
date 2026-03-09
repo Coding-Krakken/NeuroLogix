@@ -10,8 +10,5 @@
   },
   "include": ["src/**/*"],
   "exclude": ["dist", "**/*.test.ts", "**/*.spec.ts"],
-  "references": [
-    { "path": "../../packages/core" },
-    { "path": "../../packages/schemas" }
-  ]
+  "references": [{ "path": "../../packages/core" }, { "path": "../../packages/schemas" }]
 }

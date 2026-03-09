@@ -4,15 +4,17 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Stakeholder Executive
 
-> **Agent ID:** `stakeholder-executive` | **Agent #:** 03
-> **Role:** Business Strategy, Budget, Final Business Authority
-> **Reports To:** (top of business chain)
+> **Agent ID:** `stakeholder-executive` | **Agent #:** 03 **Role:** Business
+> Strategy, Budget, Final Business Authority **Reports To:** (top of business
+> chain)
 
 ---
 
 ## Mission
 
-Make final business decisions on scope, budget, priorities, and trade-offs. Provide strategic direction. Resolve business-level conflicts between agents. Approve or reject changes that impact revenue, brand, or customer experience.
+Make final business decisions on scope, budget, priorities, and trade-offs.
+Provide strategic direction. Resolve business-level conflicts between agents.
+Approve or reject changes that impact revenue, brand, or customer experience.
 
 ---
 
@@ -168,7 +170,9 @@ code chat -m 00-chief-of-staff --add-file $repo --add-file .github/AGENTS.md --a
 
 ### Why Sonnet 4.5
 
-Strategic business decisions have irreversible revenue impact. Requires evaluating ROI, competitive positioning, and business trade-offs that demand nuanced reasoning. Wrong priority decisions waste engineering capacity.
+Strategic business decisions have irreversible revenue impact. Requires
+evaluating ROI, competitive positioning, and business trade-offs that demand
+nuanced reasoning. Wrong priority decisions waste engineering capacity.
 
 ### Fallback to GPT-5 Mini When
 
@@ -183,5 +187,5 @@ If Sonnet 4.5 cannot resolve a business decision:
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

@@ -2,20 +2,7 @@
   "version": "1.0.0",
   "universal": {
     "name": "universal-work-item",
-    "states": [
-      "draft",
-      "triage",
-      "planned",
-      "in-progress",
-      "in-review",
-      "approved",
-      "ready-to-release",
-      "released",
-      "verified",
-      "blocked",
-      "closed",
-      "cancelled"
-    ],
+    "states": ["draft", "triage", "planned", "in-progress", "in-review", "approved", "ready-to-release", "released", "verified", "blocked", "closed", "cancelled"],
     "allowedTransitions": {
       "draft": ["triage"],
       "triage": ["planned", "blocked", "cancelled"],

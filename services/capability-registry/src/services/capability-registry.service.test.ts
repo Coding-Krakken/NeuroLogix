@@ -60,9 +60,9 @@ describe('CapabilityRegistryService', () => {
 
       await service.installCapability(installRequest);
 
-      await expect(service.installCapability(installRequest))
-        .rejects
-        .toThrow('Capability modbus-adapter is already installed');
+      await expect(service.installCapability(installRequest)).rejects.toThrow(
+        'Capability modbus-adapter is already installed'
+      );
     });
 
     it('should update an existing capability', async () => {
@@ -75,10 +75,10 @@ describe('CapabilityRegistryService', () => {
       };
 
       const capability = await service.installCapability(installRequest);
-      
+
       // Add a small delay to ensure timestamp difference
       await new Promise(resolve => setTimeout(resolve, 10));
-      
+
       const updateRequest = {
         version: '1.3.0',
         configuration: {
@@ -97,7 +97,9 @@ describe('CapabilityRegistryService', () => {
         port: 502,
         timeout: 10000,
       });
-      expect(updatedCapability.lastUpdated.getTime()).toBeGreaterThan(capability.lastUpdated.getTime());
+      expect(updatedCapability.lastUpdated.getTime()).toBeGreaterThan(
+        capability.lastUpdated.getTime()
+      );
     });
 
     it('should reject update for non-existent capability', async () => {
@@ -106,9 +108,9 @@ describe('CapabilityRegistryService', () => {
         restartRequired: false,
       };
 
-      await expect(service.updateCapability('non-existent-id', updateRequest))
-        .rejects
-        .toThrow('Capability non-existent-id not found');
+      await expect(service.updateCapability('non-existent-id', updateRequest)).rejects.toThrow(
+        'Capability non-existent-id not found'
+      );
     });
   });
 
@@ -168,25 +170,27 @@ describe('CapabilityRegistryService', () => {
       };
 
       const dependentCapability = await service.installCapability(dependentInstallRequest);
-      
+
       // Manually add dependency (in real system this would come from package metadata)
       const capability = await service.getCapability(capabilityId);
       if (capability) {
         const updatedDependent = {
           ...dependentCapability,
-          dependencies: [{
-            name: capability.name,
-            version: capability.version,
-            required: true,
-          }],
+          dependencies: [
+            {
+              name: capability.name,
+              version: capability.version,
+              required: true,
+            },
+          ],
         };
         // Mock updating the dependent with the dependency
         service['capabilities'].set(dependentCapability.id, updatedDependent);
       }
 
-      await expect(service.uninstallCapability(capabilityId))
-        .rejects
-        .toThrow('Cannot uninstall test-capability. It is required by: dependent-capability');
+      await expect(service.uninstallCapability(capabilityId)).rejects.toThrow(
+        'Cannot uninstall test-capability. It is required by: dependent-capability'
+      );
     });
   });
 
@@ -245,9 +249,11 @@ describe('CapabilityRegistryService', () => {
       });
 
       expect(response.capabilities).toHaveLength(2);
-      expect(response.capabilities.every(cap => 
-        cap.name.includes('adapter') || cap.displayName.includes('adapter')
-      )).toBe(true);
+      expect(
+        response.capabilities.every(
+          cap => cap.name.includes('adapter') || cap.displayName.includes('adapter')
+        )
+      ).toBe(true);
     });
 
     it('should paginate results', async () => {
@@ -310,9 +316,9 @@ describe('CapabilityRegistryService', () => {
     });
 
     it('should reject health check for non-existent capability', async () => {
-      await expect(service.checkCapabilityHealth('non-existent-id'))
-        .rejects
-        .toThrow('Capability non-existent-id not found');
+      await expect(service.checkCapabilityHealth('non-existent-id')).rejects.toThrow(
+        'Capability non-existent-id not found'
+      );
     });
   });
 
@@ -349,21 +355,21 @@ describe('CapabilityRegistryService', () => {
 
   describe('Error Handling', () => {
     it('should handle enable for non-existent capability', async () => {
-      await expect(service.enableCapability('non-existent-id'))
-        .rejects
-        .toThrow('Capability non-existent-id not found');
+      await expect(service.enableCapability('non-existent-id')).rejects.toThrow(
+        'Capability non-existent-id not found'
+      );
     });
 
     it('should handle disable for non-existent capability', async () => {
-      await expect(service.disableCapability('non-existent-id'))
-        .rejects
-        .toThrow('Capability non-existent-id not found');
+      await expect(service.disableCapability('non-existent-id')).rejects.toThrow(
+        'Capability non-existent-id not found'
+      );
     });
 
     it('should handle uninstall for non-existent capability', async () => {
-      await expect(service.uninstallCapability('non-existent-id'))
-        .rejects
-        .toThrow('Capability non-existent-id not found');
+      await expect(service.uninstallCapability('non-existent-id')).rejects.toThrow(
+        'Capability non-existent-id not found'
+      );
     });
 
     it('should handle get for non-existent capability', async () => {

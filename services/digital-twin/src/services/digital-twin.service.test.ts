@@ -131,9 +131,21 @@ describe('DigitalTwinService', () => {
       metadata: {},
     });
 
-    await service.ingestState(twin.id, { source: 'telemetry', properties: { speed: 1 }, confidence: 1 });
-    await service.ingestState(twin.id, { source: 'telemetry', properties: { speed: 2 }, confidence: 1 });
-    await service.ingestState(twin.id, { source: 'telemetry', properties: { speed: 3 }, confidence: 1 });
+    await service.ingestState(twin.id, {
+      source: 'telemetry',
+      properties: { speed: 1 },
+      confidence: 1,
+    });
+    await service.ingestState(twin.id, {
+      source: 'telemetry',
+      properties: { speed: 2 },
+      confidence: 1,
+    });
+    await service.ingestState(twin.id, {
+      source: 'telemetry',
+      properties: { speed: 3 },
+      confidence: 1,
+    });
 
     const history = await service.getStateHistory(twin.id, 2);
     expect(history).toHaveLength(2);

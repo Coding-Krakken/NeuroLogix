@@ -37,10 +37,7 @@ const logger = winston.createLogger({
   transports: [
     // Console transport
     new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      ),
+      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
     }),
 
     // File transport for errors
@@ -63,13 +60,9 @@ const logger = winston.createLogger({
 });
 
 // Handle uncaught exceptions and unhandled rejections
-logger.exceptions.handle(
-  new winston.transports.File({ filename: 'logs/exceptions.log' })
-);
+logger.exceptions.handle(new winston.transports.File({ filename: 'logs/exceptions.log' }));
 
-logger.rejections.handle(
-  new winston.transports.File({ filename: 'logs/rejections.log' })
-);
+logger.rejections.handle(new winston.transports.File({ filename: 'logs/rejections.log' }));
 
 /**
  * Create a child logger with additional context

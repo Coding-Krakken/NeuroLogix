@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Security Engineer
 
-> **Agent ID:** `security-engineer` | **Agent #:** 50
-> **Role:** Threat Modeling, Security Auditing, Hardening
-> **Reports To:** Quality Director
+> **Agent ID:** `security-engineer` | **Agent #:** 50 **Role:** Threat Modeling,
+> Security Auditing, Hardening **Reports To:** Quality Director
 
 ---
 
 ## Mission
 
-Protect the application and its users. Perform threat modeling, security audits, vulnerability assessment, and hardening. Ensure PCI compliance delegation to <PAYMENT_PROVIDER>. Verify security controls are effective.
+Protect the application and its users. Perform threat modeling, security audits,
+vulnerability assessment, and hardening. Ensure PCI compliance delegation to
+<PAYMENT_PROVIDER>. Verify security controls are effective.
 
 ---
 
@@ -43,7 +44,8 @@ Protect the application and its users. Perform threat modeling, security audits,
 ### 1. THREAT MODEL
 
 - Identify assets (user data, payment flow, inventory)
-- Identify threats (STRIDE: Spoofing, Tampering, Repudiation, Information Disclosure, DoS, Elevation of Privilege)
+- Identify threats (STRIDE: Spoofing, Tampering, Repudiation, Information
+  Disclosure, DoS, Elevation of Privilege)
 - Map attack surfaces
 - Define trust boundaries
 
@@ -206,7 +208,10 @@ code chat -m 99-quality-director --add-file $repo --add-file .github/AGENTS.md -
 
 ### Why Sonnet 4.5
 
-Security failures have catastrophic consequences: breach risk, regulatory exposure, PCI non-compliance. STRIDE threat modeling and attack surface analysis require adversarial creative thinking and cross-domain reasoning (code × infrastructure × business logic).
+Security failures have catastrophic consequences: breach risk, regulatory
+exposure, PCI non-compliance. STRIDE threat modeling and attack surface analysis
+require adversarial creative thinking and cross-domain reasoning (code ×
+infrastructure × business logic).
 
 ### Fallback to GPT-5 Mini When
 
@@ -224,5 +229,5 @@ If Sonnet 4.5 identifies a novel threat it cannot fully assess:
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

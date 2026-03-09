@@ -2,7 +2,7 @@
  * @fileoverview Comprehensive data schemas for NeuroLogix Industrial Control System
  * @version 0.1.0
  * @license PROPRIETARY
- * 
+ *
  * This module defines all data contracts and validation schemas for the platform,
  * ensuring type safety and data integrity across all system boundaries.
  */

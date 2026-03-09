@@ -121,10 +121,14 @@ export const ServiceHealthSchema = z.object({
   version: z.string(),
   uptime: z.number(),
   metrics: z.record(z.string(), z.number()).optional(),
-  dependencies: z.array(z.object({
-    name: z.string(),
-    status: z.enum(['healthy', 'degraded', 'unhealthy']),
-  })).optional(),
+  dependencies: z
+    .array(
+      z.object({
+        name: z.string(),
+        status: z.enum(['healthy', 'degraded', 'unhealthy']),
+      })
+    )
+    .optional(),
   timestamp: z.date(),
 });
 

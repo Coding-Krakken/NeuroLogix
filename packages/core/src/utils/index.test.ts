@@ -1,11 +1,24 @@
 import { describe, it, expect } from 'vitest';
-import { generateId, sleep, retry, formatDate, deepClone, debounce, throttle, safeJsonParse, isValidUuid, timeoutPromise } from '@/utils/index';
+import {
+  generateId,
+  sleep,
+  retry,
+  formatDate,
+  deepClone,
+  debounce,
+  throttle,
+  safeJsonParse,
+  isValidUuid,
+  timeoutPromise,
+} from '@/utils/index';
 
 describe('Utils', () => {
   describe('generateId', () => {
     it('should generate a valid UUID', () => {
       const id = generateId();
-      expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+      expect(id).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+      );
     });
 
     it('should generate unique IDs', () => {
@@ -59,9 +72,7 @@ describe('Utils', () => {
         throw new Error(`Failure ${attempts}`);
       };
 
-      await expect(retry(fn, { maxAttempts: 2, baseDelay: 10 }))
-        .rejects
-        .toThrow('Failure 2');
+      await expect(retry(fn, { maxAttempts: 2, baseDelay: 10 })).rejects.toThrow('Failure 2');
       expect(attempts).toBe(2);
     });
   });
@@ -152,9 +163,7 @@ describe('Utils', () => {
 
     it('should reject if timeout is reached', async () => {
       const promise = new Promise(resolve => setTimeout(() => resolve('late'), 200));
-      await expect(timeoutPromise(promise, 100))
-        .rejects
-        .toThrow('Operation timed out after 100ms');
+      await expect(timeoutPromise(promise, 100)).rejects.toThrow('Operation timed out after 100ms');
     });
   });
 

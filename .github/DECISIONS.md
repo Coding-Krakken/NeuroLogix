@@ -6,7 +6,8 @@
 
 ## ADR Process
 
-1. **Identify** a decision point (new dependency, pattern change, architecture change)
+1. **Identify** a decision point (new dependency, pattern change, architecture
+   change)
 2. **Draft** an ADR using the template below
 3. **Propose** via PR or design discussion
 4. **Review** with relevant stakeholders
@@ -21,10 +22,9 @@
 ```markdown
 # ADR-XXXX: Title
 
-**Status:** Proposed | Accepted | Rejected | Superseded | Deprecated
-**Date:** YYYY-MM-DD
-**Deciders:** [list of people/agents involved]
-**Supersedes:** ADR-XXXX (if applicable)
+**Status:** Proposed | Accepted | Rejected | Superseded | Deprecated **Date:**
+YYYY-MM-DD **Deciders:** [list of people/agents involved] **Supersedes:**
+ADR-XXXX (if applicable)
 
 ## Context
 
@@ -67,18 +67,18 @@ What is the change that we're proposing and/or doing?
 
 ## ADR Index
 
-| #        | Title                                                 | Status   | Date       | Category         |
-| -------- | ----------------------------------------------------- | -------- | ---------- | ---------------- |
-| ADR-0001 | <WEB_FRAMEWORK> as frontend framework                 | Accepted | 2026-01-15 | Architecture     |
-| ADR-0002 | <PAYMENT_PROVIDER> APIs as backend integration        | Accepted | 2026-01-15 | Architecture     |
-| ADR-0003 | <DEPLOYMENT_PLATFORM> as deployment platform          | Accepted | 2026-01-15 | Infrastructure   |
-| ADR-0004 | Zustand for client state management                   | Accepted | 2026-01-20 | State Management |
-| ADR-0005 | Tailwind CSS for styling                              | Accepted | 2026-01-20 | Styling          |
-| ADR-0006 | Model-first development workflow                      | Accepted | 2026-02-01 | Process          |
-| ADR-0007 | Copilot Agent organization for autonomous engineering | Accepted | 2026-02-25 | Process          |
+| #        | Title                                                  | Status   | Date       | Category         |
+| -------- | ------------------------------------------------------ | -------- | ---------- | ---------------- |
+| ADR-0001 | <WEB_FRAMEWORK> as frontend framework                  | Accepted | 2026-01-15 | Architecture     |
+| ADR-0002 | <PAYMENT_PROVIDER> APIs as backend integration         | Accepted | 2026-01-15 | Architecture     |
+| ADR-0003 | <DEPLOYMENT_PLATFORM> as deployment platform           | Accepted | 2026-01-15 | Infrastructure   |
+| ADR-0004 | Zustand for client state management                    | Accepted | 2026-01-20 | State Management |
+| ADR-0005 | Tailwind CSS for styling                               | Accepted | 2026-01-20 | Styling          |
+| ADR-0006 | Model-first development workflow                       | Accepted | 2026-02-01 | Process          |
+| ADR-0007 | Copilot Agent organization for autonomous engineering  | Accepted | 2026-02-25 | Process          |
 | ADR-0008 | Portfolio site architecture for vanilla single-page v1 | Proposed | 2026-02-26 | Architecture     |
 | ADR-0009 | Package-first universal framework adoption             | Accepted | 2026-03-01 | Process          |
-| ADR-0010 | Generic checkout slice telemetry contract                  | Accepted | 2026-03-02 | Architecture     |
+| ADR-0010 | Generic checkout slice telemetry contract              | Accepted | 2026-03-02 | Architecture     |
 
 ---
 

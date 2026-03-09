@@ -1,6 +1,6 @@
 # Agent Handoff Template
 
-<!-- 
+<!--
 This template MUST be used for all agent-to-agent handoffs.
 All sections are REQUIRED, even if marked "N/A".
 -->
@@ -8,7 +8,8 @@ All sections are REQUIRED, even if marked "N/A".
 ## Handoff
 
 **Agent:** {{AGENT_NAME}}  
-**Work Item:** Issue #{{ISSUE_NUMBER}} {{#if PR_NUMBER}}| PR #{{PR_NUMBER}}{{/if}}  
+**Work Item:** Issue #{{ISSUE_NUMBER}} {{#if PR_NUMBER}}|
+PR #{{PR_NUMBER}}{{/if}}  
 **Status:** {{STATUS}} <!-- Done | Partial | Blocked -->  
 **Timestamp:** {{TIMESTAMP}}
 
@@ -40,7 +41,8 @@ All sections are REQUIRED, even if marked "N/A".
 
 ### Changes Summary
 
-**Files Changed:** {{FILES_CHANGED_COUNT}} files (+{{LINES_ADDED}} -{{LINES_REMOVED}})
+**Files Changed:** {{FILES_CHANGED_COUNT}} files
+(+{{LINES_ADDED}} -{{LINES_REMOVED}})
 
 **Notable Files:**
 

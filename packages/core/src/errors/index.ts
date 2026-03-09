@@ -101,20 +101,32 @@ export class AssetNotFoundError extends NeuroLogixError {
 
 export class RecipeExecutionError extends NeuroLogixError {
   constructor(recipeId: string, reason: string, context?: Record<string, unknown>) {
-    super(`Recipe '${recipeId}' execution failed: ${reason}`, ERROR_CODES.RECIPE_EXECUTION_FAILED, 422, true, {
-      recipeId,
-      reason,
-      ...context,
-    });
+    super(
+      `Recipe '${recipeId}' execution failed: ${reason}`,
+      ERROR_CODES.RECIPE_EXECUTION_FAILED,
+      422,
+      true,
+      {
+        recipeId,
+        reason,
+        ...context,
+      }
+    );
   }
 }
 
 export class CapabilityNotAvailableError extends NeuroLogixError {
   constructor(capability: string, context?: Record<string, unknown>) {
-    super(`Capability '${capability}' is not available`, ERROR_CODES.CAPABILITY_NOT_AVAILABLE, 503, true, {
-      capability,
-      ...context,
-    });
+    super(
+      `Capability '${capability}' is not available`,
+      ERROR_CODES.CAPABILITY_NOT_AVAILABLE,
+      503,
+      true,
+      {
+        capability,
+        ...context,
+      }
+    );
   }
 }
 
@@ -139,21 +151,33 @@ export class DatabaseConnectionError extends NeuroLogixError {
 
 export class ExternalServiceError extends NeuroLogixError {
   constructor(service: string, reason: string, context?: Record<string, unknown>) {
-    super(`External service '${service}' unavailable: ${reason}`, ERROR_CODES.EXTERNAL_SERVICE_UNAVAILABLE, 503, true, {
-      service,
-      reason,
-      ...context,
-    });
+    super(
+      `External service '${service}' unavailable: ${reason}`,
+      ERROR_CODES.EXTERNAL_SERVICE_UNAVAILABLE,
+      503,
+      true,
+      {
+        service,
+        reason,
+        ...context,
+      }
+    );
   }
 }
 
 export class RateLimitExceededError extends NeuroLogixError {
   constructor(limit: number, window: string, context?: Record<string, unknown>) {
-    super(`Rate limit exceeded: ${limit} requests per ${window}`, ERROR_CODES.RATE_LIMIT_EXCEEDED, 429, true, {
-      limit,
-      window,
-      ...context,
-    });
+    super(
+      `Rate limit exceeded: ${limit} requests per ${window}`,
+      ERROR_CODES.RATE_LIMIT_EXCEEDED,
+      429,
+      true,
+      {
+        limit,
+        window,
+        ...context,
+      }
+    );
   }
 }
 

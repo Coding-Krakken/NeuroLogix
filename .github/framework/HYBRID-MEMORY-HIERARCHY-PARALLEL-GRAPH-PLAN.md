@@ -1,11 +1,9 @@
 # Hybrid Orchestration Implementation Plan
 
-> **Title:** Memory Hierarchy + Parallel Graph Orchestration
-> **Owner:** Chief of Staff (`00-chief-of-staff`)
-> **Status:** Ready for Execution
-> **Priority:** P0
-> **Target Branch:** `feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>`
-> **Date:** 2026-02-26
+> **Title:** Memory Hierarchy + Parallel Graph Orchestration **Owner:** Chief of
+> Staff (`00-chief-of-staff`) **Status:** Ready for Execution **Priority:** P0
+> **Target Branch:** `feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>` **Date:**
+> 2026-02-26
 
 ---
 
@@ -22,15 +20,19 @@ Implement a production-grade hybrid orchestration mode that combines:
    - Parallel dispatch for independent work items
    - Deterministic merge/join semantics and gate enforcement
 
-This hybrid mode MUST reduce token spend, improve throughput, preserve auditability, and remain fully compatible with existing GitHub-native handoff workflow.
+This hybrid mode MUST reduce token spend, improve throughput, preserve
+auditability, and remain fully compatible with existing GitHub-native handoff
+workflow.
 
 ---
 
 ## 2) Non-Negotiable Constraints
 
 1. Maintain model-first governance and quality gates G1-G10.
-2. No external long-running service dependency; execution remains CLI/library based.
-3. Every dispatch must preserve traceability (Issue/PR comment URL + agent + timestamp).
+2. No external long-running service dependency; execution remains CLI/library
+   based.
+3. Every dispatch must preserve traceability (Issue/PR comment URL + agent +
+   timestamp).
 4. No bypass of security, compliance, or Definition-of-Done checks.
 5. Feature flag rollout only; no forced cutover.
 6. Deterministic behavior under retries, partial failures, and restarts.
@@ -66,7 +68,8 @@ This hybrid mode MUST reduce token spend, improve throughput, preserve auditabil
 
 - **L1 (Hot Context):**
   - Max 20K token budget per agent task
-  - Includes active work item metadata, explicit acceptance criteria, and unresolved blockers
+  - Includes active work item metadata, explicit acceptance criteria, and
+    unresolved blockers
   - TTL: per dispatch session
 
 - **L2 (Warm Context):**
@@ -75,7 +78,8 @@ This hybrid mode MUST reduce token spend, improve throughput, preserve auditabil
   - Max comment fetch window configurable (`MAX_L2_COMMENTS`)
 
 - **L3 (Cold Context):**
-  - Canonical docs and source-of-truth files (`.system-state`, ADRs, architecture docs)
+  - Canonical docs and source-of-truth files (`.system-state`, ADRs,
+    architecture docs)
   - On-demand targeted retrieval only (never full repo scan by default)
 
 ### 4.2 Parallel Graph
@@ -194,18 +198,18 @@ This hybrid mode MUST reduce token spend, improve throughput, preserve auditabil
 
 ## 6) Detailed Acceptance Criteria Matrix
 
-| Category | Criteria | Threshold | Verification |
-|---|---|---:|---|
-| Correctness | DAG execution respects dependencies | 100% | 200 synthetic DAG tests |
-| Determinism | Same inputs produce same schedule order | 100% | replay test suite |
-| Performance | End-to-end duration improvement vs sequential | >=30% median | benchmark harness |
-| Token Efficiency | token reduction vs sequential | >=35% median | telemetry comparison |
-| Reliability | successful completion under transient failures | >=99% | chaos tests |
-| Recovery | checkpoint restart success | 100% | fault injection suite |
-| Observability | required metrics present | 100% runs | schema validator |
-| Security | no secret leakage in prompts/logs | 0 findings | scanning gate |
-| Governance | G1-G10 unchanged enforcement | 100% | integration tests |
-| Compatibility | legacy sequential mode unaffected | 100% | regression suite |
+| Category         | Criteria                                       |    Threshold | Verification            |
+| ---------------- | ---------------------------------------------- | -----------: | ----------------------- |
+| Correctness      | DAG execution respects dependencies            |         100% | 200 synthetic DAG tests |
+| Determinism      | Same inputs produce same schedule order        |         100% | replay test suite       |
+| Performance      | End-to-end duration improvement vs sequential  | >=30% median | benchmark harness       |
+| Token Efficiency | token reduction vs sequential                  | >=35% median | telemetry comparison    |
+| Reliability      | successful completion under transient failures |        >=99% | chaos tests             |
+| Recovery         | checkpoint restart success                     |         100% | fault injection suite   |
+| Observability    | required metrics present                       |    100% runs | schema validator        |
+| Security         | no secret leakage in prompts/logs              |   0 findings | scanning gate           |
+| Governance       | G1-G10 unchanged enforcement                   |         100% | integration tests       |
+| Compatibility    | legacy sequential mode unaffected              |         100% | regression suite        |
 
 ---
 
@@ -287,13 +291,13 @@ This hybrid mode MUST reduce token spend, improve throughput, preserve auditabil
 
 ## 9) Risks and Mitigations
 
-| Risk | Impact | Likelihood | Mitigation |
-|---|---|---|---|
-| Race conditions in parallel dispatch | High | Medium | immutable planning + synchronized result collector |
-| Context truncation of critical details | High | Medium | critical pinning + provenance + AC pinset |
-| Graph misclassification of dependencies | High | Low | explicit dependency contracts + cycle validation |
-| Token estimate drift | Medium | Medium | conservative budgets + runtime telemetry correction |
-| Operator misconfiguration | Medium | Medium | safe defaults + schema validation |
+| Risk                                    | Impact | Likelihood | Mitigation                                          |
+| --------------------------------------- | ------ | ---------- | --------------------------------------------------- |
+| Race conditions in parallel dispatch    | High   | Medium     | immutable planning + synchronized result collector  |
+| Context truncation of critical details  | High   | Medium     | critical pinning + provenance + AC pinset           |
+| Graph misclassification of dependencies | High   | Low        | explicit dependency contracts + cycle validation    |
+| Token estimate drift                    | Medium | Medium     | conservative budgets + runtime telemetry correction |
+| Operator misconfiguration               | Medium | Medium     | safe defaults + schema validation                   |
 
 ---
 
@@ -339,7 +343,8 @@ This hybrid mode MUST reduce token spend, improve throughput, preserve auditabil
 Chief of Staff must:
 
 1. Create execution issue(s) mapped to phases A-E.
-2. Route architecture tasks first (Solution Architect) before implementation tasks.
+2. Route architecture tasks first (Solution Architect) before implementation
+   tasks.
 3. Enforce handoff protocol with comment URL for every dispatch.
 4. Enforce quality gate evidence before phase transitions.
 5. Maintain progress ledger and risk register in GitHub comments.
@@ -376,5 +381,7 @@ All metrics must be trended by day/week and broken down by task type.
 
 ## 15) Final Note
 
-This plan is intentionally strict: optimize throughput and token usage **without sacrificing determinism, safety, or governance**. If hybrid mode ever conflicts with quality or compliance, sequential mode remains the source-of-truth fallback.
-
+This plan is intentionally strict: optimize throughput and token usage **without
+sacrificing determinism, safety, or governance**. If hybrid mode ever conflicts
+with quality or compliance, sequential mode remains the source-of-truth
+fallback.

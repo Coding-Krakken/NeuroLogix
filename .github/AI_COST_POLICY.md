@@ -8,7 +8,9 @@
 
 ## Governing Principle
 
-**Mini First When Safe.** Heavy reasoning is reserved for high-risk domains where incorrect output has cascading, irreversible, or security-impacting consequences.
+**Mini First When Safe.** Heavy reasoning is reserved for high-risk domains
+where incorrect output has cascading, irreversible, or security-impacting
+consequences.
 
 ---
 
@@ -29,11 +31,13 @@
 Every task starts with GPT-5 Mini unless:
 
 - The agent is a Tier 1 (Sonnet Primary) agent, OR
-- An escalation trigger has fired (see AI_MODEL_ASSIGNMENT.md §Escalation Triggers)
+- An escalation trigger has fired (see AI_MODEL_ASSIGNMENT.md §Escalation
+  Triggers)
 
 ### Rule 2: Evidence-Based Escalation Only
 
-Escalation to Sonnet 4.5 requires a documented trigger. Agents may NOT preemptively escalate because a task "seems hard." The trigger must be one of:
+Escalation to Sonnet 4.5 requires a documented trigger. Agents may NOT
+preemptively escalate because a task "seems hard." The trigger must be one of:
 
 - E1: 3 failed attempts
 - E2: Conflicting ADR decisions
@@ -53,11 +57,13 @@ Sonnet 4.5 usage should produce one of:
 - A crisis resolution (incident response, root cause analysis)
 - A conflict resolution (ADR conflicts, requirement ambiguity)
 
-If the output is purely mechanical (boilerplate, template fill, formatting), the task should have been on Mini.
+If the output is purely mechanical (boilerplate, template fill, formatting), the
+task should have been on Mini.
 
 ### Rule 4: Fallback When Possible
 
-Sonnet agents encountering repetitive mechanical sub-tasks SHOULD delegate to Mini via fallback (F1-F3 triggers). Examples:
+Sonnet agents encountering repetitive mechanical sub-tasks SHOULD delegate to
+Mini via fallback (F1-F3 triggers). Examples:
 
 - Generating TypeScript interfaces from a completed domain model
 - Populating a runbook template with known values
@@ -65,7 +71,8 @@ Sonnet agents encountering repetitive mechanical sub-tasks SHOULD delegate to Mi
 
 ### Rule 5: No Escalation Ping-Pong
 
-An agent may escalate from Mini to Sonnet **once per task**. If Sonnet cannot resolve:
+An agent may escalate from Mini to Sonnet **once per task**. If Sonnet cannot
+resolve:
 
 - Route to Chief of Staff for re-assessment
 - Do NOT bounce back to Mini and re-escalate
@@ -91,13 +98,15 @@ These are advisory. The goal is awareness, not hard enforcement.
 
 ### Chain-Level Budget
 
-A typical dispatch chain (Chief of Staff → ... → Quality Director) should target:
+A typical dispatch chain (Chief of Staff → ... → Quality Director) should
+target:
 
 - **Small task (1-3 agents):** ~20,000 total tokens
 - **Medium task (3-5 agents):** ~50,000 total tokens
 - **Large task (5+ agents):** ~100,000 total tokens
 
-If a chain exceeds 2× its category budget, Chief of Staff should review for loop/redundancy.
+If a chain exceeds 2× its category budget, Chief of Staff should review for
+loop/redundancy.
 
 ---
 
@@ -120,7 +129,8 @@ Chief of Staff reviews monthly:
 1. Which agents escalate most frequently?
 2. Are escalation triggers appropriate or too sensitive?
 3. Are any Mini agents consistently failing (should they be upgraded)?
-4. Are any Sonnet agents doing mostly mechanical work (should they be downgraded)?
+4. Are any Sonnet agents doing mostly mechanical work (should they be
+   downgraded)?
 
 ---
 
@@ -136,15 +146,19 @@ Before passing context to the next agent, prune:
 
 ### Strategy 2: Prompt Caching
 
-For agents that run the same prompt structure repeatedly (e.g., QA test engineer running test-gap analysis), enable prompt caching to reduce input token costs.
+For agents that run the same prompt structure repeatedly (e.g., QA test engineer
+running test-gap analysis), enable prompt caching to reduce input token costs.
 
 ### Strategy 3: Batch Mechanical Tasks
 
-When a Sonnet agent identifies multiple mechanical sub-tasks, batch them into a single Mini delegation rather than individual fallbacks.
+When a Sonnet agent identifies multiple mechanical sub-tasks, batch them into a
+single Mini delegation rather than individual fallbacks.
 
 ### Strategy 4: Progressive Detail
 
-Start with high-level analysis (cheaper), only expand detail where issues are found. Example: Security engineer scans at file level first, deep-dives only on flagged files.
+Start with high-level analysis (cheaper), only expand detail where issues are
+found. Example: Security engineer scans at file level first, deep-dives only on
+flagged files.
 
 ---
 

@@ -1,6 +1,7 @@
 # Agent Handoff Usage Example
 
-This shows how agents use the framework functions directly (NO external services required).
+This shows how agents use the framework functions directly (NO external services
+required).
 
 ## Simple Agent Handoff (3 Lines of Code)
 
@@ -44,6 +45,7 @@ await postHandoffAndDispatch(provider, dispatcher, context, handoffData)
 ## What Actually Happens Under the Hood
 
 ### Step 1: Post Comment to GitHub
+
 ```typescript
 // github-handoff-provider.ts internally runs:
 gh issue comment 123 --body "Handoff: frontend-engineer → backend-engineer..."
@@ -52,6 +54,7 @@ gh pr comment 123 --body "Handoff: frontend-engineer → backend-engineer..."
 ```
 
 ### Step 2: Dispatch Next Agent
+
 ```typescript
 // dispatcher.ts internally runs:
 code chat -m backend-engineer --add-file /path/to/repo \
@@ -63,11 +66,13 @@ code chat -m backend-engineer --add-file /path/to/repo \
 ## Zero External Services Required
 
 **What you need (already installed):**
+
 - ✅ `gh` CLI (GitHub CLI) - for posting comments
 - ✅ `code` CLI (VS Code) - for `code chat` dispatch
 - ✅ `git` CLI - for auto-detecting context
 
 **What you DON'T need:**
+
 - ❌ No separate service running
 - ❌ No HTTP server
 - ❌ No background daemon
@@ -76,10 +81,13 @@ code chat -m backend-engineer --add-file /path/to/repo \
 
 ## The Framework IS the Agent Code
 
-Agents import these functions **directly** and call them **in their own process**. 
+Agents import these functions **directly** and call them **in their own
+process**.
 
 Think of it like this:
-- **Old system:** `fs.writeFileSync('.handoffs/agent/handoff.md')` then `exec('code chat')`
+
+- **Old system:** `fs.writeFileSync('.handoffs/agent/handoff.md')` then
+  `exec('code chat')`
 - **New system:** `provider.postHandoff()` then `dispatcher.dispatch()`
 
 Same concept, just posting to GitHub instead of writing files.
@@ -88,20 +96,19 @@ Same concept, just posting to GitHub instead of writing files.
 
 ```typescript
 // Test without actually posting to GitHub or dispatching
-const provider = createGitHubHandoffProvider({ githubDryRun: true })
-const dispatcher = new AgentDispatcher({ dryRun: true })
+const provider = createGitHubHandoffProvider({ githubDryRun: true });
+const dispatcher = new AgentDispatcher({ dryRun: true });
 
-await postHandoffAndDispatch(provider, dispatcher, context, handoffData)
+await postHandoffAndDispatch(provider, dispatcher, context, handoffData);
 // Logs what WOULD happen, makes no actual API calls
 ```
 
 ## Command-Line Dependencies
 
-| Command | Purpose | Already Have It? |
-|---------|---------|------------------|
-| `gh` | Post GitHub comments | ✅ If using GitHub |
-| `code` | Dispatch agents | ✅ If using Copilot Chat |
-| `git` | Detect repo/branch | ✅ Always |
+| Command | Purpose              | Already Have It?         |
+| ------- | -------------------- | ------------------------ |
+| `gh`    | Post GitHub comments | ✅ If using GitHub       |
+| `code`  | Dispatch agents      | ✅ If using Copilot Chat |
+| `git`   | Detect repo/branch   | ✅ Always                |
 
 These are **CLI tools**, not services. The framework just wraps them.
-

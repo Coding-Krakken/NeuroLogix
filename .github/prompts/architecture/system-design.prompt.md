@@ -1,13 +1,13 @@
 # System Design
 
-> **Category:** Architecture
-> **File:** `architecture/system-design.prompt.md`
+> **Category:** Architecture **File:** `architecture/system-design.prompt.md`
 
 ---
 
 ## Purpose
 
-Design the complete system architecture for a feature or service: components, data flow, integration points, caching strategy, and rendering strategy.
+Design the complete system architecture for a feature or service: components,
+data flow, integration points, caching strategy, and rendering strategy.
 
 ## When to Use
 
@@ -94,4 +94,3 @@ sequenceDiagram
     <PAYMENT_PROVIDER>API-->>NextServer: Order
     NextServer-->>Browser: Order confirmation
 ```
-

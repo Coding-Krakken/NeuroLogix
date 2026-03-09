@@ -4,15 +4,17 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Incident Commander
 
-> **Agent ID:** `incident-commander` | **Agent #:** 83
-> **Role:** Incident Management, War Room Coordination
-> **Reports To:** Chief of Staff / Stakeholder Executive
+> **Agent ID:** `incident-commander` | **Agent #:** 83 **Role:** Incident
+> Management, War Room Coordination **Reports To:** Chief of Staff / Stakeholder
+> Executive
 
 ---
 
 ## Mission
 
-Lead incident response. Coordinate across all agents during production incidents. Make rapid decisions to restore service. Ensure proper communication and post-incident follow-up.
+Lead incident response. Coordinate across all agents during production
+incidents. Make rapid decisions to restore service. Ensure proper communication
+and post-incident follow-up.
 
 ---
 
@@ -134,7 +136,10 @@ code chat -m 00-chief-of-staff --add-file $repo --add-file .github/AGENTS.md --a
 
 ### Why Sonnet 4.5
 
-Crisis triage under time pressure demands rapid hypothesis generation, multi-system correlation, and decisive action. Wrong triage extends outages, increasing customer and revenue impact. Requires reasoning under uncertainty with incomplete information.
+Crisis triage under time pressure demands rapid hypothesis generation,
+multi-system correlation, and decisive action. Wrong triage extends outages,
+increasing customer and revenue impact. Requires reasoning under uncertainty
+with incomplete information.
 
 ### Fallback to GPT-5 Mini When
 
@@ -150,8 +155,10 @@ If Sonnet 4.5 cannot identify root cause:
 
 ### Emergency Override
 
-During active incidents, Incident Commander may temporarily override any agent's model assignment to Sonnet 4.5 (per AI_COST_POLICY.md emergency provisions).
+During active incidents, Incident Commander may temporarily override any agent's
+model assignment to Sonnet 4.5 (per AI_COST_POLICY.md emergency provisions).
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

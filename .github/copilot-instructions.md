@@ -22,7 +22,8 @@
 ### Target State
 
 - **Architecture:** Headless/Modular (<WEB_FRAMEWORK> + <PAYMENT_PROVIDER> APIs)
-- **Performance:** Core Web Vitals targets defined in `.github/.system-state/perf/budgets.yaml`
+- **Performance:** Core Web Vitals targets defined in
+  `.github/.system-state/perf/budgets.yaml`
 - **Conversion/Outcome Goal:** <TARGET_OUTCOME>
 - **Business Goal:** <TARGET_BUSINESS_METRIC>
 
@@ -30,10 +31,13 @@
 
 ## 🚨 Critical Constraints (Non-Negotiable)
 
-1. **PRESERVE ALL CRITICAL INTEGRATIONS** — Payments, inventory, fulfillment, and customer operations must remain functional
+1. **PRESERVE ALL CRITICAL INTEGRATIONS** — Payments, inventory, fulfillment,
+   and customer operations must remain functional
 2. **ZERO-DOWNTIME MIGRATION** — Gradual rollout with rollback <5 minutes
-3. **COMPLIANCE BOUNDARY ENFORCEMENT** — Sensitive payment data remains delegated to `<PAYMENT_PROVIDER>`
-4. **MODEL-FIRST WORKFLOW** — NO implementation before required models exist and validate
+3. **COMPLIANCE BOUNDARY ENFORCEMENT** — Sensitive payment data remains
+   delegated to `<PAYMENT_PROVIDER>`
+4. **MODEL-FIRST WORKFLOW** — NO implementation before required models exist and
+   validate
 
 ---
 
@@ -142,15 +146,18 @@
 
 ### `.customer/` Packet
 
-- `README.md`, `SETUP.md`, `ACCOUNTS.md`, `BILLING.md`, `OPERATIONS.md`, `FAQ.md`, `TODO.md`, `CHANGELOG.md`, `SECURITY.md`
+- `README.md`, `SETUP.md`, `ACCOUNTS.md`, `BILLING.md`, `OPERATIONS.md`,
+  `FAQ.md`, `TODO.md`, `CHANGELOG.md`, `SECURITY.md`
 
 ### `.github/.developer/` Packet
 
-- `README.md`, `TODO.md`, `ARCHITECTURE.md`, `DECISIONS/`, `RUNBOOKS/`, `RELEASE.md`, `INCIDENTS.md`, `SECURITY_INTERNAL.md`
+- `README.md`, `TODO.md`, `ARCHITECTURE.md`, `DECISIONS/`, `RUNBOOKS/`,
+  `RELEASE.md`, `INCIDENTS.md`, `SECURITY_INTERNAL.md`
 
 ### `.github/.system-state/` Canonical Models
 
-- `meta/`, `copilot/`, `model/`, `delivery/`, `contracts/`, `data/`, `security/`, `resilience/`, `ops/`, `perf/`, `deps/`, `ci/`, `roadmap/`
+- `meta/`, `copilot/`, `model/`, `delivery/`, `contracts/`, `data/`,
+  `security/`, `resilience/`, `ops/`, `perf/`, `deps/`, `ci/`, `roadmap/`
 
 ---
 
@@ -191,14 +198,16 @@
 ## 🔄 Rollback Strategy
 
 - Rollback target: `<ROLLBACK_TARGET_PLATFORM>`
-- Trigger: elevated error rate, checkout failure, latency SLO breach, critical incidents
+- Trigger: elevated error rate, checkout failure, latency SLO breach, critical
+  incidents
 - Time-to-rollback target: <5 minutes
 
 ---
 
 ## 📈 Success Metrics & SLOs
 
-- Define Core Web Vitals, business conversion, and technical SLO targets in model files
+- Define Core Web Vitals, business conversion, and technical SLO targets in
+  model files
 - Enforce performance and accessibility budgets in CI
 
 ---
@@ -214,7 +223,8 @@
 
 ## 🧪 CI/CD Requirements
 
-- Required checks: lint, format, typecheck, tests, build, secrets scan, dependency scan
+- Required checks: lint, format, typecheck, tests, build, secrets scan,
+  dependency scan
 - Optional gates by risk tier: e2e, performance budgets, security deep scan
 
 ---
@@ -224,7 +234,9 @@
 **Current Phase:** Phase 0 - Copilot Model  
 **Next Phase:** Phase 1 - System State Model
 
-Create `.github/.system-state/model/system_state_model.yaml` with domain entities, state machine, invariants, security boundaries, and tenant/config/feature-flag extensions.
+Create `.github/.system-state/model/system_state_model.yaml` with domain
+entities, state machine, invariants, security boundaries, and
+tenant/config/feature-flag extensions.
 
 ---
 
@@ -236,11 +248,13 @@ Use the Core-3 operating model by default:
 - `11-tech-lead` (implementation)
 - `99-quality-director` (independent assurance; only chain closer)
 
-Specialists are invoked by policy triggers (security, compliance, incident, data, legal, performance).
+Specialists are invoked by policy triggers (security, compliance, incident,
+data, legal, performance).
 
 ### Dispatch Format
 
-Use GitHub-native handoffs (Issue/PR comment URL + context pack) with `code chat -m <agent-id>` and at least two relevant auxiliary artifacts.
+Use GitHub-native handoffs (Issue/PR comment URL + context pack) with
+`code chat -m <agent-id>` and at least two relevant auxiliary artifacts.
 
 ### Quality Gates
 
@@ -257,4 +271,5 @@ Use `.github/QUALITY-GATES.md` for gate definitions and pass criteria.
 
 ---
 
-**When in doubt prioritize:** model-first, determinism, rollback safety, and traceability.
+**When in doubt prioritize:** model-first, determinism, rollback safety, and
+traceability.

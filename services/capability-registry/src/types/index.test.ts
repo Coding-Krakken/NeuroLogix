@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { 
+import {
   CapabilitySchema,
   CapabilityInstallRequestSchema,
   CapabilityQuerySchema,
   CapabilityRegistryResponseSchema,
-  CapabilityHealthSchema
+  CapabilityHealthSchema,
 } from '@/types/index';
 
 describe('Capability Registry Types', () => {

@@ -7,8 +7,5 @@
   },
   "include": ["src/**/*"],
   "exclude": ["dist", "node_modules", "**/*.test.ts"],
-  "references": [
-    { "path": "../../packages/core" },
-    { "path": "../../packages/schemas" }
-  ]
+  "references": [{ "path": "../../packages/core" }, { "path": "../../packages/schemas" }]
 }

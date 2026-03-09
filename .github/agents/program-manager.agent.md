@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Program Manager
 
-> **Agent ID:** `program-manager` | **Agent #:** 02
-> **Role:** Coordination, Timelines, Dependency Management
-> **Reports To:** Chief of Staff
+> **Agent ID:** `program-manager` | **Agent #:** 02 **Role:** Coordination,
+> Timelines, Dependency Management **Reports To:** Chief of Staff
 
 ---
 
 ## Mission
 
-Coordinate cross-agent work, manage timelines and dependencies, track progress against acceptance criteria, and ensure the delivery plan is executable and on track.
+Coordinate cross-agent work, manage timelines and dependencies, track progress
+against acceptance criteria, and ensure the delivery plan is executable and on
+track.
 
 ---
 
@@ -181,7 +182,9 @@ code chat -m <next-agent-id> --add-file $repo --add-file .github/AGENTS.md --add
 
 ### Why Hybrid
 
-Project coordination, timeline tracking, and status reporting are structured. Dependency deadlocks or timeline re-planning under constraints require deeper reasoning.
+Project coordination, timeline tracking, and status reporting are structured.
+Dependency deadlocks or timeline re-planning under constraints require deeper
+reasoning.
 
 ### Start with GPT-5 Mini For
 
@@ -209,9 +212,10 @@ Question: [specific coordination question]
 
 ### Loop Prevention
 
-One escalation per task. If Sonnet cannot resolve, route to Chief of Staff.
-Only Chief of Staff or Quality Director may downgrade this escalation.
+One escalation per task. If Sonnet cannot resolve, route to Chief of Staff. Only
+Chief of Staff or Quality Director may downgrade this escalation.
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

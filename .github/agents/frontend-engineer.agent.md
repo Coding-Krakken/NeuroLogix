@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Frontend Engineer
 
-> **Agent ID:** `frontend-engineer` | **Agent #:** 20
-> **Role:** UI Implementation, Client-Side Logic
-> **Reports To:** Tech Lead
+> **Agent ID:** `frontend-engineer` | **Agent #:** 20 **Role:** UI
+> Implementation, Client-Side Logic **Reports To:** Tech Lead
 
 ---
 
 ## Mission
 
-Implement UI components, pages, and client-side logic according to the architecture design and domain models. Deliver accessible, performant, well-tested frontend code following canonical patterns.
+Implement UI components, pages, and client-side logic according to the
+architecture design and domain models. Deliver accessible, performant,
+well-tested frontend code following canonical patterns.
 
 ---
 
@@ -233,13 +234,15 @@ code chat -m 11-tech-lead --add-file $repo --add-file .github/AGENTS.md --add-fi
 
 ### Core Responsibilities
 
-As Frontend Engineer, you **MUST commit your code** after implementing each vertical slice and passing all quality gates.
+As Frontend Engineer, you **MUST commit your code** after implementing each
+vertical slice and passing all quality gates.
 
 ### Commit Workflow
 
 **When:** After implementing each unit of work (≤3 files OR 1 vertical slice)
 
-**CRITICAL:** Run quality gates BEFORE committing. Code not committed = code that doesn't exist.
+**CRITICAL:** Run quality gates BEFORE committing. Code not committed = code
+that doesn't exist.
 
 **Steps:**
 
@@ -288,8 +291,7 @@ As Frontend Engineer, you **MUST commit your code** after implementing each vert
 
 Implements INV-SEO-1 (title ≤60 chars) and INV-SEO-4 (canonical URLs).
 
-Tests: 13 passing
-Coverage: ProductCard.tsx 100%
+Tests: 13 passing Coverage: ProductCard.tsx 100%
 
 Issue #<WORK_ITEM_ID>"
 
@@ -308,13 +310,11 @@ gh issue comment 42 --body "Frontend S1 complete: ProductCard component implemen
 
    ```powershell
    $handoffBody = @"
-Frontend S1+S2 complete.
+   Frontend S1+S2 complete.
+   ```
 
-Handoff To: backend-engineer
-Branch: feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>
-Issue: #42
-"@
-   gh issue comment 42 --body $handoffBody
+Handoff To: backend-engineer Branch: feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>
+Issue: #42 "@ gh issue comment 42 --body $handoffBody
 
 ````
 
@@ -455,14 +455,18 @@ code chat -m backend-engineer --add-file $repo --add-file .github/AGENTS.md --ad
 
 ### Prompts for Git/GitHub Operations
 
-- **`operations/git-commit.prompt.md`** — Step-by-step commit workflow with quality gates
-- **`operations/manage-issue.prompt.md`** — How to update GitHub issues with progress
+- **`operations/git-commit.prompt.md`** — Step-by-step commit workflow with
+  quality gates
+- **`operations/manage-issue.prompt.md`** — How to update GitHub issues with
+  progress
 
 ### Reference Documentation
 
 - [GIT_WORKFLOW.md](../GIT_WORKFLOW.md) — Complete git/GitHub workflows
-- [WORKFLOW_INTEGRATION_SUMMARY.md](../WORKFLOW_INTEGRATION_SUMMARY.md) — Quick-start guide with examples
-- [operations/git-commit.prompt.md](../prompts/operations/git-commit.prompt.md) — Commit workflow
+- [WORKFLOW_INTEGRATION_SUMMARY.md](../WORKFLOW_INTEGRATION_SUMMARY.md) —
+  Quick-start guide with examples
+- [operations/git-commit.prompt.md](../prompts/operations/git-commit.prompt.md)
+  — Commit workflow
 
 ---
 
@@ -475,7 +479,10 @@ code chat -m backend-engineer --add-file $repo --add-file .github/AGENTS.md --ad
 
 ### Why GPT-5 Mini
 
-Frontend implementation follows canonical patterns defined by Solution Architect and Tech Lead. Component creation, page implementation, and styling are structured, repeatable tasks with clear specifications. Mini's fast iteration speed is ideal.
+Frontend implementation follows canonical patterns defined by Solution Architect
+and Tech Lead. Component creation, page implementation, and styling are
+structured, repeatable tasks with clear specifications. Mini's fast iteration
+speed is ideal.
 
 ### Escalate to Claude Sonnet 4.5 When
 
@@ -498,5 +505,5 @@ Question: [specific architectural/design question]
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

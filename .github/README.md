@@ -1,6 +1,7 @@
 # Governance Index
 
-Status: Active canonical index for project management, workflow, and governance artifacts.
+Status: Active canonical index for project management, workflow, and governance
+artifacts.
 
 ## Canonical Workflow Documents
 
@@ -13,12 +14,15 @@ Status: Active canonical index for project management, workflow, and governance 
 
 When governance artifacts disagree, apply this precedence order:
 
-1. `.github/framework-config/deterministic/policies/*.json` (machine-enforced policy contracts)
+1. `.github/framework-config/deterministic/policies/*.json` (machine-enforced
+   policy contracts)
 2. `.github/workflows/*.yml` (automated gate enforcement)
-3. `AGENTS.md`, `GIT_WORKFLOW.md`, `QUALITY-GATES.md` (human operational procedures)
+3. `AGENTS.md`, `GIT_WORKFLOW.md`, `QUALITY-GATES.md` (human operational
+   procedures)
 4. Supporting guides and examples
 
-Core operating model default is Core-3 with specialist escalation by policy trigger.
+Core operating model default is Core-3 with specialist escalation by policy
+trigger.
 
 ## Deterministic Policy Contracts
 
@@ -43,8 +47,10 @@ Core operating model default is Core-3 with specialist escalation by policy trig
 
 ## Operational Notes
 
-- `.github/.handoffs/` is historical only; active handoffs must be posted in GitHub Issue/PR comments.
-- When adding governance docs, link them from this index to preserve a single source of truth.
+- `.github/.handoffs/` is historical only; active handoffs must be posted in
+  GitHub Issue/PR comments.
+- When adding governance docs, link them from this index to preserve a single
+  source of truth.
 
 ## Agent Efficiency Automation
 

@@ -1,13 +1,14 @@
 # Tech Stack Detection
 
-> **Category:** Discovery
-> **File:** `discovery/techstack-detection.prompt.md`
+> **Category:** Discovery **File:** `discovery/techstack-detection.prompt.md`
 
 ---
 
 ## Purpose
 
-Automatically detect and catalog the complete technology stack of a repository, including frameworks, libraries, build tools, testing tools, deployment targets, and runtime requirements.
+Automatically detect and catalog the complete technology stack of a repository,
+including frameworks, libraries, build tools, testing tools, deployment targets,
+and runtime requirements.
 
 ## When to Use
 
@@ -49,7 +50,8 @@ Produce a structured technology inventory:
 
 ## Failure Cases
 
-- No package manifest → Check for other manifest types (pyproject.toml, Cargo.toml, etc.)
+- No package manifest → Check for other manifest types (pyproject.toml,
+  Cargo.toml, etc.)
 - Mixed tech stack → Document all detected technologies
 - Cannot determine version → Mark as "version unknown"
 
@@ -62,17 +64,16 @@ Produce a structured technology inventory:
 ## Example Output
 
 ```markdown
-| Layer     | Technology     | Version | Config Notes                         |
-| --------- | -------------- | ------- | ------------------------------------ |
-| Runtime   | Node.js        | 20.x    | (from CI workflow)                   |
+| Layer     | Technology             | Version | Config Notes                         |
+| --------- | ---------------------- | ------- | ------------------------------------ |
+| Runtime   | Node.js                | 20.x    | (from CI workflow)                   |
 | Framework | <WEB_FRAMEWORK>        | 16.1.6  | App Router, strict mode              |
-| Language  | TypeScript     | 5.6.3   | strict: true                         |
-| UI        | React          | 19.2.4  | Server + Client Components           |
-| Styling   | Tailwind CSS   | 3.4.19  | + prettier plugin                    |
-| State     | Zustand        | 4.5.7   | Client state                         |
-| API       | <PAYMENT_PROVIDER> SDK     | 44.0.0  | Payments, Catalog, Orders            |
-| Testing   | Jest           | 29.7.0  | + RTL + jest-dom                     |
-| CI        | GitHub Actions | -       | lint, format, typecheck, test, build |
-| Deploy    | <DEPLOYMENT_PLATFORM>         | -       | Region: iad1                         |
+| Language  | TypeScript             | 5.6.3   | strict: true                         |
+| UI        | React                  | 19.2.4  | Server + Client Components           |
+| Styling   | Tailwind CSS           | 3.4.19  | + prettier plugin                    |
+| State     | Zustand                | 4.5.7   | Client state                         |
+| API       | <PAYMENT_PROVIDER> SDK | 44.0.0  | Payments, Catalog, Orders            |
+| Testing   | Jest                   | 29.7.0  | + RTL + jest-dom                     |
+| CI        | GitHub Actions         | -       | lint, format, typecheck, test, build |
+| Deploy    | <DEPLOYMENT_PLATFORM>  | -       | Region: iad1                         |
 ```
-

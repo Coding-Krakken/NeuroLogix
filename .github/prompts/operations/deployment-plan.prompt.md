@@ -1,13 +1,13 @@
 # Deployment Plan
 
-> **Category:** Operations
-> **File:** `operations/deployment-plan.prompt.md`
+> **Category:** Operations **File:** `operations/deployment-plan.prompt.md`
 
 ---
 
 ## Purpose
 
-Create a comprehensive deployment plan including pre-deployment checks, deployment steps, verification procedures, and rollback contingencies.
+Create a comprehensive deployment plan including pre-deployment checks,
+deployment steps, verification procedures, and rollback contingencies.
 
 ## When to Use
 
@@ -97,4 +97,3 @@ Create a comprehensive deployment plan including pre-deployment checks, deployme
 - Staging test results
 - Post-deployment verification results
 - Monitoring screenshots (if issues)
-

@@ -7,11 +7,11 @@ import { z } from 'zod';
 
 // Capability Status Enumeration
 export const CapabilityStatus = z.enum([
-  'installed',    // Capability is installed but not active
-  'enabled',      // Capability is enabled and operational
-  'disabled',     // Capability is disabled but can be enabled
-  'failed',       // Capability failed to load/initialize
-  'updating',     // Capability is being updated
+  'installed', // Capability is installed but not active
+  'enabled', // Capability is enabled and operational
+  'disabled', // Capability is disabled but can be enabled
+  'failed', // Capability failed to load/initialize
+  'updating', // Capability is being updated
   'uninstalling', // Capability is being uninstalled
 ]);
 
@@ -19,14 +19,14 @@ export type CapabilityStatus = z.infer<typeof CapabilityStatus>;
 
 // Capability Type Categories
 export const CapabilityType = z.enum([
-  'adapter',      // Protocol adapters (OPC UA, MQTT, etc.)
-  'ai_model',     // AI/ML models and processors
-  'optimizer',    // Optimization algorithms
-  'connector',    // External system connectors (WMS, WCS, etc.)
+  'adapter', // Protocol adapters (OPC UA, MQTT, etc.)
+  'ai_model', // AI/ML models and processors
+  'optimizer', // Optimization algorithms
+  'connector', // External system connectors (WMS, WCS, etc.)
   'ui_component', // Frontend UI components
-  'middleware',   // Middleware services
-  'security',     // Security and authentication modules
-  'analytics',    // Analytics and reporting
+  'middleware', // Middleware services
+  'security', // Security and authentication modules
+  'analytics', // Analytics and reporting
 ]);
 
 export type CapabilityType = z.infer<typeof CapabilityType>;
@@ -58,53 +58,57 @@ export const CapabilitySchema = z.object({
   version: z.string().regex(/^\d+\.\d+\.\d+$/),
   type: CapabilityType,
   status: CapabilityStatus,
-  
+
   // Metadata
   displayName: z.string().min(1).max(200),
   description: z.string().max(1000),
   author: z.string().min(1),
   homepage: z.string().url().optional(),
   documentation: z.string().url().optional(),
-  
+
   // Technical specifications
   dependencies: z.array(CapabilityDependencySchema).default([]),
   permissions: z.array(z.string()).default([]), // Required permissions
   zones: z.array(z.string()).default([]), // Applicable zones
   platforms: z.array(z.string()).default(['linux', 'windows']), // Supported platforms
-  
+
   // Configuration
   configuration: CapabilityConfigSchema.optional(),
   currentConfig: z.record(z.string(), z.unknown()).optional(),
-  
+
   // Runtime information
   installPath: z.string().optional(),
   entryPoint: z.string().optional(), // Main executable/script
   healthEndpoint: z.string().url().optional(),
   metricsEndpoint: z.string().url().optional(),
-  
+
   // Lifecycle timestamps
   installedAt: z.date(),
   enabledAt: z.date().optional(),
   lastUpdated: z.date(),
   lastHealthCheck: z.date().optional(),
-  
+
   // Health and performance
   isHealthy: z.boolean().default(true),
   lastError: z.string().optional(),
-  resourceUsage: z.object({
-    cpu: z.number().min(0).max(100).optional(),
-    memory: z.number().min(0).optional(), // MB
-    disk: z.number().min(0).optional(), // MB
-  }).optional(),
-  
+  resourceUsage: z
+    .object({
+      cpu: z.number().min(0).max(100).optional(),
+      memory: z.number().min(0).optional(), // MB
+      disk: z.number().min(0).optional(), // MB
+    })
+    .optional(),
+
   // Security and compliance
   checksum: z.string().optional(), // File integrity check
   signature: z.string().optional(), // Digital signature
-  securityScan: z.object({
-    status: z.enum(['passed', 'failed', 'pending', 'skipped']),
-    lastScanned: z.date().optional(),
-    vulnerabilities: z.number().min(0).optional(),
-  }).optional(),
+  securityScan: z
+    .object({
+      status: z.enum(['passed', 'failed', 'pending', 'skipped']),
+      lastScanned: z.date().optional(),
+      vulnerabilities: z.number().min(0).optional(),
+    })
+    .optional(),
 });
 
 export type Capability = z.infer<typeof CapabilitySchema>;

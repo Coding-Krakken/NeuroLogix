@@ -1,15 +1,17 @@
 # Framework Audit Remediation Dispatch
 
-> **Category:** Framework Audit
-> **File:** `framework-audit/remediation-dispatch.prompt.md`
+> **Category:** Framework Audit **File:**
+> `framework-audit/remediation-dispatch.prompt.md`
 
 ---
 
 ## Purpose
 
-Dispatch remediation tasks automatically. Create GitHub issues. Post GitHub handoff comments. Dispatch to Chief of Staff for task routing.
+Dispatch remediation tasks automatically. Create GitHub issues. Post GitHub
+handoff comments. Dispatch to Chief of Staff for task routing.
 
-**CRITICAL:** This prompt executes autonomously; do not pause for user approval when tasks are actionable and in-scope.
+**CRITICAL:** This prompt executes autonomously; do not pause for user approval
+when tasks are actionable and in-scope.
 
 ## When to Use
 
@@ -38,7 +40,7 @@ Dispatch remediation tasks automatically. Create GitHub issues. Post GitHub hand
 | REM-01 | Lower express lane confidence threshold | P1       | 1 hour  | Tech Lead              | #26          |
 | REM-02 | Expand pattern library (100 patterns)   | P1       | 1 day   | ML Engineer            | #27          |
 | REM-03 | Implement parallel quality gates        | P2       | 4 days  | Tech Lead + Platform   | #28          |
-| REM-04 | Optimize <WEB_FRAMEWORK> build time             | P2       | 2 days  | Frontend + Performance | #29          |
+| REM-04 | Optimize <WEB_FRAMEWORK> build time     | P2       | 2 days  | Frontend + Performance | #29          |
 | REM-05 | Agent consolidation (27 → 20)           | P3       | 10 days | Solution Architect     | #30          |
 | REM-06 | Extend express lane to medium tasks     | P3       | 3 days  | Tech Lead + ML         | #31          |
 
@@ -50,7 +52,8 @@ Dispatch remediation tasks automatically. Create GitHub issues. Post GitHub hand
 
 ### Handoff to Chief of Staff
 
-**Comment URL:** `https://github.com/<owner>/<repo>/issues/<issue>#issuecomment-<id>`
+**Comment URL:**
+`https://github.com/<owner>/<repo>/issues/<issue>#issuecomment-<id>`
 
 **Contents:**
 
@@ -96,8 +99,9 @@ Proceed to create GitHub issues for these tasks and dispatch to Chief of Staff f
 
 ### Step 2: Validate Dispatch Preconditions
 
-Proceed automatically when recommendations are actionable and ownership/routes are known.
-If a hard external dependency blocks dispatch, record blocker evidence and escalate via chain.
+Proceed automatically when recommendations are actionable and ownership/routes
+are known. If a hard external dependency blocks dispatch, record blocker
+evidence and escalate via chain.
 
 ### Step 3: Create GitHub Issues
 
@@ -151,8 +155,7 @@ const EXPRESS_LANE_THRESHOLD = 0.85;
 - Code changed and committed
 - Tests passing
 - ADR updated
-- Next audit shows improvement
-  "@
+- Next audit shows improvement "@
 
 # Create issue (pseudo-code, actual implementation depends on API)
 
@@ -277,7 +280,7 @@ code chat -m 11-tech-lead --add-file $repo --add-file .github/AGENTS.md --add-fi
 $repo = (Get-Location).Path
 $handoffUrl = "https://github.com/<owner>/<repo>/issues/<issue>#issuecomment-<id>"
 code chat -m 00-chief-of-staff --add-file $repo --add-file .github/AGENTS.md --add-file .github/GIT_WORKFLOW.md "[Issue#<id>] [Task 1] [To: 00-chief-of-staff]`nHandoff URL: $handoffUrl`nExecute remediation routing from the handoff comment."
-````
+```
 
 ### Step 6: Confirm Completion
 
@@ -356,7 +359,8 @@ Proceed to create issues and dispatch by priority.
 
 ## Security Note
 
-**Do not block dispatch on optional user confirmation when the next optimal action is known.**
+**Do not block dispatch on optional user confirmation when the next optimal
+action is known.**
 
 This prevents:
 
@@ -365,9 +369,9 @@ This prevents:
 - Agent overload (too many tasks at once)
 - User losing control of their repository
 
-Proceed immediately unless a true stop condition or hard external dependency exists.
+Proceed immediately unless a true stop condition or hard external dependency
+exists.
 
 ---
 
 **END OF PROMPT** - Framework Audit workflow complete after this step.
-

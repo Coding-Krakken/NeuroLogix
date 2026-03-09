@@ -1,13 +1,14 @@
 # Domain Model Design
 
-> **Category:** Architecture
-> **File:** `architecture/domain-model.prompt.md`
+> **Category:** Architecture **File:** `architecture/domain-model.prompt.md`
 
 ---
 
 ## Purpose
 
-Define the domain model for a feature or system: entities, relationships, invariants, state machines, and business rules. This model is the source of truth that code must mirror.
+Define the domain model for a feature or system: entities, relationships,
+invariants, state machines, and business rules. This model is the source of
+truth that code must mirror.
 
 ## When to Use
 
@@ -92,20 +93,19 @@ Define the domain model for a feature or system: entities, relationships, invari
 ```typescript
 // Generated from domain model
 export interface Product {
-  id: string
-  name: string
-  description?: string
-  price: Money
-  category: CategoryRef
-  images: Image[]
-  status: ProductStatus
+  id: string;
+  name: string;
+  description?: string;
+  price: Money;
+  category: CategoryRef;
+  images: Image[];
+  status: ProductStatus;
 }
 
 export interface Money {
-  amount: number // in smallest unit (cents)
-  currency: string // ISO 4217
+  amount: number; // in smallest unit (cents)
+  currency: string; // ISO 4217
 }
 
-export type ProductStatus = 'draft' | 'active' | 'archived'
+export type ProductStatus = 'draft' | 'active' | 'archived';
 ```
-

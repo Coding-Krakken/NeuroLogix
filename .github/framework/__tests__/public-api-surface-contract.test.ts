@@ -1,40 +1,38 @@
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from '@jest/globals';
 
-describe("public API surface contract", () => {
-  it("exports only canonical allowed symbols", async () => {
-    const api = await import("../src/index");
+describe('public API surface contract', () => {
+  it('exports only canonical allowed symbols', async () => {
+    const api = await import('../src/index');
     const exportedKeys = Object.keys(api).sort();
 
     expect(exportedKeys).toEqual([
-      "analyzeHandoffWorkflow",
-      "normalizeLifecycle",
-      "runFrameworkAudit",
-      "workflowTelemetry",
+      'analyzeHandoffWorkflow',
+      'normalizeLifecycle',
+      'runFrameworkAudit',
+      'workflowTelemetry',
     ]);
   });
 
-  it("returns a telemetry instance from workflowTelemetry", async () => {
-    const api = await import("../src/index");
+  it('returns a telemetry instance from workflowTelemetry', async () => {
+    const api = await import('../src/index');
     const telemetry = api.workflowTelemetry();
 
-    expect(typeof telemetry.buildFinalSummary).toBe("function");
-    expect(typeof telemetry.markTaskStart).toBe("function");
+    expect(typeof telemetry.buildFinalSummary).toBe('function');
+    expect(typeof telemetry.markTaskStart).toBe('function');
   });
 
-  it("exposes callable audit and lifecycle helpers from index", async () => {
-    const api = await import("../src/index");
+  it('exposes callable audit and lifecycle helpers from index', async () => {
+    const api = await import('../src/index');
 
-    await expect(
-      api.runFrameworkAudit({ taskId: "api-contract" }),
-    ).resolves.toEqual(
+    await expect(api.runFrameworkAudit({ taskId: 'api-contract' })).resolves.toEqual(
       expect.objectContaining({
-        taskId: "api-contract",
-        lifecycle: "candidate",
+        taskId: 'api-contract',
+        lifecycle: 'candidate',
         completed: true,
-      }),
+      })
     );
 
-    expect(api.normalizeLifecycle("smoke validated")).toBe("smoke_validated");
+    expect(api.normalizeLifecycle('smoke validated')).toBe('smoke_validated');
 
     const report = api.analyzeHandoffWorkflow([
       {

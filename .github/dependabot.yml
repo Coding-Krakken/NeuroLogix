@@ -1,33 +1,32 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: "/.github/framework"
+    directory: '/.github/framework'
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
     versioning-strategy: increase
     reviewers:
-      - "<ORGANIZATION_NAME>"
+      - '<ORGANIZATION_NAME>'
     assignees:
-      - "<ORGANIZATION_NAME>"
+      - '<ORGANIZATION_NAME>'
     labels:
-      - "dependencies"
-      - "framework"
-      - "manual-approval-required"
+      - 'dependencies'
+      - 'framework'
+      - 'manual-approval-required'
     commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      include: 'scope'
 
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: '/'
     schedule:
       interval: weekly
     reviewers:
-      - "<ORGANIZATION_NAME>"
+      - '<ORGANIZATION_NAME>'
     labels:
-      - "dependencies"
-      - "github-actions"
-
+      - 'dependencies'
+      - 'github-actions'
 # Rollback expectation for framework update failures:
 # revert the dependency update PR and include the linked issue URL documenting rollback rationale.
 

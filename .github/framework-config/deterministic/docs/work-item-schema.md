@@ -2,7 +2,8 @@
 
 ## Canonical Schema
 
-Canonical schema file: `.github/framework-config/deterministic/policies/work_item.schema.json`
+Canonical schema file:
+`.github/framework-config/deterministic/policies/work_item.schema.json`
 
 Required top-level fields:
 
@@ -24,7 +25,8 @@ Required top-level fields:
 
 ## Policy Matrix Contract
 
-Machine-readable policy matrix: `.github/framework-config/deterministic/policies/policy_matrix.json`
+Machine-readable policy matrix:
+`.github/framework-config/deterministic/policies/policy_matrix.json`
 
 Resolution order (deterministic):
 
@@ -36,11 +38,13 @@ Resolution order (deterministic):
 6. Apply deployment surface override.
 7. Apply incident/hotfix mode overrides.
 
-No ad-hoc decision path is permitted. If no rule matches, fallback is `deny_with_clarification`.
+No ad-hoc decision path is permitted. If no rule matches, fallback is
+`deny_with_clarification`.
 
 ## State Machine Contract
 
-Machine-readable state machines: `.github/framework-config/deterministic/policies/state_machines.json`
+Machine-readable state machines:
+`.github/framework-config/deterministic/policies/state_machines.json`
 
 Each state machine defines:
 

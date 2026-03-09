@@ -10,12 +10,9 @@ import {
   ContextHierarchy,
   type ContextHierarchyInput,
   type ContextSource,
-} from "./context-hierarchy";
-import {
-  DependencyGraphBuilder,
-  type DependencyGraphNodeInput,
-} from "./dependency-graph";
-import { WaveScheduler } from "./wave-scheduler";
+} from './context-hierarchy';
+import { DependencyGraphBuilder, type DependencyGraphNodeInput } from './dependency-graph';
+import { WaveScheduler } from './wave-scheduler';
 import type {
   ContextHierarchyResult,
   HybridExecutionConfig,
@@ -23,10 +20,10 @@ import type {
   HybridMode,
   SchedulePlan,
   Task,
-} from "./types";
+} from './types';
 
 export interface HybridExecutionRequest {
-  task: Pick<Task, "id" | "title" | "description" | "acceptanceCriteria">;
+  task: Pick<Task, 'id' | 'title' | 'description' | 'acceptanceCriteria'>;
   graphNodes: DependencyGraphNodeInput[];
   l2Items: ContextSource[];
   l3Items: ContextSource[];
@@ -43,7 +40,7 @@ export interface HybridExecutionResult {
 }
 
 export const DEFAULT_HYBRID_CONFIG: HybridExecutionConfig = {
-  mode: "sequential",
+  mode: 'sequential',
   flags: {
     hybridOrchestrationEnabled: false,
     parallelGraphEnabled: false,
@@ -59,9 +56,7 @@ export class HybridOrchestrator {
   private readonly waveScheduler = new WaveScheduler();
   private readonly contextHierarchy: ContextHierarchy;
 
-  constructor(
-    private readonly config: HybridExecutionConfig = DEFAULT_HYBRID_CONFIG,
-  ) {
+  constructor(private readonly config: HybridExecutionConfig = DEFAULT_HYBRID_CONFIG) {
     this.contextHierarchy = new ContextHierarchy(config);
   }
 
@@ -72,19 +67,16 @@ export class HybridOrchestrator {
   execute(request: HybridExecutionRequest): HybridExecutionResult {
     const flags = this.config.flags;
 
-    if (
-      !flags.hybridOrchestrationEnabled ||
-      this.config.mode === "sequential"
-    ) {
+    if (!flags.hybridOrchestrationEnabled || this.config.mode === 'sequential') {
       return {
-        mode: "sequential",
+        mode: 'sequential',
         effectiveFlags: flags,
-        fallbackReason: "Hybrid orchestration disabled by config flag or mode",
+        fallbackReason: 'Hybrid orchestration disabled by config flag or mode',
       };
     }
 
     const result: HybridExecutionResult = {
-      mode: "hybrid",
+      mode: 'hybrid',
       effectiveFlags: flags,
     };
 
@@ -100,11 +92,11 @@ export class HybridOrchestrator {
     if (flags.parallelGraphEnabled) {
       const plan = this.graphBuilder.build(request.graphNodes);
       if (!plan.validation.valid) {
-        const path = plan.validation.cyclePath?.join(" -> ") ?? "unknown";
+        const path = plan.validation.cyclePath?.join(' -> ') ?? 'unknown';
         throw new Error(`Dependency graph validation failed: ${path}`);
       }
       const schedule = this.waveScheduler.createPlan(plan.nodes);
-      result.waves = schedule.waves.map((wave) => [...wave.nodeIds]);
+      result.waves = schedule.waves.map(wave => [...wave.nodeIds]);
       result.schedulePlan = schedule;
       result.schedulePlanHash = schedule.schedulePlanHash;
     }

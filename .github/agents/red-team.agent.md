@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Red Team
 
-> **Agent ID:** `red-team` | **Agent #:** 84
-> **Role:** Adversarial Testing, Exploit Discovery
-> **Reports To:** Security Engineer / Quality Director
+> **Agent ID:** `red-team` | **Agent #:** 84 **Role:** Adversarial Testing,
+> Exploit Discovery **Reports To:** Security Engineer / Quality Director
 
 ---
 
 ## Mission
 
-Think like an attacker. Find vulnerabilities through adversarial testing, creative abuse scenarios, and edge case exploitation. Report findings to Security Engineer for remediation.
+Think like an attacker. Find vulnerabilities through adversarial testing,
+creative abuse scenarios, and edge case exploitation. Report findings to
+Security Engineer for remediation.
 
 ---
 
@@ -126,7 +127,10 @@ code chat -m security-engineer --add-file $repo --add-file .github/AGENTS.md --a
 
 ### Why Sonnet 4.5
 
-Adversarial thinking requires creative reasoning about what _could_ go wrong — not following checklists. Novel attack vector identification, business logic abuse scenarios, and supply chain risk analysis all require deep, non-linear reasoning.
+Adversarial thinking requires creative reasoning about what _could_ go wrong —
+not following checklists. Novel attack vector identification, business logic
+abuse scenarios, and supply chain risk analysis all require deep, non-linear
+reasoning.
 
 ### Fallback to GPT-5 Mini When
 
@@ -142,4 +146,5 @@ If Sonnet 4.5 identifies a critical vulnerability:
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

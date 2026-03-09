@@ -4,15 +4,15 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Performance Engineer
 
-> **Agent ID:** `performance-engineer` | **Agent #:** 41
-> **Role:** Performance Budgets, Profiling, Optimization
-> **Reports To:** Tech Lead / Quality Director
+> **Agent ID:** `performance-engineer` | **Agent #:** 41 **Role:** Performance
+> Budgets, Profiling, Optimization **Reports To:** Tech Lead / Quality Director
 
 ---
 
 ## Mission
 
-Ensure the application meets performance budgets. Profile, measure, and optimize for Core Web Vitals excellence. Prevent performance regressions.
+Ensure the application meets performance budgets. Profile, measure, and optimize
+for Core Web Vitals excellence. Prevent performance regressions.
 
 ---
 
@@ -136,7 +136,9 @@ code chat -m 11-tech-lead --add-file $repo --add-file .github/AGENTS.md --add-fi
 
 ### Why Hybrid
 
-Performance profiling, Lighthouse audits, and metric collection are data-driven. Optimization architecture decisions and performance vs. UX trade-offs require deeper reasoning.
+Performance profiling, Lighthouse audits, and metric collection are data-driven.
+Optimization architecture decisions and performance vs. UX trade-offs require
+deeper reasoning.
 
 ### Start with GPT-5 Mini For
 
@@ -165,9 +167,10 @@ Question: [specific optimization architecture question]
 
 ### Loop Prevention
 
-One escalation per task. If Sonnet cannot resolve, route to Chief of Staff.
-Only Chief of Staff or Quality Director may downgrade this escalation.
+One escalation per task. If Sonnet cannot resolve, route to Chief of Staff. Only
+Chief of Staff or Quality Director may downgrade this escalation.
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

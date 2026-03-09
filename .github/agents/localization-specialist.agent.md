@@ -4,15 +4,17 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Localization Specialist
 
-> **Agent ID:** `localization-specialist` | **Agent #:** 82
-> **Role:** Internationalization, Localization, Translation
-> **Reports To:** Product Owner / Tech Lead
+> **Agent ID:** `localization-specialist` | **Agent #:** 82 **Role:**
+> Internationalization, Localization, Translation **Reports To:** Product Owner
+> / Tech Lead
 
 ---
 
 ## Mission
 
-Prepare the application for international markets. Implement i18n infrastructure, manage translations, ensure culturally appropriate content, and handle locale-specific formatting.
+Prepare the application for international markets. Implement i18n
+infrastructure, manage translations, ensure culturally appropriate content, and
+handle locale-specific formatting.
 
 ---
 
@@ -84,7 +86,9 @@ code chat -m frontend-engineer --add-file $repo --add-file .github/AGENTS.md --a
 
 ### Why GPT-5 Mini
 
-i18n configuration, translation file management, and locale setup are mechanical, pattern-based tasks. String extraction and translation follows established patterns.
+i18n configuration, translation file management, and locale setup are
+mechanical, pattern-based tasks. String extraction and translation follows
+established patterns.
 
 ### Escalate to Claude Sonnet 4.5 When
 
@@ -105,4 +109,5 @@ Question: [specific i18n/localization question]
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

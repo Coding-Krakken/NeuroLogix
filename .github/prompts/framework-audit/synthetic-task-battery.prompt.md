@@ -1,13 +1,15 @@
 # Synthetic Task Battery
 
-> **Category:** Framework Audit
-> **File:** `framework-audit/synthetic-task-battery.prompt.md`
+> **Category:** Framework Audit **File:**
+> `framework-audit/synthetic-task-battery.prompt.md`
 
 ---
 
 ## Purpose
 
-Provide a comprehensive library of synthetic tasks to test the framework across different complexities, agent types, and workflows. Tasks are designed to validate routing, handoffs, quality gates, and agent coordination.
+Provide a comprehensive library of synthetic tasks to test the framework across
+different complexities, agent types, and workflows. Tasks are designed to
+validate routing, handoffs, quality gates, and agent coordination.
 
 ## When to Use
 
@@ -35,13 +37,15 @@ Each task includes:
 ### T-001: Fix Typo in README
 
 **Complexity:** Trivial  
-**Description:** Fix a typo in README.md (change "developement" to "development")  
+**Description:** Fix a typo in README.md (change "developement" to
+"development")  
 **Expected Chain:** Chief of Staff → Documentation Engineer → Quality Director  
 **Expected Handoffs:** 2  
 **Expected Duration:** 5 min  
 **Pass Criteria:** Typo fixed, committed, no quality gate failures  
 **Express Lane:** Yes (trivial change)  
-**Failure Modes:** Routing to wrong agent, quality gates fail on unrelated issues
+**Failure Modes:** Routing to wrong agent, quality gates fail on unrelated
+issues
 
 ### T-002: Update Changelog Entry
 
@@ -109,7 +113,8 @@ Each task includes:
 **Expected Chain:** Chief of Staff → Frontend Engineer → QA → Quality Director  
 **Expected Handoffs:** 3  
 **Expected Duration:** 12 min  
-**Pass Criteria:** Prop added, typed correctly, tests updated, no breaking changes  
+**Pass Criteria:** Prop added, typed correctly, tests updated, no breaking
+changes  
 **Express Lane:** No (requires testing)  
 **Failure Modes:** Breaking change, missing PropTypes, insufficient tests
 
@@ -127,7 +132,8 @@ Each task includes:
 ### T-009: Create Simple ADR
 
 **Complexity:** Simple  
-**Description:** Document decision to use React Hook Form (ADR already decided)  
+**Description:** Document decision to use React Hook Form (ADR already
+decided)  
 **Expected Chain:** Chief of Staff → Solution Architect → Quality Director  
 **Expected Handoffs:** 2  
 **Expected Duration:** 15 min  
@@ -139,7 +145,8 @@ Each task includes:
 
 **Complexity:** Simple  
 **Description:** Add new env var to .env.example and document usage  
-**Expected Chain:** Chief of Staff → Backend Engineer → Platform Engineer → Quality Director  
+**Expected Chain:** Chief of Staff → Backend Engineer → Platform Engineer →
+Quality Director  
 **Expected Handoffs:** 3  
 **Expected Duration:** 10 min  
 **Pass Criteria:** Env var documented, added to .env.example, not in code  
@@ -153,7 +160,8 @@ Each task includes:
 ### T-011: Implement UI Component
 
 **Complexity:** Medium  
-**Description:** Create new Button component with variants (primary, secondary, danger)  
+**Description:** Create new Button component with variants (primary, secondary,
+danger)  
 **Expected Chain:** Chief → Tech Lead → Frontend → QA → Quality Director  
 **Expected Handoffs:** 4  
 **Expected Duration:** 25 min  
@@ -165,10 +173,12 @@ Each task includes:
 
 **Complexity:** Medium  
 **Description:** Create GET /api/health endpoint returning system status  
-**Expected Chain:** Chief → Tech Lead → Backend → QA → Security → Quality Director  
+**Expected Chain:** Chief → Tech Lead → Backend → QA → Security → Quality
+Director  
 **Expected Handoffs:** 5  
 **Expected Duration:** 30 min  
-**Pass Criteria:** Endpoint works, tested, documented, no auth required (health check)  
+**Pass Criteria:** Endpoint works, tested, documented, no auth required (health
+check)  
 **Express Lane:** No (new API)  
 **Failure Modes:** Missing tests, wrong status codes, security issues
 
@@ -179,7 +189,8 @@ Each task includes:
 **Expected Chain:** Chief → Tech Lead → Engineer → QA → Quality Director  
 **Expected Handoffs:** 4  
 **Expected Duration:** 20 min  
-**Pass Criteria:** Logic extracted, all callers updated, tests pass, no regressions  
+**Pass Criteria:** Logic extracted, all callers updated, tests pass, no
+regressions  
 **Express Lane:** No (requires testing across callers)  
 **Failure Modes:** Breaking changes, missed callers, test failures
 
@@ -187,7 +198,8 @@ Each task includes:
 
 **Complexity:** Medium  
 **Description:** Update OpenGraph tags for product pages  
-**Expected Chain:** Chief → Solution Architect → Tech Lead → Frontend → QA → Quality Director  
+**Expected Chain:** Chief → Solution Architect → Tech Lead → Frontend → QA →
+Quality Director  
 **Expected Handoffs:** 5  
 **Expected Duration:** 30 min  
 **Pass Criteria:** OG tags correct, validated, no duplicates, tested  
@@ -213,32 +225,40 @@ Each task includes:
 
 **Complexity:** Complex  
 **Description:** Design and implement Redis caching for product catalog  
-**Expected Chain:** Chief → Solution Architect → Tech Lead → Backend → QA → Security → Performance → Quality Director  
+**Expected Chain:** Chief → Solution Architect → Tech Lead → Backend → QA →
+Security → Performance → Quality Director  
 **Expected Handoffs:** 7  
 **Expected Duration:** 50 min  
-**Pass Criteria:** ADR written, cache implemented, invalidation strategy, tested, performance improved  
+**Pass Criteria:** ADR written, cache implemented, invalidation strategy,
+tested, performance improved  
 **Express Lane:** No (architecture + implementation)  
-**Failure Modes:** Cache poisoning, stale data, no invalidation, performance regression
+**Failure Modes:** Cache poisoning, stale data, no invalidation, performance
+regression
 
 ### T-017: Security Audit
 
 **Complexity:** Complex  
 **Description:** Audit checkout flow for security vulnerabilities  
-**Expected Chain:** Chief → Security → Red Team → Backend → QA → Quality Director  
+**Expected Chain:** Chief → Security → Red Team → Backend → QA → Quality
+Director  
 **Expected Handoffs:** 5  
 **Expected Duration:** 45 min  
-**Pass Criteria:** Audit complete, vulnerabilities identified, remediation plan, no critical issues  
+**Pass Criteria:** Audit complete, vulnerabilities identified, remediation plan,
+no critical issues  
 **Express Lane:** No (security review)  
 **Failure Modes:** Missed vulnerabilities, no remediation plan, incomplete audit
 
 ### T-018: Implement Feature Flag
 
 **Complexity:** Complex  
-**Description:** Add feature flag system with <DEPLOYMENT_PLATFORM> Edge Config  
-**Expected Chain:** Chief → Solution Architect → Tech Lead → Platform → Backend → Frontend → QA → Quality Director  
+**Description:** Add feature flag system with <DEPLOYMENT_PLATFORM> Edge
+Config  
+**Expected Chain:** Chief → Solution Architect → Tech Lead → Platform → Backend
+→ Frontend → QA → Quality Director  
 **Expected Handoffs:** 7  
 **Expected Duration:** 60 min  
-**Pass Criteria:** ADR written, Edge Config integrated, flags work, tested, documented  
+**Pass Criteria:** ADR written, Edge Config integrated, flags work, tested,
+documented  
 **Express Lane:** No (architecture + cross-cutting)  
 **Failure Modes:** Flags don't toggle correctly, no rollback, breaking changes
 
@@ -246,10 +266,12 @@ Each task includes:
 
 **Complexity:** Complex  
 **Description:** Design migration to add new table for wishlists  
-**Expected Chain:** Chief → Solution Architect → Data Engineer → Backend → QA → Quality Director  
+**Expected Chain:** Chief → Solution Architect → Data Engineer → Backend → QA →
+Quality Director  
 **Expected Handoffs:** 5  
 **Expected Duration:** 50 min  
-**Pass Criteria:** Migration script, rollback script, tested on staging, no data loss  
+**Pass Criteria:** Migration script, rollback script, tested on staging, no data
+loss  
 **Express Lane:** No (data migration)  
 **Failure Modes:** Data loss, deadlocks, no rollback, breaking changes
 
@@ -257,10 +279,12 @@ Each task includes:
 
 **Complexity:** Complex  
 **Description:** Set up A/B test for product page layout  
-**Expected Chain:** Chief → Product Owner → Solution Architect → Tech Lead → Frontend → QA → Quality Director  
+**Expected Chain:** Chief → Product Owner → Solution Architect → Tech Lead →
+Frontend → QA → Quality Director  
 **Expected Handoffs:** 6  
 **Expected Duration:** 55 min  
-**Pass Criteria:** Test setup, variants implemented, analytics tracking, documented  
+**Pass Criteria:** Test setup, variants implemented, analytics tracking,
+documented  
 **Express Lane:** No (product + architecture + implementation)  
 **Failure Modes:** Biased test, no analytics, variants not equal traffic
 
@@ -294,7 +318,8 @@ Each task includes:
 ### THOROUGH Mode (30 tasks, 6 hours)
 
 - All 20 tasks above
-- 10 additional edge case tasks (deadlock scenarios, failure mode testing, stress tests)
+- 10 additional edge case tasks (deadlock scenarios, failure mode testing,
+  stress tests)
 
 **Coverage:** Comprehensive + edge cases  
 **Express Lane:** 8 of 30 (27%)  
@@ -309,10 +334,8 @@ For each task:
 ````markdown
 ### Executing Task T-XXX: [Task Name]
 
-**Started:** [timestamp]
-**Expected Duration:** [X min]
-**Expected Chain:** [agents]
-**Expected Handoffs:** [N]
+**Started:** [timestamp] **Expected Duration:** [X min] **Expected Chain:**
+[agents] **Expected Handoffs:** [N]
 
 **Dispatching to Chief of Staff:**
 
@@ -329,12 +352,9 @@ code chat -m 00-chief-of-staff --add-file $repo --add-file .github/AGENTS.md --a
 - Quality gates: [track]
 - Express lane used: [Yes/No]
 
-**Completed:** [timestamp]
-**Actual Duration:** [X min]
-**Actual Chain:** [agents]
-**Actual Handoffs:** [N]
-**Result:** [PASS/FAIL]
-**Notes:** [any deviations]
+**Completed:** [timestamp] **Actual Duration:** [X min] **Actual Chain:**
+[agents] **Actual Handoffs:** [N] **Result:** [PASS/FAIL] **Notes:** [any
+deviations]
 
 ```
 
@@ -346,4 +366,3 @@ During task execution, use:
 - **Concurrent Prompt:** `framework-audit/monitoring-rubric.prompt.md`
 - **Task:** Real-time monitoring and failure detection
 ```
-

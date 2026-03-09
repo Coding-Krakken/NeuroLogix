@@ -6,12 +6,7 @@
  * @module framework/dependency-graph
  */
 
-import type {
-  AgentId,
-  DependencyGraphNode,
-  DependencyGraphValidation,
-  Priority,
-} from "./types";
+import type { AgentId, DependencyGraphNode, DependencyGraphValidation, Priority } from './types';
 
 export interface DependencyGraphNodeInput {
   id: string;
@@ -48,7 +43,7 @@ export class DependencyGraphBuilder {
   }
 
   validate(nodes: DependencyGraphNode[]): DependencyGraphValidation {
-    const ids = new Set(nodes.map((node) => node.id));
+    const ids = new Set(nodes.map(node => node.id));
     for (const node of nodes) {
       for (const dependency of node.dependsOn) {
         if (!ids.has(dependency)) {
@@ -73,18 +68,18 @@ export class DependencyGraphBuilder {
 
   private normalize(inputs: DependencyGraphNodeInput[]): DependencyGraphNode[] {
     return [...inputs]
-      .map((input) => ({
+      .map(input => ({
         id: input.id,
         title: input.title,
         agent: input.agent,
         dependsOn: [...(input.dependsOn ?? [])],
-        priority: input.priority ?? "P2",
+        priority: input.priority ?? 'P2',
       }))
       .sort((left, right) => left.id.localeCompare(right.id));
   }
 
   private findCyclePath(nodes: DependencyGraphNode[]): string[] {
-    const byId = new Map(nodes.map((node) => [node.id, node] as const));
+    const byId = new Map(nodes.map(node => [node.id, node] as const));
     const visiting = new Set<string>();
     const visited = new Set<string>();
     const stack: string[] = [];
@@ -92,9 +87,7 @@ export class DependencyGraphBuilder {
     const dfs = (nodeId: string): string[] | undefined => {
       if (visiting.has(nodeId)) {
         const cycleStart = stack.indexOf(nodeId);
-        return cycleStart >= 0
-          ? [...stack.slice(cycleStart), nodeId]
-          : [nodeId, nodeId];
+        return cycleStart >= 0 ? [...stack.slice(cycleStart), nodeId] : [nodeId, nodeId];
       }
 
       if (visited.has(nodeId)) {
@@ -145,8 +138,8 @@ export class DependencyGraphBuilder {
 
     const waves: string[][] = [];
     let frontier = nodes
-      .filter((node) => (inDegree.get(node.id) ?? 0) === 0)
-      .map((node) => node.id)
+      .filter(node => (inDegree.get(node.id) ?? 0) === 0)
+      .map(node => node.id)
       .sort((left, right) => left.localeCompare(right));
 
     while (frontier.length > 0) {

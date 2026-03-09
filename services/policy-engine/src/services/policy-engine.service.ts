@@ -19,17 +19,24 @@ import {
   ApprovalQuerySchema,
   ViolationQuerySchema,
 } from '../types/index.js';
-import { ValidationError, AssetNotFoundError, InternalServerError, PolicyViolationError, generateId, logAuditEvent } from '@neurologix/core';
+import {
+  ValidationError,
+  AssetNotFoundError,
+  InternalServerError,
+  PolicyViolationError,
+  generateId,
+  logAuditEvent,
+} from '@neurologix/core';
 import logger from '@neurologix/core/logger';
 import { z } from 'zod';
 
 /**
  * Enterprise-grade Policy Engine Service
- * 
+ *
  * This service implements OPA/Rego-based policy evaluation with comprehensive
  * approval workflows, safety guardrails, and audit logging for industrial
  * control system environments.
- * 
+ *
  * Key Features:
  * - Policy document management with version control
  * - Real-time policy evaluation with caching
@@ -43,7 +50,8 @@ export class PolicyEngineService {
   private policies: Map<string, PolicyDocument> = new Map();
   private approvalRequests: Map<string, ApprovalRequest> = new Map();
   private violations: Map<string, PolicyViolation> = new Map();
-  private evaluationCache: Map<string, { result: PolicyEvaluationResult; expiresAt: Date }> = new Map();
+  private evaluationCache: Map<string, { result: PolicyEvaluationResult; expiresAt: Date }> =
+    new Map();
   private config: PolicyEngineConfig;
   private evaluationMetrics: {
     evaluationsLast24h: number;
@@ -67,7 +75,7 @@ export class PolicyEngineService {
 
     // Initialize with default safety policies
     this.initializeDefaultPolicies();
-    
+
     logger.info('Policy Engine Service initialized', {
       service: 'policy-engine',
       config: this.config,
@@ -77,7 +85,9 @@ export class PolicyEngineService {
   /**
    * Create a new policy document
    */
-  async createPolicy(policyData: Omit<PolicyDocument, 'id' | 'createdAt' | 'updatedAt'>): Promise<PolicyDocument> {
+  async createPolicy(
+    policyData: Omit<PolicyDocument, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<PolicyDocument> {
     try {
       const policy: PolicyDocument = PolicyDocumentSchema.parse({
         ...policyData,
@@ -105,17 +115,20 @@ export class PolicyEngineService {
 
       return policy;
     } catch (error) {
-      throw new ValidationError(
-        'Failed to create policy',
-        { policyData, error: error instanceof Error ? error.message : String(error) }
-      );
+      throw new ValidationError('Failed to create policy', {
+        policyData,
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 
   /**
    * Update an existing policy document
    */
-  async updatePolicy(policyId: string, updates: Partial<Omit<PolicyDocument, 'id' | 'createdAt'>>): Promise<PolicyDocument> {
+  async updatePolicy(
+    policyId: string,
+    updates: Partial<Omit<PolicyDocument, 'id' | 'createdAt'>>
+  ): Promise<PolicyDocument> {
     const existingPolicy = this.policies.get(policyId);
     if (!existingPolicy) {
       throw new AssetNotFoundError(policyId, { resource: 'policy' });
@@ -151,10 +164,11 @@ export class PolicyEngineService {
 
       return updatedPolicy;
     } catch (error) {
-      throw new ValidationError(
-        'Failed to update policy',
-        { policyId, updates, error: error instanceof Error ? error.message : String(error) }
-      );
+      throw new ValidationError('Failed to update policy', {
+        policyId,
+        updates,
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 
@@ -173,10 +187,10 @@ export class PolicyEngineService {
     );
 
     if (activeReferences.length > 0) {
-      throw new ValidationError(
-        'Cannot delete policy with active approval requests',
-        { policyId, activeReferences: activeReferences.length }
-      );
+      throw new ValidationError('Cannot delete policy with active approval requests', {
+        policyId,
+        activeReferences: activeReferences.length,
+      });
     }
 
     this.policies.delete(policyId);
@@ -222,15 +236,16 @@ export class PolicyEngineService {
       filteredPolicies = filteredPolicies.filter(p => p.priority === validatedQuery.priority);
     }
     if (validatedQuery.tags && validatedQuery.tags.length > 0) {
-      filteredPolicies = filteredPolicies.filter(p => 
+      filteredPolicies = filteredPolicies.filter(p =>
         validatedQuery.tags!.some(tag => p.metadata.tags.includes(tag))
       );
     }
     if (validatedQuery.search) {
       const searchTerm = validatedQuery.search.toLowerCase();
-      filteredPolicies = filteredPolicies.filter(p => 
-        p.name.toLowerCase().includes(searchTerm) ||
-        (p.description && p.description.toLowerCase().includes(searchTerm))
+      filteredPolicies = filteredPolicies.filter(
+        p =>
+          p.name.toLowerCase().includes(searchTerm) ||
+          (p.description && p.description.toLowerCase().includes(searchTerm))
       );
     }
 
@@ -386,15 +401,18 @@ export class PolicyEngineService {
         decision: overallDecision,
         policyMatches,
         overallReasoning: this.generateOverallReasoning(overallDecision, policyMatches),
-        approvalWorkflow: requiresApproval ? {
-          required: true,
-          approvers,
-          minimumApprovals: minApprovals,
-          emergencyOverrideEnabled,
-        } : undefined,
+        approvalWorkflow: requiresApproval
+          ? {
+              required: true,
+              approvers,
+              minimumApprovals: minApprovals,
+              emergencyOverrideEnabled,
+            }
+          : undefined,
         constraints: this.extractConstraints(policyMatches),
-        validUntil: this.config.cacheEnabled ? 
-          new Date(Date.now() + this.config.cacheTtlMinutes * 60 * 1000) : undefined,
+        validUntil: this.config.cacheEnabled
+          ? new Date(Date.now() + this.config.cacheTtlMinutes * 60 * 1000)
+          : undefined,
         evaluatedAt: new Date(),
       });
 
@@ -450,10 +468,10 @@ export class PolicyEngineService {
         severity: 'high',
       });
 
-      throw new InternalServerError(
-        'Policy evaluation failed',
-        { request: validatedRequest, error: error instanceof Error ? error.message : String(error) }
-      );
+      throw new InternalServerError('Policy evaluation failed', {
+        request: validatedRequest,
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 
@@ -465,26 +483,41 @@ export class PolicyEngineService {
     const violations = Array.from(this.violations.values());
     const approvals = Array.from(this.approvalRequests.values());
 
-    const policiesByCategory = policies.reduce((acc, policy) => {
-      acc[policy.category] = (acc[policy.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const policiesByCategory = policies.reduce(
+      (acc, policy) => {
+        acc[policy.category] = (acc[policy.category] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const policiesByStatus = policies.reduce((acc, policy) => {
-      acc[policy.status] = (acc[policy.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const policiesByStatus = policies.reduce(
+      (acc, policy) => {
+        acc[policy.status] = (acc[policy.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const violationsBySeverity = violations.reduce((acc, violation) => {
-      acc[violation.severity] = (acc[violation.severity] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const violationsBySeverity = violations.reduce(
+      (acc, violation) => {
+        acc[violation.severity] = (acc[violation.severity] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const cacheHitRate = this.evaluationMetrics.cacheHits + this.evaluationMetrics.cacheMisses > 0 ?
-      (this.evaluationMetrics.cacheHits / (this.evaluationMetrics.cacheHits + this.evaluationMetrics.cacheMisses)) * 100 : 0;
+    const cacheHitRate =
+      this.evaluationMetrics.cacheHits + this.evaluationMetrics.cacheMisses > 0
+        ? (this.evaluationMetrics.cacheHits /
+            (this.evaluationMetrics.cacheHits + this.evaluationMetrics.cacheMisses)) *
+          100
+        : 0;
 
-    const averageEvaluationTime = this.evaluationMetrics.evaluationsLast24h > 0 ?
-      this.evaluationMetrics.totalEvaluationTime / this.evaluationMetrics.evaluationsLast24h : 0;
+    const averageEvaluationTime =
+      this.evaluationMetrics.evaluationsLast24h > 0
+        ? this.evaluationMetrics.totalEvaluationTime / this.evaluationMetrics.evaluationsLast24h
+        : 0;
 
     return {
       totalPolicies: policies.length,
@@ -577,7 +610,7 @@ export class PolicyEngineService {
     if (!regoRules.includes('package ')) {
       throw new Error('Rego rules must include a package declaration');
     }
-    
+
     // Additional syntax checks could be added here
     // In a production environment, this would use the OPA Go library
     // or call out to an OPA service for proper validation
@@ -586,42 +619,46 @@ export class PolicyEngineService {
   private getApplicablePolicies(request: PolicyEvaluationRequest): PolicyDocument[] {
     return Array.from(this.policies.values()).filter(policy => {
       if (policy.status !== 'active') return false;
-      
+
       // Check if policy applies to the requested asset type
-      if (policy.metadata.applicableAssets.length > 0 && 
-          !policy.metadata.applicableAssets.includes('*')) {
+      if (
+        policy.metadata.applicableAssets.length > 0 &&
+        !policy.metadata.applicableAssets.includes('*')
+      ) {
         const assetType = this.extractAssetType(request.resource);
         if (!policy.metadata.applicableAssets.includes(assetType)) {
           return false;
         }
       }
-      
+
       // Check if policy has expired
       if (policy.metadata.expiresAt && policy.metadata.expiresAt < new Date()) {
         return false;
       }
-      
+
       return true;
     });
   }
 
   private async evaluatePolicy(
-    policy: PolicyDocument, 
+    policy: PolicyDocument,
     request: PolicyEvaluationRequest
   ): Promise<{ decision: 'allow' | 'deny' | 'approval_required'; reasoning: string }> {
     // In a production environment, this would use OPA for Rego evaluation
     // For now, we'll simulate policy evaluation based on the policy content
-    
+
     try {
       // Simulate Rego evaluation
-      if (policy.regoRules.includes('emergency_stop.override') && 
-          request.action === 'emergency_stop.override') {
+      if (
+        policy.regoRules.includes('emergency_stop.override') &&
+        request.action === 'emergency_stop.override'
+      ) {
         return {
           decision: policy.metadata.requiredApprovals > 0 ? 'approval_required' : 'deny',
-          reasoning: 'Emergency stop override requires special authorization'
+          reasoning: 'Emergency stop override requires special authorization',
         };
       }
-      
+
       // Check for approval_required pattern in Rego rules
       if (policy.regoRules.includes('approval_required')) {
         // More flexible pattern matching for different quote styles
@@ -631,35 +668,37 @@ export class PolicyEngineService {
           `input.action=="${request.action}"`,
           `input.action=='${request.action}'`,
         ];
-        
+
         if (actionPatterns.some(pattern => policy.regoRules.includes(pattern))) {
           return {
             decision: 'approval_required',
-            reasoning: `Action ${request.action} requires approval as per policy`
+            reasoning: `Action ${request.action} requires approval as per policy`,
           };
         }
       }
-      
-      if (policy.regoRules.includes('plc_interlocks') && 
-          request.context.plc_interlocks && 
-          Array.isArray(request.context.plc_interlocks) &&
-          request.context.plc_interlocks.some((interlock: any) => interlock.active)) {
+
+      if (
+        policy.regoRules.includes('plc_interlocks') &&
+        request.context.plc_interlocks &&
+        Array.isArray(request.context.plc_interlocks) &&
+        request.context.plc_interlocks.some((interlock: any) => interlock.active)
+      ) {
         return {
           decision: 'deny',
-          reasoning: 'PLC interlock is active - blocking action for safety'
+          reasoning: 'PLC interlock is active - blocking action for safety',
         };
       }
-      
+
       // Default allow for other cases
       return {
         decision: 'allow',
-        reasoning: `Policy ${policy.name} evaluated successfully - no restrictions found`
+        reasoning: `Policy ${policy.name} evaluated successfully - no restrictions found`,
       };
     } catch (error) {
       // If evaluation fails, default to deny for safety
       return {
         decision: 'deny',
-        reasoning: `Policy evaluation error: ${error instanceof Error ? error.message : String(error)}`
+        reasoning: `Policy evaluation error: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   }
@@ -670,7 +709,7 @@ export class PolicyEngineService {
   ): string {
     const denyMatches = policyMatches.filter(m => m.decision === 'deny');
     const approvalMatches = policyMatches.filter(m => m.decision === 'approval_required');
-    
+
     if (decision === 'deny') {
       const criticalDenies = denyMatches.filter(m => m.priority === 'critical');
       if (criticalDenies.length > 0) {
@@ -678,15 +717,17 @@ export class PolicyEngineService {
       }
       return `Request denied by policy evaluation: ${denyMatches[0]?.reasoning || 'Security restrictions apply'}`;
     }
-    
+
     if (decision === 'approval_required') {
       return `Request requires approval due to policy restrictions: ${approvalMatches.map(m => m.policyName).join(', ')}`;
     }
-    
+
     return 'Request approved - all applicable policies allow this action';
   }
 
-  private extractConstraints(policyMatches: PolicyEvaluationResult['policyMatches']): PolicyEvaluationResult['constraints'] {
+  private extractConstraints(
+    policyMatches: PolicyEvaluationResult['policyMatches']
+  ): PolicyEvaluationResult['constraints'] {
     // Extract constraints from policy evaluation results
     // This would be more sophisticated in a real implementation
     return [];
@@ -712,7 +753,7 @@ export class PolicyEngineService {
     policyMatches: PolicyEvaluationResult['policyMatches']
   ): Promise<void> {
     const denyMatches = policyMatches.filter(m => m.decision === 'deny');
-    
+
     for (const match of denyMatches) {
       const violation: PolicyViolation = PolicyViolationSchema.parse({
         id: generateId(),

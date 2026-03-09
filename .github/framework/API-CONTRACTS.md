@@ -9,7 +9,9 @@
 
 ## Overview
 
-This document defines the public interfaces for all framework components. These contracts are **immutable** once implemented. Breaking changes require a new major version.
+This document defines the public interfaces for all framework components. These
+contracts are **immutable** once implemented. Breaking changes require a new
+major version.
 
 ---
 
@@ -49,9 +51,9 @@ const task: Task = {
   status: 'pending',
   dispatchChain: [],
   dispatchDepth: 0,
-}
+};
 
-const decision = await RoutingOptimizer.determineRoute(task)
+const decision = await RoutingOptimizer.determineRoute(task);
 // {
 //   targetAgent: 'frontend-engineer',
 //   skipAgents: ['product-owner', 'solution-architect'],
@@ -73,7 +75,8 @@ const decision = await RoutingOptimizer.determineRoute(task)
 
 **Throws:**
 
-- `InvariantViolationError`: If decision violates invariants (e.g., bypasses Chief of Staff)
+- `InvariantViolationError`: If decision violates invariants (e.g., bypasses
+  Chief of Staff)
 
 **Invariants Checked:**
 
@@ -113,7 +116,7 @@ const decision = await RoutingOptimizer.determineRoute(task)
 **Example:**
 
 ```typescript
-await TaskScheduler.schedule([task1, task2, task3])
+await TaskScheduler.schedule([task1, task2, task3]);
 // Tasks execute in parallel, respecting priority and concurrency limit
 ```
 
@@ -141,7 +144,7 @@ await TaskScheduler.schedule([task1, task2, task3])
 **Example:**
 
 ```typescript
-await TaskScheduler.cancel('task-001')
+await TaskScheduler.cancel('task-001');
 ```
 
 ---
@@ -154,7 +157,8 @@ await TaskScheduler.cancel('task-001')
 
 #### Method: `runAll(taskId: string): Promise<QualityGateResults>`
 
-**Description:** Executes all quality gates in parallel (respecting dependencies).
+**Description:** Executes all quality gates in parallel (respecting
+dependencies).
 
 **Parameters:**
 
@@ -164,12 +168,12 @@ await TaskScheduler.cancel('task-001')
 
 ```typescript
 interface QualityGateResults {
-  taskId: string
-  results: QualityGateResult[]
-  passed: boolean // True if all blocking gates passed
-  duration: number // Total execution time (milliseconds)
-  parallelizationGain: number // Time saved vs sequential (milliseconds)
-  aborted: boolean // True if blocked by failed blocking gate
+  taskId: string;
+  results: QualityGateResult[];
+  passed: boolean; // True if all blocking gates passed
+  duration: number; // Total execution time (milliseconds)
+  parallelizationGain: number; // Time saved vs sequential (milliseconds)
+  aborted: boolean; // True if blocked by failed blocking gate
 }
 ```
 
@@ -187,7 +191,7 @@ interface QualityGateResults {
 **Example:**
 
 ```typescript
-const results = await ParallelQualityGates.runAll('task-001')
+const results = await ParallelQualityGates.runAll('task-001');
 // {
 //   taskId: 'task-001',
 //   results: [
@@ -220,7 +224,7 @@ const results = await ParallelQualityGates.runAll('task-001')
 **Example:**
 
 ```typescript
-const result = await ParallelQualityGates.runGate('G1', 'task-001')
+const result = await ParallelQualityGates.runGate('G1', 'task-001');
 // { gate: 'G1', passed: true, duration: 30000, errors: [] }
 ```
 
@@ -265,7 +269,7 @@ await Telemetry.track({
     type: 'Feature',
     scope: 'Small',
   },
-})
+});
 ```
 
 #### Method: `query(filter: TelemetryFilter): Promise<TelemetryEvent[]>`
@@ -278,12 +282,12 @@ await Telemetry.track({
 
 ```typescript
 interface TelemetryFilter {
-  taskId?: string
-  eventType?: TelemetryEventType
-  startTime?: Date
-  endTime?: Date
-  severity?: string
-  limit?: number // Default: 1000
+  taskId?: string;
+  eventType?: TelemetryEventType;
+  startTime?: Date;
+  endTime?: Date;
+  severity?: string;
+  limit?: number; // Default: 1000
 }
 ```
 
@@ -299,7 +303,7 @@ interface TelemetryFilter {
 const events = await Telemetry.query({
   taskId: 'task-001',
   eventType: 'routing.decision',
-})
+});
 // [{ id: 'evt-002', eventType: 'routing.decision', ... }]
 ```
 
@@ -312,33 +316,33 @@ const events = await Telemetry.query({
 ```typescript
 interface Metrics {
   tasks: {
-    created: number
-    completed: number
-    failed: number
-    aborted: number
-    inProgress: number
-  }
+    created: number;
+    completed: number;
+    failed: number;
+    aborted: number;
+    inProgress: number;
+  };
   duration: {
-    p50: number
-    p95: number
-    p99: number
-  }
+    p50: number;
+    p95: number;
+    p99: number;
+  };
   routing: {
-    expressLaneRate: number
-    bypassRate: number
-    fallbackRate: number
-  }
+    expressLaneRate: number;
+    bypassRate: number;
+    fallbackRate: number;
+  };
   gates: {
-    parallelizationGain: number
-    failureRate: number
-  }
+    parallelizationGain: number;
+    failureRate: number;
+  };
 }
 ```
 
 **Example:**
 
 ```typescript
-const metrics = await Telemetry.getMetrics()
+const metrics = await Telemetry.getMetrics();
 // { tasks: { created: 100, completed: 95, ... }, ... }
 ```
 
@@ -363,11 +367,11 @@ const metrics = await Telemetry.getMetrics()
 **Example:**
 
 ```typescript
-const repoStructure = await ContextCache.get('repo:structure:v1')
+const repoStructure = await ContextCache.get('repo:structure:v1');
 if (!repoStructure) {
   // Cache miss - load from disk
-  const structure = await loadRepoStructure()
-  await ContextCache.set('repo:structure:v1', structure, { ttl: 3600 })
+  const structure = await loadRepoStructure();
+  await ContextCache.set('repo:structure:v1', structure, { ttl: 3600 });
 }
 ```
 
@@ -383,8 +387,8 @@ if (!repoStructure) {
 
 ```typescript
 interface CacheOptions {
-  ttl?: number // Time-to-live in seconds (default: 3600)
-  tags?: string[] // For bulk invalidation
+  ttl?: number; // Time-to-live in seconds (default: 3600)
+  tags?: string[]; // For bulk invalidation
 }
 ```
 
@@ -400,7 +404,7 @@ interface CacheOptions {
 await ContextCache.set('repo:structure:v1', repoStructure, {
   ttl: 3600,
   tags: ['repo'],
-})
+});
 ```
 
 #### Method: `invalidate(key: string): Promise<void>`
@@ -416,7 +420,7 @@ await ContextCache.set('repo:structure:v1', repoStructure, {
 **Example:**
 
 ```typescript
-await ContextCache.invalidate('repo:structure:v1')
+await ContextCache.invalidate('repo:structure:v1');
 ```
 
 #### Method: `invalidateByTag(tag: string): Promise<void>`
@@ -433,7 +437,7 @@ await ContextCache.invalidate('repo:structure:v1')
 
 ```typescript
 // Invalidate all model-related cache entries
-await ContextCache.invalidateByTag('model')
+await ContextCache.invalidateByTag('model');
 ```
 
 #### Method: `stats(): Promise<CacheStats>`
@@ -444,18 +448,18 @@ await ContextCache.invalidateByTag('model')
 
 ```typescript
 interface CacheStats {
-  hits: number
-  misses: number
-  hitRate: number
-  size: number // Total bytes cached
-  entries: number // Number of cached items
+  hits: number;
+  misses: number;
+  hitRate: number;
+  size: number; // Total bytes cached
+  entries: number; // Number of cached items
 }
 ```
 
 **Example:**
 
 ```typescript
-const stats = await ContextCache.stats()
+const stats = await ContextCache.stats();
 // { hits: 1000, misses: 200, hitRate: 0.83, size: 50000000, entries: 50 }
 ```
 
@@ -478,9 +482,9 @@ const stats = await ContextCache.stats()
 
 ```typescript
 interface TaskOutcome {
-  success: boolean
-  route: AgentId[] // Agent chain used
-  duration: number // Total task duration (milliseconds)
+  success: boolean;
+  route: AgentId[]; // Agent chain used
+  duration: number; // Total task duration (milliseconds)
 }
 ```
 
@@ -493,7 +497,7 @@ await AgentLearning.learnFromTask(task, {
   success: true,
   route: ['00-chief-of-staff', 'frontend-engineer', 'quality-director'],
   duration: 900000, // 15 minutes
-})
+});
 ```
 
 #### Method: `getPattern(signature: string): Promise<TaskPattern | null>`
@@ -509,7 +513,7 @@ await AgentLearning.learnFromTask(task, {
 **Example:**
 
 ```typescript
-const pattern = await AgentLearning.getPattern('Feature:Small:search')
+const pattern = await AgentLearning.getPattern('Feature:Small:search');
 // {
 //   signature: 'Feature:Small:search',
 //   route: ['00-chief-of-staff', 'frontend-engineer', 'quality-director'],
@@ -521,23 +525,24 @@ const pattern = await AgentLearning.getPattern('Feature:Small:search')
 
 #### Method: `suggestRuleUpdates(): Promise<RuleSuggestion[]>`
 
-**Description:** Generates suggested routing rule updates based on learned patterns.
+**Description:** Generates suggested routing rule updates based on learned
+patterns.
 
 **Returns:** Promise<RuleSuggestion[]>
 
 ```typescript
 interface RuleSuggestion {
-  pattern: TaskPattern
-  suggestedRule: string // Human-readable rule description
-  confidence: number
-  rationale: string
+  pattern: TaskPattern;
+  suggestedRule: string; // Human-readable rule description
+  confidence: number;
+  rationale: string;
 }
 ```
 
 **Example:**
 
 ```typescript
-const suggestions = await AgentLearning.suggestRuleUpdates()
+const suggestions = await AgentLearning.suggestRuleUpdates();
 // [
 //   {
 //     pattern: { signature: 'Feature:Small:security', ... },
@@ -569,9 +574,9 @@ const suggestions = await AgentLearning.suggestRuleUpdates()
 
 ```typescript
 interface HandoffDelta {
-  added?: string[]
-  removed?: string[]
-  modified?: Record<string, unknown>
+  added?: string[];
+  removed?: string[];
+  modified?: Record<string, unknown>;
 }
 ```
 
@@ -586,10 +591,15 @@ interface HandoffDelta {
 **Example:**
 
 ```typescript
-const handoff = await HandoffManager.createHandoff('solution-architect', 'tech-lead', 'task-001', {
-  added: ['ADR-001 created', 'API contract defined'],
-  modified: { acceptanceCriteria: ['Updated criteria'] },
-})
+const handoff = await HandoffManager.createHandoff(
+  'solution-architect',
+  'tech-lead',
+  'task-001',
+  {
+    added: ['ADR-001 created', 'API contract defined'],
+    modified: { acceptanceCriteria: ['Updated criteria'] },
+  }
+);
 // Returns HandoffV2 if both agents support v2
 ```
 
@@ -617,7 +627,7 @@ const handoff = await HandoffManager.createHandoff('solution-architect', 'tech-l
 **Example:**
 
 ```typescript
-await HandoffManager.deliverHandoff(handoff)
+await HandoffManager.deliverHandoff(handoff);
 ```
 
 ---
@@ -628,8 +638,8 @@ All framework errors extend `FrameworkError`:
 
 ```typescript
 class FrameworkError extends Error {
-  code: string // Error code (e.g., 'ROUTING_FAILED')
-  details?: Record<string, unknown> // Additional context
+  code: string; // Error code (e.g., 'ROUTING_FAILED')
+  details?: Record<string, unknown>; // Additional context
 }
 ```
 
@@ -672,10 +682,10 @@ class FrameworkError extends Error {
 
 ```typescript
 // v1 (deprecated)
-await RoutingOptimizer.routeTask(task) // Old method name
+await RoutingOptimizer.routeTask(task); // Old method name
 
 // v2 (current)
-await RoutingOptimizer.determineRoute(task) // New method name
+await RoutingOptimizer.determineRoute(task); // New method name
 ```
 
 ---
@@ -694,18 +704,20 @@ All public methods must have:
 ```typescript
 describe('RoutingOptimizer.determineRoute', () => {
   it('should route small bug to frontend-engineer', async () => {
-    const task = createTask({ type: 'Bug', scope: 'Small' })
-    const decision = await RoutingOptimizer.determineRoute(task)
+    const task = createTask({ type: 'Bug', scope: 'Small' });
+    const decision = await RoutingOptimizer.determineRoute(task);
 
-    expect(decision.targetAgent).toBe('frontend-engineer')
-    expect(decision.expressLane).toBe(true)
-  })
+    expect(decision.targetAgent).toBe('frontend-engineer');
+    expect(decision.expressLane).toBe(true);
+  });
 
   it('should throw RoutingError if task is malformed', async () => {
-    const invalidTask = { id: 'task-001' } as Task
-    await expect(RoutingOptimizer.determineRoute(invalidTask)).rejects.toThrow('ROUTING_FAILED')
-  })
-})
+    const invalidTask = { id: 'task-001' } as Task;
+    await expect(RoutingOptimizer.determineRoute(invalidTask)).rejects.toThrow(
+      'ROUTING_FAILED'
+    );
+  });
+});
 ```
 
 ---

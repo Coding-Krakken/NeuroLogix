@@ -71,7 +71,9 @@ export const TwinValidationResultSchema = z.object({
 export type TwinValidationResult = z.infer<typeof TwinValidationResultSchema>;
 
 export const TwinQuerySchema = z.object({
-  assetType: z.enum(['plc', 'camera', 'sensor', 'conveyor', 'robot', 'dock', 'workstation']).optional(),
+  assetType: z
+    .enum(['plc', 'camera', 'sensor', 'conveyor', 'robot', 'dock', 'workstation'])
+    .optional(),
   status: z.enum(['online', 'offline', 'maintenance', 'error']).optional(),
   zone: z.string().optional(),
   search: z.string().optional(),

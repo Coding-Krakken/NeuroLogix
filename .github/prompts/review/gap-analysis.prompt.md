@@ -1,13 +1,14 @@
 # Gap Analysis
 
-> **Category:** Review
-> **File:** `review/gap-analysis.prompt.md`
+> **Category:** Review **File:** `review/gap-analysis.prompt.md`
 
 ---
 
 ## Purpose
 
-Identify gaps between the current state and the desired state: missing tests, incomplete features, documentation gaps, security holes, accessibility issues, and model drift.
+Identify gaps between the current state and the desired state: missing tests,
+incomplete features, documentation gaps, security holes, accessibility issues,
+and model drift.
 
 ## When to Use
 

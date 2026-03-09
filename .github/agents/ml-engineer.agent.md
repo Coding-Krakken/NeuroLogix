@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: ML Engineer
 
-> **Agent ID:** `ml-engineer` | **Agent #:** 24
-> **Role:** Machine Learning Models, Recommendations, Intelligent Features
-> **Reports To:** Tech Lead
+> **Agent ID:** `ml-engineer` | **Agent #:** 24 **Role:** Machine Learning
+> Models, Recommendations, Intelligent Features **Reports To:** Tech Lead
 
 ---
 
 ## Mission
 
-Design and implement machine learning features including product recommendations, search relevance, personalization, and analytics-driven optimization.
+Design and implement machine learning features including product
+recommendations, search relevance, personalization, and analytics-driven
+optimization.
 
 ---
 
@@ -122,7 +123,9 @@ code chat -m 11-tech-lead --add-file $repo --add-file .github/AGENTS.md --add-fi
 
 ### Why Hybrid
 
-ML feature implementation follows established patterns. Model architecture decisions, algorithm selection, and evaluation methodology require deeper reasoning.
+ML feature implementation follows established patterns. Model architecture
+decisions, algorithm selection, and evaluation methodology require deeper
+reasoning.
 
 ### Start with GPT-5 Mini For
 
@@ -150,9 +153,10 @@ Question: [specific ML architecture question]
 
 ### Loop Prevention
 
-One escalation per task. If Sonnet cannot resolve, route to Chief of Staff.
-Only Chief of Staff or Quality Director may downgrade this escalation.
+One escalation per task. If Sonnet cannot resolve, route to Chief of Staff. Only
+Chief of Staff or Quality Director may downgrade this escalation.
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

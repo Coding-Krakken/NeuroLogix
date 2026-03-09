@@ -1,13 +1,14 @@
 # Framework Audit Final Report
 
-> **Category:** Framework Audit
-> **File:** `framework-audit/final-report.prompt.md`
+> **Category:** Framework Audit **File:**
+> `framework-audit/final-report.prompt.md`
 
 ---
 
 ## Purpose
 
-Generate comprehensive framework audit report with findings, remediation plan, and appendices. Provide actionable recommendations for framework improvement.
+Generate comprehensive framework audit report with findings, remediation plan,
+and appendices. Provide actionable recommendations for framework improvement.
 
 ## When to Use
 
@@ -27,10 +28,8 @@ Generate comprehensive framework audit report with findings, remediation plan, a
 ```markdown
 # Framework Audit Report
 
-**Date:** [YYYY-MM-DD]
-**Audit Mode:** [FAST|STANDARD|THOROUGH]
-**Auditor:** Framework Auditor (Agent #90)
-**Overall Grade:** [A|B|C|D|F]
+**Date:** [YYYY-MM-DD] **Audit Mode:** [FAST|STANDARD|THOROUGH] **Auditor:**
+Framework Auditor (Agent #90) **Overall Grade:** [A|B|C|D|F]
 
 ---
 
@@ -88,7 +87,8 @@ Generate comprehensive framework audit report with findings, remediation plan, a
 **Evidence:**
 
 - Tasks T-001, T-002, T-003, T-006 used express lane
-- Tasks T-007, T-008, T-009, T-011, T-012, T-013, T-014, T-016, T-017 did not qualify
+- Tasks T-007, T-008, T-009, T-011, T-012, T-013, T-014, T-016, T-017 did not
+  qualify
 - Routing confidence scores: T-007 (75%), T-008 (68%), T-009 (82%)
 
 **Recommendation:**
@@ -231,20 +231,20 @@ None
 
 ### Agent Utilization
 
-| Agent                  | Tasks | Handoffs | Avg Time | Notes                |
-| ---------------------- | ----- | -------- | -------- | -------------------- |
-| Chief of Staff         | 12    | 12       | 2 min    | All tasks start here |
-| Tech Lead              | 8     | 8        | 5 min    | Planning phase       |
-| Frontend Engineer      | 4     | 4        | 18 min   | React/<WEB_FRAMEWORK> work   |
-| Backend Engineer       | 4     | 4        | 20 min   | API routes           |
-| QA Test Engineer       | 12    | 12       | 8 min    | All tasks tested     |
-| Security Engineer      | 3     | 3        | 15 min   | Security reviews     |
-| Documentation Engineer | 2     | 2        | 4 min    | Docs updates         |
-| Solution Architect     | 3     | 3        | 20 min   | Design work          |
-| Quality Director       | 12    | 12       | 3 min    | Final validation     |
-| Performance Engineer   | 1     | 1        | 10 min   | Perf review          |
-| Red Team               | 1     | 1        | 15 min   | Security testing     |
-| Platform Engineer      | 2     | 2        | 12 min   | Infrastructure       |
+| Agent                  | Tasks | Handoffs | Avg Time | Notes                      |
+| ---------------------- | ----- | -------- | -------- | -------------------------- |
+| Chief of Staff         | 12    | 12       | 2 min    | All tasks start here       |
+| Tech Lead              | 8     | 8        | 5 min    | Planning phase             |
+| Frontend Engineer      | 4     | 4        | 18 min   | React/<WEB_FRAMEWORK> work |
+| Backend Engineer       | 4     | 4        | 20 min   | API routes                 |
+| QA Test Engineer       | 12    | 12       | 8 min    | All tasks tested           |
+| Security Engineer      | 3     | 3        | 15 min   | Security reviews           |
+| Documentation Engineer | 2     | 2        | 4 min    | Docs updates               |
+| Solution Architect     | 3     | 3        | 20 min   | Design work                |
+| Quality Director       | 12    | 12       | 3 min    | Final validation           |
+| Performance Engineer   | 1     | 1        | 10 min   | Perf review                |
+| Red Team               | 1     | 1        | 15 min   | Security testing           |
+| Platform Engineer      | 2     | 2        | 12 min   | Infrastructure             |
 
 **Total Agents Used:** 12 of 27 (44%)
 
@@ -320,7 +320,8 @@ None
 ---
 
 **Report Generated:** 2026-02-25T18:45:00  
-**Next Steps:** Review with Chief of Staff, dispatch remediation tasks autonomously
+**Next Steps:** Review with Chief of Staff, dispatch remediation tasks
+autonomously
 ```
 
 ---
@@ -428,5 +429,5 @@ After report generation, proceed to:
 
 - **Next Prompt:** `framework-audit/remediation-dispatch.prompt.md`
 - **Input:** Final report, recommendations list
-- **Task:** Dispatch remediation tasks autonomously using priority order and deterministic routing
-
+- **Task:** Dispatch remediation tasks autonomously using priority order and
+  deterministic routing

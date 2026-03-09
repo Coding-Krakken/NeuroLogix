@@ -1,19 +1,19 @@
-import { 
-  Capability, 
+import {
+  Capability,
   CapabilityInstallRequest,
   CapabilityUpdateRequest,
   CapabilityQuery,
   CapabilityQuerySchema,
   CapabilityRegistryResponse,
   CapabilityHealth,
-  RegistryStats
+  RegistryStats,
 } from '../types/index.js';
 
 // Simple UUID generator for testing
 function generateId(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -31,7 +31,7 @@ function logAuditEvent(event: {
 
 /**
  * Capability Registry Service
- * 
+ *
  * Enterprise-grade capability management with full lifecycle support,
  * security scanning, health monitoring, and dependency resolution.
  */
@@ -45,7 +45,7 @@ export class CapabilityRegistryService {
   async listCapabilities(query: CapabilityQuery): Promise<CapabilityRegistryResponse> {
     // Parse and validate query with defaults
     const validatedQuery = CapabilityQuerySchema.parse(query);
-    
+
     let filtered = Array.from(this.capabilities.values());
 
     // Apply filters
@@ -60,10 +60,11 @@ export class CapabilityRegistryService {
     }
     if (validatedQuery.search) {
       const searchLower = validatedQuery.search.toLowerCase();
-      filtered = filtered.filter(cap => 
-        cap.name.toLowerCase().includes(searchLower) ||
-        cap.displayName.toLowerCase().includes(searchLower) ||
-        cap.description.toLowerCase().includes(searchLower)
+      filtered = filtered.filter(
+        cap =>
+          cap.name.toLowerCase().includes(searchLower) ||
+          cap.displayName.toLowerCase().includes(searchLower) ||
+          cap.description.toLowerCase().includes(searchLower)
       );
     }
 
@@ -92,7 +93,10 @@ export class CapabilityRegistryService {
 
     // Apply pagination
     const total = filtered.length;
-    const paginatedResults = filtered.slice(validatedQuery.offset, validatedQuery.offset + validatedQuery.limit);
+    const paginatedResults = filtered.slice(
+      validatedQuery.offset,
+      validatedQuery.offset + validatedQuery.limit
+    );
 
     return {
       capabilities: paginatedResults,
@@ -115,9 +119,11 @@ export class CapabilityRegistryService {
    */
   async installCapability(request: CapabilityInstallRequest): Promise<Capability> {
     // Validate installation request
-    if (Array.from(this.capabilities.values()).some(cap => 
-      cap.name === request.name && !request.forceUpdate
-    )) {
+    if (
+      Array.from(this.capabilities.values()).some(
+        cap => cap.name === request.name && !request.forceUpdate
+      )
+    ) {
       throw new Error(`Capability ${request.name} is already installed`);
     }
 
@@ -175,7 +181,8 @@ export class CapabilityRegistryService {
       version: request.version,
       currentConfig: request.configuration ?? capability.currentConfig,
       lastUpdated: new Date(),
-      status: request.restartRequired && capability.status === 'enabled' ? 'updating' : capability.status,
+      status:
+        request.restartRequired && capability.status === 'enabled' ? 'updating' : capability.status,
     };
 
     this.capabilities.set(id, updatedCapability);
@@ -284,7 +291,9 @@ export class CapabilityRegistryService {
     );
 
     if (dependents.length > 0) {
-      throw new Error(`Cannot uninstall ${capability.name}. It is required by: ${dependents.map(d => d.name).join(', ')}`);
+      throw new Error(
+        `Cannot uninstall ${capability.name}. It is required by: ${dependents.map(d => d.name).join(', ')}`
+      );
     }
 
     // Remove capability
@@ -348,7 +357,7 @@ export class CapabilityRegistryService {
    */
   async getRegistryStats(): Promise<RegistryStats> {
     const capabilities = Array.from(this.capabilities.values());
-    
+
     const stats: RegistryStats = {
       total: capabilities.length,
       enabled: capabilities.filter(c => c.status === 'enabled').length,
@@ -381,8 +390,8 @@ export class CapabilityRegistryService {
     for (const dependency of capability.dependencies) {
       if (!dependency.required) continue;
 
-      const dependentCapability = Array.from(this.capabilities.values()).find(cap =>
-        cap.name === dependency.name && cap.status === 'enabled'
+      const dependentCapability = Array.from(this.capabilities.values()).find(
+        cap => cap.name === dependency.name && cap.status === 'enabled'
       );
 
       if (!dependentCapability) {
@@ -394,7 +403,9 @@ export class CapabilityRegistryService {
       const [depMajor] = dependentCapability.version.split('.').map(Number);
 
       if (reqMajor !== depMajor) {
-        throw new Error(`Dependency version mismatch: ${dependency.name} requires v${dependency.version}, but v${dependentCapability.version} is installed`);
+        throw new Error(
+          `Dependency version mismatch: ${dependency.name} requires v${dependency.version}, but v${dependentCapability.version} is installed`
+        );
       }
     }
   }

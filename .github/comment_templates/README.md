@@ -1,6 +1,7 @@
 # Comment Templates README
 
-This directory contains standardized comment templates used by the SubZero agentic framework for GitHub-native handoffs and reviews.
+This directory contains standardized comment templates used by the SubZero
+agentic framework for GitHub-native handoffs and reviews.
 
 ## Purpose
 
@@ -18,11 +19,13 @@ These templates ensure:
 **Usage:** Agent-to-agent work handoffs
 
 **When to use:**
+
 - After completing a unit of work
 - Before dispatching to the next agent in the workflow
 - When blocked and escalating
 
 **Required fields:**
+
 - Agent name
 - Work item (Issue/PR)
 - Status (Done/Partial/Blocked)
@@ -35,18 +38,21 @@ These templates ensure:
 - Next actions checklist
 - Links (comment URL, CI, docs)
 
-**Template variables:** `{{AGENT_NAME}}`, `{{ISSUE_NUMBER}}`, `{{PR_NUMBER}}`, `{{STATUS}}`, etc.
+**Template variables:** `{{AGENT_NAME}}`, `{{ISSUE_NUMBER}}`, `{{PR_NUMBER}}`,
+`{{STATUS}}`, etc.
 
 ### 2. PR Review Template (`pr_review.md`)
 
 **Usage:** Agent-generated pull request reviews
 
 **When to use:**
+
 - Quality Director final review
 - Security Engineer review
 - Any agent performing PR review
 
 **Sections:**
+
 - Executive summary
 - Scope review
 - Code quality assessment
@@ -60,18 +66,21 @@ These templates ensure:
 - Approval checklist
 - Final decision
 
-**Template variables:** `{{REVIEWER_AGENT}}`, `{{PR_NUMBER}}`, `{{DECISION}}`, etc.
+**Template variables:** `{{REVIEWER_AGENT}}`, `{{PR_NUMBER}}`, `{{DECISION}}`,
+etc.
 
 ### 3. Issue Triage Template (`issue_triage.md`)
 
 **Usage:** Initial issue classification and routing
 
 **When to use:**
+
 - New issue created
 - Issue needs re-triage
 - Chief of Staff initial assessment
 
 **Sections:**
+
 - Initial assessment (validity, clarity, completeness)
 - Classification (priority, severity, scope, component)
 - Impact analysis (user and business impact)
@@ -83,7 +92,8 @@ These templates ensure:
 - Related issues
 - Triage decision
 
-**Template variables:** `{{TRIAGER_AGENT}}`, `{{ISSUE_NUMBER}}`, `{{DECISION}}`, etc.
+**Template variables:** `{{TRIAGER_AGENT}}`, `{{ISSUE_NUMBER}}`, `{{DECISION}}`,
+etc.
 
 ## Template Format
 
@@ -96,9 +106,9 @@ All templates use a hybrid Markdown + Mustache variable syntax:
 ## Usage in Code
 
 ```typescript
-import { CommentTemplateService } from '../framework/comment-template-service'
+import { CommentTemplateService } from '../framework/comment-template-service';
 
-const templateService = new CommentTemplateService()
+const templateService = new CommentTemplateService();
 
 // Load and render handoff template
 const handoffComment = await templateService.render('handoff', {
@@ -107,10 +117,10 @@ const handoffComment = await templateService.render('handoff', {
   PR_NUMBER: 123,
   STATUS: 'Done',
   // ... other variables
-})
+});
 
 // Post to GitHub
-await githubClient.postComment(42, handoffComment)
+await githubClient.postComment(42, handoffComment);
 ```
 
 ## Validation
@@ -121,7 +131,8 @@ The `CommentTemplateService` validates that:
 2. All required sections are present in the rendered output
 3. Template syntax is valid
 
-Missing required fields will cause the render to fail with a clear error message.
+Missing required fields will cause the render to fail with a clear error
+message.
 
 ## Adding New Templates
 
@@ -135,7 +146,8 @@ To add a new template:
 
 ## Template Versioning
 
-Templates are versioned alongside the framework. Breaking changes to template structure:
+Templates are versioned alongside the framework. Breaking changes to template
+structure:
 
 - Require a major version bump
 - Must include migration guide
@@ -145,7 +157,7 @@ Templates are versioned alongside the framework. Breaking changes to template st
 
 1. **Always use templates:** Never post freeform comments for handoffs/reviews
 2. **Fill all sections:** Use "N/A" if a section doesn't apply
-3. **Validate before posting:** Use `CommentTemplateService.validate()` 
+3. **Validate before posting:** Use `CommentTemplateService.validate()`
 4. **Keep templates DRY:** Extract common sections if duplication occurs
 5. **Version control:** All template changes go through PR review
 

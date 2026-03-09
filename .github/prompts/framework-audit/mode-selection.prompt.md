@@ -1,13 +1,14 @@
 # Framework Audit Mode Selection
 
-> **Category:** Framework Audit
-> **File:** `framework-audit/mode-selection.prompt.md`
+> **Category:** Framework Audit **File:**
+> `framework-audit/mode-selection.prompt.md`
 
 ---
 
 ## Purpose
 
-Select the appropriate audit mode (FAST, STANDARD, or THOROUGH) autonomously based on available context, constraints, and audit goals.
+Select the appropriate audit mode (FAST, STANDARD, or THOROUGH) autonomously
+based on available context, constraints, and audit goals.
 
 ## When to Use
 
@@ -42,8 +43,9 @@ Select the appropriate audit mode (FAST, STANDARD, or THOROUGH) autonomously bas
 
 ### 1. Gather Context Automatically
 
-Derive context from repository evidence and active task context first.
-If context is incomplete, proceed with deterministic defaults instead of pausing for user choice.
+Derive context from repository evidence and active task context first. If
+context is incomplete, proceed with deterministic defaults instead of pausing
+for user choice.
 
 ### 2. Select Mode Based on Context
 
@@ -73,7 +75,8 @@ If context is incomplete, proceed with deterministic defaults instead of pausing
 - Default to **STANDARD** when constraints are unclear.
 - Use **FAST** for explicit short-window validation.
 - Use **THOROUGH** for explicit deep-audit context or major framework changes.
-- Do not ask the user to choose mode unless a hard external constraint must be provided.
+- Do not ask the user to choose mode unless a hard external constraint must be
+  provided.
 
 ### 4. Record Selection
 
@@ -87,7 +90,8 @@ Document the selection with rationale and evidence used.
 ## Failure Cases
 
 - Context uncertain → Select STANDARD as safe default
-- Explicit custom constraint → Map to closest supported mode and document rationale
+- Explicit custom constraint → Map to closest supported mode and document
+  rationale
 - Explicit runtime limit <30 min → Select FAST and limit scope deterministically
 
 ## Evidence Expectations
@@ -105,7 +109,10 @@ Document the selection with rationale and evidence used.
 
 **Selected Mode:** STANDARD
 
-**Rationale:** User has 2 hours available, this is a weekly audit before release v1.5.0, and there have been minor framework changes (handoff protocol v2 implemented in Phase 2). STANDARD mode provides comprehensive coverage of all agent types and all 12 metrics without the time commitment of THOROUGH mode.
+**Rationale:** User has 2 hours available, this is a weekly audit before release
+v1.5.0, and there have been minor framework changes (handoff protocol v2
+implemented in Phase 2). STANDARD mode provides comprehensive coverage of all
+agent types and all 12 metrics without the time commitment of THOROUGH mode.
 
 **Expected Duration:** 2 hours
 

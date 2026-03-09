@@ -1,5 +1,5 @@
-import { WorkflowTelemetry } from "../workflow-telemetry.js";
-import { normalizeLifecycle } from "./normalize-lifecycle.js";
+import { WorkflowTelemetry } from '../workflow-telemetry.js';
+import { normalizeLifecycle } from './normalize-lifecycle.js';
 
 export interface FrameworkAuditOptions {
   taskId?: string;
@@ -13,10 +13,10 @@ export interface FrameworkAuditResult {
 }
 
 export const runFrameworkAudit = (
-  options: FrameworkAuditOptions = {},
+  options: FrameworkAuditOptions = {}
 ): Promise<FrameworkAuditResult> => {
-  const taskId = options.taskId ?? "framework-audit";
-  const lifecycle = normalizeLifecycle(options.lifecycle ?? "candidate");
+  const taskId = options.taskId ?? 'framework-audit';
+  const lifecycle = normalizeLifecycle(options.lifecycle ?? 'candidate');
 
   const telemetry = new WorkflowTelemetry();
   telemetry.markTaskStart(taskId);

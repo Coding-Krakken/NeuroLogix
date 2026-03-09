@@ -6,27 +6,27 @@ Closes #
 
 ## Work Item Metadata
 
-- Work Item Type: 
+- Work Item Type:
 - Severity: S
 - Priority: P
-- Risk: 
+- Risk:
 - Blast Radius:
-- Component Area: 
-- Deployment Surface: 
-- Rollout Method: 
-- Data Sensitivity: 
+- Component Area:
+- Deployment Surface:
+- Rollout Method:
+- Data Sensitivity:
 
 ## Core-3 Governance Mapping
 
-- Orchestrator Owner: 
-- Implementer Owner: 
-- Assurance Owner: 
-- Specialist Escalations Used (if any): 
+- Orchestrator Owner:
+- Implementer Owner:
+- Assurance Owner:
+- Specialist Escalations Used (if any):
 - Independent Assurance for high/critical confirmed: yes/no
 
 ## Changes Summary
 
-- 
+-
 
 ## Risk Assessment
 
@@ -197,20 +197,19 @@ Closes #
 **Status:** Done/Partial/Blocked
 
 **Scope Completed:**
-- 
 
-**Key Decisions:**
-- 
+- **Key Decisions:**
 
-**Next Actions:**
-- [ ] 
+- **Next Actions:**
+
+- [ ]
 
 **Risks/Follow-ups:**
-- 
 
-**Links:**
-- Commit: 
-- CI Run: 
+- **Links:**
+
+- Commit:
+- CI Run:
 
 ---
 

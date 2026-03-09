@@ -1,10 +1,5 @@
 {
-  "removeDirectories": [
-    ".github/.handoffs",
-    ".github/issue-bodies",
-    ".github/pr-bodies",
-    ".github/prompts_original"
-  ],
+  "removeDirectories": [".github/.handoffs", ".github/issue-bodies", ".github/pr-bodies", ".github/prompts_original"],
   "removeFileGlobs": [
     ".github/.system-state/**/*issue*.*",
     ".github/.system-state/**/*fullstack*.*",
@@ -14,24 +9,10 @@
     ".github/DECISIONS/ADR-*issue-*.*",
     ".github/DECISIONS/ADR-*hybrid-*.*"
   ],
-  "removeFileRegex": [
-    "(?i)^\\.github/.+/(issue[-_ ]?[0-9]+|issue[0-9]+|pr[-_ ]?[0-9]+).+",
-    "(?i)^\\.github/.+/handoff-\\d{8}-.+\\.md$"
-  ],
+  "removeFileRegex": ["(?i)^\\.github/.+/(issue[-_ ]?[0-9]+|issue[0-9]+|pr[-_ ]?[0-9]+).+", "(?i)^\\.github/.+/handoff-\\d{8}-.+\\.md$"],
   "scrub": {
-    "includeFileGlobs": [
-      "CHANGELOG.md",
-      ".github/**/*.md",
-      ".github/**/*.yaml",
-      ".github/**/*.yml"
-    ],
-    "excludeFileGlobs": [
-      ".github/.handoffs/**",
-      ".github/issue-bodies/**",
-      ".github/pr-bodies/**",
-      ".github/prompts_original/**",
-      ".github/framework/node_modules/**"
-    ],
+    "includeFileGlobs": ["CHANGELOG.md", ".github/**/*.md", ".github/**/*.yaml", ".github/**/*.yml"],
+    "excludeFileGlobs": [".github/.handoffs/**", ".github/issue-bodies/**", ".github/pr-bodies/**", ".github/prompts_original/**", ".github/framework/node_modules/**"],
     "replacements": [
       {
         "pattern": "(?i)<APPLICATION_NAME>",
@@ -86,4 +67,3 @@
     ]
   }
 }
-

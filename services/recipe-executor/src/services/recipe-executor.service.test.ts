@@ -7,15 +7,15 @@ expect.extend({
     if (pass) {
       return {
         message: () => `expected ${received} not to be one of ${expected.join(', ')}`,
-        pass: true
+        pass: true,
       };
     } else {
       return {
         message: () => `expected ${received} to be one of ${expected.join(', ')}`,
-        pass: false
+        pass: false,
       };
     }
-  }
+  },
 });
 
 import { RecipeExecutorService } from '../services/recipe-executor.service';
@@ -26,7 +26,7 @@ import {
   RecipeExecutionStatus,
   StepExecutionStatus,
   RecipeStepType,
-  SafetyCheckType
+  SafetyCheckType,
 } from '../types/index';
 
 // Mock the logger to avoid console output during tests
@@ -35,8 +35,8 @@ vi.mock('@neurologix/core/logger', () => ({
     info: vi.fn(),
     error: vi.fn(),
     warn: vi.fn(),
-    debug: vi.fn()
-  }
+    debug: vi.fn(),
+  },
 }));
 
 describe('RecipeExecutorService', () => {
@@ -45,7 +45,7 @@ describe('RecipeExecutorService', () => {
 
   beforeEach(() => {
     service = new RecipeExecutorService();
-    
+
     mockRecipe = {
       name: 'Test Recipe',
       description: 'A test recipe for validation',
@@ -75,7 +75,7 @@ describe('RecipeExecutorService', () => {
           safetyChecks: [SafetyCheckType.PLC_INTERLOCK],
           requiredResources: ['plc-1'],
           tags: ['initialization'],
-          metadata: {}
+          metadata: {},
         },
         {
           id: '550e8400-e29b-41d4-a716-446655440001',
@@ -93,8 +93,8 @@ describe('RecipeExecutorService', () => {
           rollbackCommand: 'stop_conveyor',
           rollbackTimeout: 2000,
           tags: ['conveyor'],
-          metadata: {}
-        }
+          metadata: {},
+        },
       ],
       dependencies: [],
       requiredResources: ['plc-1', 'conveyor-1'],
@@ -102,14 +102,14 @@ describe('RecipeExecutorService', () => {
       preconditions: ['system_ready'],
       postconditions: ['conveyor_running'],
       author: 'test-user',
-      metadata: {}
+      metadata: {},
     };
   });
 
   describe('Recipe Management', () => {
     it('should create a new recipe successfully', async () => {
       const recipe = await service.createRecipe(mockRecipe);
-      
+
       expect(recipe.id).toBeDefined();
       expect(recipe.name).toBe(mockRecipe.name);
       expect(recipe.version).toBe(mockRecipe.version);
@@ -120,50 +120,54 @@ describe('RecipeExecutorService', () => {
 
     it('should reject invalid recipe data', async () => {
       const invalidRecipe = { ...mockRecipe, name: '' };
-      
+
       await expect(service.createRecipe(invalidRecipe)).rejects.toThrow('Recipe name is required');
     });
 
     it('should get recipe by ID', async () => {
       const createdRecipe = await service.createRecipe(mockRecipe);
       const retrievedRecipe = await service.getRecipe(createdRecipe.id);
-      
+
       expect(retrievedRecipe.id).toBe(createdRecipe.id);
       expect(retrievedRecipe.name).toBe(createdRecipe.name);
     });
 
     it('should throw error for non-existent recipe', async () => {
-      await expect(service.getRecipe('non-existent-id')).rejects.toThrow('Asset \'Recipe\' not found');
+      await expect(service.getRecipe('non-existent-id')).rejects.toThrow(
+        "Asset 'Recipe' not found"
+      );
     });
 
     it('should update an existing recipe', async () => {
       const createdRecipe = await service.createRecipe(mockRecipe);
-      
+
       const updates = {
         name: 'Updated Recipe Name',
         description: 'Updated description',
-        version: '1.1.0'
+        version: '1.1.0',
       };
-      
+
       const updatedRecipe = await service.updateRecipe(createdRecipe.id, updates);
-      
+
       expect(updatedRecipe.name).toBe(updates.name);
       expect(updatedRecipe.description).toBe(updates.description);
       expect(updatedRecipe.version).toBe(updates.version);
-      expect(updatedRecipe.updatedAt.getTime()).toBeGreaterThanOrEqual(createdRecipe.updatedAt.getTime());
+      expect(updatedRecipe.updatedAt.getTime()).toBeGreaterThanOrEqual(
+        createdRecipe.updatedAt.getTime()
+      );
     });
 
     it('should delete a recipe', async () => {
       const createdRecipe = await service.createRecipe(mockRecipe);
-      
+
       await service.deleteRecipe(createdRecipe.id);
-      
-      await expect(service.getRecipe(createdRecipe.id)).rejects.toThrow('Asset \'Recipe\' not found');
+
+      await expect(service.getRecipe(createdRecipe.id)).rejects.toThrow("Asset 'Recipe' not found");
     });
 
     it('should prevent deletion of recipe with active executions', async () => {
       const createdRecipe = await service.createRecipe(mockRecipe);
-      
+
       // Create an active execution
       const request: RecipeExecutionRequest = {
         recipeId: createdRecipe.id,
@@ -174,18 +178,20 @@ describe('RecipeExecutorService', () => {
         rollbackOnFailure: true,
         dryRun: false,
         tags: [],
-        metadata: {}
+        metadata: {},
       };
-      
+
       await service.executeRecipe(request);
-      
-      await expect(service.deleteRecipe(createdRecipe.id)).rejects.toThrow('Cannot delete recipe with active executions');
+
+      await expect(service.deleteRecipe(createdRecipe.id)).rejects.toThrow(
+        'Cannot delete recipe with active executions'
+      );
     });
   });
 
   describe('Recipe Execution', () => {
     let testRecipe: Recipe;
-    
+
     beforeEach(async () => {
       testRecipe = await service.createRecipe(mockRecipe);
     });
@@ -201,17 +207,20 @@ describe('RecipeExecutorService', () => {
         dryRun: false,
         reason: 'Test execution',
         tags: ['test'],
-        metadata: { testRun: true }
+        metadata: { testRun: true },
       };
 
       const execution = await service.executeRecipe(request);
-      
+
       expect(execution.id).toBeDefined();
       expect(execution.recipeId).toBe(testRecipe.id);
       expect(execution.recipeName).toBe(testRecipe.name);
       expect(execution.recipeVersion).toBe(testRecipe.version);
       expect(execution.executedBy).toBe(request.executedBy);
-      expect(execution.status).toBeOneOf([RecipeExecutionStatus.PENDING, RecipeExecutionStatus.EXECUTING]);
+      expect(execution.status).toBeOneOf([
+        RecipeExecutionStatus.PENDING,
+        RecipeExecutionStatus.EXECUTING,
+      ]);
       expect(execution.totalSteps).toBe(testRecipe.steps.length);
       expect(execution.completedSteps).toBe(0);
     });
@@ -226,11 +235,11 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
       const execution = await service.executeRecipe(request);
-      
+
       expect(execution.status).toBe(RecipeExecutionStatus.COMPLETED);
       expect(execution.result?.dryRun).toBe(true);
       expect(execution.completedAt).toBeDefined();
@@ -241,7 +250,7 @@ describe('RecipeExecutorService', () => {
       const approvalRecipe = await service.createRecipe({
         ...mockRecipe,
         name: 'Approval Required Recipe',
-        requiresApproval: true
+        requiresApproval: true,
       });
 
       const request: RecipeExecutionRequest = {
@@ -253,7 +262,7 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
       await expect(service.executeRecipe(request)).rejects.toThrow('Recipe requires approval');
@@ -266,7 +275,7 @@ describe('RecipeExecutorService', () => {
         name: 'Critical Recipe',
         requiresApproval: true,
         requiresDualApproval: true,
-        safetyLevel: 'critical'
+        safetyLevel: 'critical',
       });
 
       const request: RecipeExecutionRequest = {
@@ -280,7 +289,7 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
       await expect(service.executeRecipe(request)).rejects.toThrow('Recipe requires dual approval');
@@ -296,15 +305,18 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
       // Mock safety check failure by testing with actual safety implementation
       // In real implementation, this would involve actual PLC/safety system checks
       const execution = await service.executeRecipe(request);
-      
+
       // Since our mock safety checks pass, execution should proceed
-      expect(execution.status).toBeOneOf([RecipeExecutionStatus.PENDING, RecipeExecutionStatus.EXECUTING]);
+      expect(execution.status).toBeOneOf([
+        RecipeExecutionStatus.PENDING,
+        RecipeExecutionStatus.EXECUTING,
+      ]);
     });
 
     it('should get execution by ID', async () => {
@@ -317,12 +329,12 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
       const execution = await service.executeRecipe(request);
       const retrievedExecution = await service.getExecution(execution.id);
-      
+
       expect(retrievedExecution.id).toBe(execution.id);
       expect(retrievedExecution.recipeId).toBe(testRecipe.id);
     });
@@ -337,13 +349,13 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
       const execution = await service.executeRecipe(request);
-      
+
       await service.cancelExecution(execution.id, 'Test cancellation');
-      
+
       const cancelledExecution = await service.getExecution(execution.id);
       expect(cancelledExecution.status).toBe(RecipeExecutionStatus.CANCELLED);
       expect(cancelledExecution.error).toContain('Test cancellation');
@@ -360,7 +372,7 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
       const request2: RecipeExecutionRequest = {
@@ -372,20 +384,20 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
       // Create multiple executions
       const execution1 = await service.executeRecipe(request1);
       const execution2 = await service.executeRecipe(request2);
-      
+
       // Perform emergency stop
       await service.emergencyStop('Safety incident detected', 'safety-officer');
-      
+
       // Check that executions were cancelled
       const cancelledExecution1 = await service.getExecution(execution1.id);
       const cancelledExecution2 = await service.getExecution(execution2.id);
-      
+
       expect(cancelledExecution1.status).toBe(RecipeExecutionStatus.CANCELLED);
       expect(cancelledExecution2.status).toBe(RecipeExecutionStatus.CANCELLED);
     });
@@ -399,7 +411,7 @@ describe('RecipeExecutorService', () => {
         name: 'High Priority Recipe',
         priority: RecipePriority.HIGH,
         category: 'production',
-        tags: ['production', 'high-priority']
+        tags: ['production', 'high-priority'],
       });
 
       await service.createRecipe({
@@ -407,7 +419,7 @@ describe('RecipeExecutorService', () => {
         name: 'Low Priority Recipe',
         priority: RecipePriority.LOW,
         category: 'maintenance',
-        tags: ['maintenance', 'low-priority']
+        tags: ['maintenance', 'low-priority'],
       });
 
       await service.createRecipe({
@@ -416,7 +428,7 @@ describe('RecipeExecutorService', () => {
         priority: RecipePriority.CRITICAL,
         safetyLevel: 'critical',
         category: 'safety',
-        tags: ['safety', 'critical']
+        tags: ['safety', 'critical'],
       });
     });
 
@@ -425,7 +437,7 @@ describe('RecipeExecutorService', () => {
         page: 1,
         pageSize: 10,
         sortBy: 'name',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       });
 
       expect(result.recipes).toHaveLength(3);
@@ -441,7 +453,7 @@ describe('RecipeExecutorService', () => {
         page: 1,
         pageSize: 10,
         sortBy: 'name',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       });
 
       expect(result.recipes).toHaveLength(1);
@@ -454,7 +466,7 @@ describe('RecipeExecutorService', () => {
         page: 1,
         pageSize: 10,
         sortBy: 'name',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       });
 
       expect(result.recipes).toHaveLength(1);
@@ -467,7 +479,7 @@ describe('RecipeExecutorService', () => {
         page: 1,
         pageSize: 10,
         sortBy: 'name',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       });
 
       expect(result.recipes).toHaveLength(1);
@@ -480,7 +492,7 @@ describe('RecipeExecutorService', () => {
         page: 1,
         pageSize: 10,
         sortBy: 'name',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       });
 
       expect(result.recipes).toHaveLength(1);
@@ -493,7 +505,7 @@ describe('RecipeExecutorService', () => {
         page: 1,
         pageSize: 10,
         sortBy: 'name',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       });
 
       expect(result.recipes).toHaveLength(1);
@@ -505,7 +517,7 @@ describe('RecipeExecutorService', () => {
         page: 1,
         pageSize: 2,
         sortBy: 'name',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       });
 
       expect(result.recipes).toHaveLength(2);
@@ -518,14 +530,14 @@ describe('RecipeExecutorService', () => {
         page: 1,
         pageSize: 10,
         sortBy: 'name',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       });
 
       const resultByPriority = await service.queryRecipes({
         page: 1,
         pageSize: 10,
         sortBy: 'priority',
-        sortOrder: 'desc'
+        sortOrder: 'desc',
       });
 
       expect(resultByName.recipes[0].name).toBe('Critical Safety Recipe');
@@ -537,7 +549,7 @@ describe('RecipeExecutorService', () => {
     it('should calculate execution statistics', async () => {
       // Create test recipe
       const testRecipe = await service.createRecipe(mockRecipe);
-      
+
       // Create test executions
       const request: RecipeExecutionRequest = {
         recipeId: testRecipe.id,
@@ -548,14 +560,14 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
       await service.executeRecipe(request);
       await service.executeRecipe(request);
-      
+
       const stats = await service.getExecutionStats();
-      
+
       expect(stats.totalRecipes).toBe(1);
       expect(stats.totalExecutions).toBe(2);
       expect(stats.successfulExecutions).toBe(2); // Dry runs complete successfully
@@ -567,7 +579,7 @@ describe('RecipeExecutorService', () => {
 
     it('should get execution progress', async () => {
       const testRecipe = await service.createRecipe(mockRecipe);
-      
+
       const request: RecipeExecutionRequest = {
         recipeId: testRecipe.id,
         executedBy: 'test-user',
@@ -577,12 +589,12 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
       const execution = await service.executeRecipe(request);
       const progress = await service.getExecutionProgress(execution.id);
-      
+
       expect(progress.executionId).toBe(execution.id);
       expect(progress.status).toBe(RecipeExecutionStatus.COMPLETED);
       expect(progress.totalSteps).toBe(testRecipe.steps.length);
@@ -602,7 +614,7 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       } as RecipeExecutionRequest;
 
       await expect(service.executeRecipe(invalidRequest)).rejects.toThrow();
@@ -618,10 +630,10 @@ describe('RecipeExecutorService', () => {
         context: {},
         parameters: {},
         tags: [],
-        metadata: {}
+        metadata: {},
       };
 
-      await expect(service.executeRecipe(request)).rejects.toThrow('Asset \'Recipe\' not found');
+      await expect(service.executeRecipe(request)).rejects.toThrow("Asset 'Recipe' not found");
     });
 
     it('should handle invalid query parameters', async () => {
@@ -629,7 +641,7 @@ describe('RecipeExecutorService', () => {
         page: 0, // Invalid page number
         pageSize: 150, // Exceeds maximum
         sortBy: 'invalid_field',
-        sortOrder: 'invalid_order'
+        sortOrder: 'invalid_order',
       } as any;
 
       await expect(service.queryRecipes(invalidQuery)).rejects.toThrow();

@@ -8,44 +8,44 @@
 // ============================================================================
 
 export type AgentId =
-  | "00-chief-of-staff"
-  | "product-owner"
-  | "program-manager"
-  | "stakeholder-executive"
-  | "solution-architect"
-  | "tech-lead"
-  | "frontend-engineer"
-  | "backend-engineer"
-  | "platform-engineer"
-  | "data-engineer"
-  | "ml-engineer"
-  | "ux-designer"
-  | "accessibility-specialist"
-  | "qa-test-engineer"
-  | "performance-engineer"
-  | "security-engineer"
-  | "privacy-compliance-officer"
-  | "devops-engineer"
-  | "sre-engineer"
-  | "documentation-engineer"
-  | "support-readiness-engineer"
-  | "legal-counsel"
-  | "finance-procurement"
-  | "localization-specialist"
-  | "incident-commander"
-  | "red-team"
-  | "quality-director";
+  | '00-chief-of-staff'
+  | 'product-owner'
+  | 'program-manager'
+  | 'stakeholder-executive'
+  | 'solution-architect'
+  | 'tech-lead'
+  | 'frontend-engineer'
+  | 'backend-engineer'
+  | 'platform-engineer'
+  | 'data-engineer'
+  | 'ml-engineer'
+  | 'ux-designer'
+  | 'accessibility-specialist'
+  | 'qa-test-engineer'
+  | 'performance-engineer'
+  | 'security-engineer'
+  | 'privacy-compliance-officer'
+  | 'devops-engineer'
+  | 'sre-engineer'
+  | 'documentation-engineer'
+  | 'support-readiness-engineer'
+  | 'legal-counsel'
+  | 'finance-procurement'
+  | 'localization-specialist'
+  | 'incident-commander'
+  | 'red-team'
+  | 'quality-director';
 
-export type Priority = "P0" | "P1" | "P2" | "P3";
+export type Priority = 'P0' | 'P1' | 'P2' | 'P3';
 export type TaskType =
-  | "Feature"
-  | "Bug"
-  | "Refactor"
-  | "Docs"
-  | "Security"
-  | "Performance"
-  | "Incident";
-export type TaskScope = "Small" | "Medium" | "Large";
+  | 'Feature'
+  | 'Bug'
+  | 'Refactor'
+  | 'Docs'
+  | 'Security'
+  | 'Performance'
+  | 'Incident';
+export type TaskScope = 'Small' | 'Medium' | 'Large';
 
 export interface Task {
   id: string;
@@ -57,14 +57,8 @@ export interface Task {
   acceptanceCriteria: string[];
 }
 
-export type TaskStatus =
-  | "queued"
-  | "in_progress"
-  | "blocked"
-  | "completed"
-  | "failed"
-  | "aborted";
-export type AgentStatus = "idle" | "active" | "blocked" | "offline";
+export type TaskStatus = 'queued' | 'in_progress' | 'blocked' | 'completed' | 'failed' | 'aborted';
+export type AgentStatus = 'idle' | 'active' | 'blocked' | 'offline';
 
 // ============================================================================
 // Routing Types
@@ -95,17 +89,7 @@ export interface RoutingDecision {
 // Quality Gate Types
 // ============================================================================
 
-export type QualityGateId =
-  | "G1"
-  | "G2"
-  | "G3"
-  | "G4"
-  | "G5"
-  | "G6"
-  | "G7"
-  | "G8"
-  | "G9"
-  | "G10";
+export type QualityGateId = 'G1' | 'G2' | 'G3' | 'G4' | 'G5' | 'G6' | 'G7' | 'G8' | 'G9' | 'G10';
 
 export interface QualityGateResult {
   gate: QualityGateId;
@@ -206,26 +190,20 @@ export interface WorkflowTaskSummary {
 // Agent Tier + Synthetic Tests
 // ============================================================================
 
-export type AgentTier = "core" | "specialist";
+export type AgentTier = 'core' | 'specialist';
 
 export interface AgentConfig {
   id: AgentId;
   tier: AgentTier;
   loadOnStartup: boolean;
-  model: "claude-sonnet-4.5" | "gpt-5-mini";
+  model: 'claude-sonnet-4.5' | 'gpt-5-mini';
   fallbackModel?: string;
   capabilities: string[];
   maxConcurrentTasks: number;
 }
 
-export type TestComplexity = "S" | "M" | "L" | "XL";
-export type TestCategory =
-  | "frontend"
-  | "backend"
-  | "fullstack"
-  | "docs"
-  | "infra"
-  | "security";
+export type TestComplexity = 'S' | 'M' | 'L' | 'XL';
+export type TestCategory = 'frontend' | 'backend' | 'fullstack' | 'docs' | 'infra' | 'security';
 
 export interface SyntheticTest {
   id: string;
@@ -236,7 +214,7 @@ export interface SyntheticTest {
   expectedAgentChain: AgentId[];
   expectedDuration: number;
   acceptanceCriteria: string[];
-  scenario: "happy-path" | "edge-case" | "failure-mode";
+  scenario: 'happy-path' | 'edge-case' | 'failure-mode';
 }
 
 export interface ContextCacheEntry {
@@ -253,7 +231,7 @@ export interface ContextCacheEntry {
 // Hybrid Orchestration (Phases A + B)
 // ============================================================================
 
-export type HybridMode = "sequential" | "hybrid";
+export type HybridMode = 'sequential' | 'hybrid';
 
 export interface HybridFeatureFlags {
   hybridOrchestrationEnabled: boolean;
@@ -269,7 +247,7 @@ export interface HybridExecutionConfig {
   maxL2Comments: number;
 }
 
-export type ContextTier = "L1" | "L2" | "L3";
+export type ContextTier = 'L1' | 'L2' | 'L3';
 
 export interface ContextSlice {
   tier: ContextTier;
@@ -346,30 +324,30 @@ export interface DispatchPolicy {
 }
 
 export type DispatchNodeStatus =
-  | "queued"
-  | "running"
-  | "completed"
-  | "succeeded"
-  | "failed"
-  | "timed_out"
-  | "exhausted"
-  | "blocked";
+  | 'queued'
+  | 'running'
+  | 'completed'
+  | 'succeeded'
+  | 'failed'
+  | 'timed_out'
+  | 'exhausted'
+  | 'blocked';
 
 export interface DispatchAttemptRecord {
   nodeId: string;
   waveIndex: number;
   attempt: number;
-  status: "success" | "failure" | "timeout";
+  status: 'success' | 'failure' | 'timeout';
 }
 
 export type HybridDispatchEventType =
-  | "hybrid.dispatch.start"
-  | "hybrid.dispatch.success"
-  | "hybrid.dispatch.failure"
-  | "hybrid.dispatch.timeout";
+  | 'hybrid.dispatch.start'
+  | 'hybrid.dispatch.success'
+  | 'hybrid.dispatch.failure'
+  | 'hybrid.dispatch.timeout';
 
 export interface DispatchStartEvent {
-  event: "hybrid.dispatch.start";
+  event: 'hybrid.dispatch.start';
   seq: number;
   timestamp?: Date;
   taskId: string;
@@ -382,10 +360,7 @@ export interface DispatchStartEvent {
 }
 
 export interface DispatchTerminalEvent {
-  event:
-    | "hybrid.dispatch.success"
-    | "hybrid.dispatch.failure"
-    | "hybrid.dispatch.timeout";
+  event: 'hybrid.dispatch.success' | 'hybrid.dispatch.failure' | 'hybrid.dispatch.timeout';
   seq: number;
   timestamp?: Date;
   taskId: string;
@@ -422,7 +397,7 @@ export interface DispatchWaveResult {
 // GitHub Work + Handoff
 // ============================================================================
 
-export type HandoffStatus = "Done" | "Partial" | "Blocked";
+export type HandoffStatus = 'Done' | 'Partial' | 'Blocked';
 
 export interface WorkItemContext {
   repo: string;
@@ -467,7 +442,7 @@ export interface HandoffCommentData {
     commandsRun: string[];
     expectedOutcome: string[];
     actualOutcome: string[];
-    status: "Passed" | "Failed" | "Partial";
+    status: 'Passed' | 'Failed' | 'Partial';
   };
   risks: string[];
   followUps: string[];
@@ -482,9 +457,9 @@ export interface HandoffCommentData {
 }
 
 export interface HandoffProviderConfig {
-  provider: "github" | "file";
+  provider: 'github' | 'file';
   githubDryRun?: boolean;
-  commentTarget?: "pr_preferred" | "issue_only" | "pr_only";
+  commentTarget?: 'pr_preferred' | 'issue_only' | 'pr_only';
   maxComments?: number;
   templatesDir?: string;
 }
@@ -503,7 +478,7 @@ export interface IssueCreateInput {
 }
 
 export interface IssueSearchFilters {
-  state?: "open" | "closed" | "all";
+  state?: 'open' | 'closed' | 'all';
   limit?: number;
   labels?: string[];
   assignee?: string;
@@ -514,7 +489,7 @@ export interface IssueRef {
   id: number;
   title: string;
   url: string;
-  state: "open" | "closed";
+  state: 'open' | 'closed';
 }
 
 export interface PullRequestCreateInput {
@@ -531,7 +506,7 @@ export interface PullRequestRef {
   id: number;
   title: string;
   url: string;
-  state: "OPEN" | "MERGED" | "CLOSED";
+  state: 'OPEN' | 'MERGED' | 'CLOSED';
 }
 
 // ============================================================================

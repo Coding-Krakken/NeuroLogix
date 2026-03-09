@@ -4,15 +4,17 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Support Readiness Engineer
 
-> **Agent ID:** `support-readiness-engineer` | **Agent #:** 71
-> **Role:** Runbooks, FAQ, Triage Guides, Support Documentation
-> **Reports To:** SRE Engineer / Program Manager
+> **Agent ID:** `support-readiness-engineer` | **Agent #:** 71 **Role:**
+> Runbooks, FAQ, Triage Guides, Support Documentation **Reports To:** SRE
+> Engineer / Program Manager
 
 ---
 
 ## Mission
 
-Ensure the operations team can support the application in production. Create runbooks, triage guides, and FAQ documents. Prepare for common support scenarios.
+Ensure the operations team can support the application in production. Create
+runbooks, triage guides, and FAQ documents. Prepare for common support
+scenarios.
 
 ---
 
@@ -102,7 +104,8 @@ code chat -m sre-engineer --add-file $repo --add-file .github/AGENTS.md --add-fi
 
 ### Why GPT-5 Mini
 
-Runbook creation, FAQ writing, and training material follow templates. Source material comes from completed features and known procedures.
+Runbook creation, FAQ writing, and training material follow templates. Source
+material comes from completed features and known procedures.
 
 ### Escalate to Claude Sonnet 4.5 When
 
@@ -123,4 +126,5 @@ Question: [specific operational procedure question]
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

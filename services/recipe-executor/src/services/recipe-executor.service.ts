@@ -15,14 +15,20 @@ import {
   RecipeExecutionRequestSchema,
   RecipeExecutionSchema,
   RecipeQuerySchema,
-  RecipeExecutionStatsSchema
+  RecipeExecutionStatsSchema,
 } from '../types/index';
-import { ValidationError, AssetNotFoundError, InternalServerError, generateId, logAuditEvent } from '@neurologix/core';
+import {
+  ValidationError,
+  AssetNotFoundError,
+  InternalServerError,
+  generateId,
+  logAuditEvent,
+} from '@neurologix/core';
 import logger from '@neurologix/core/logger';
 
 /**
  * Enterprise-grade Recipe Executor Service
- * 
+ *
  * Provides comprehensive recipe management and execution capabilities including:
  * - Recipe lifecycle management (CRUD operations)
  * - Safety-first execution with comprehensive prechecks
@@ -37,7 +43,7 @@ export class RecipeExecutorService {
   private executions = new Map<string, RecipeExecution>();
   private executionQueue: RecipeExecutionRequest[] = [];
   private activeExecutions = new Map<string, Promise<void>>();
-  
+
   /**
    * Create a new recipe
    */
@@ -47,16 +53,15 @@ export class RecipeExecutorService {
         ...recipeData,
         id: generateId(),
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       // Validate recipe
       const validation = await this.validateRecipe(recipe);
       if (!validation.isValid) {
-        throw new ValidationError(
-          'Recipe validation failed',
-          { errors: validation.errors.map(e => e.message) }
-        );
+        throw new ValidationError('Recipe validation failed', {
+          errors: validation.errors.map(e => e.message),
+        });
       }
 
       RecipeSchema.parse(recipe);
@@ -67,13 +72,13 @@ export class RecipeExecutorService {
         resource: `recipe/${recipe.id}`,
         outcome: 'success',
         details: { recipeName: recipe.name, version: recipe.version },
-        severity: 'medium'
+        severity: 'medium',
       });
 
       logger.info('Recipe created successfully', {
         recipeId: recipe.id,
         name: recipe.name,
-        version: recipe.version
+        version: recipe.version,
       });
 
       return recipe;
@@ -83,7 +88,7 @@ export class RecipeExecutorService {
         resource: 'recipe/unknown',
         outcome: 'failure',
         details: { error: error instanceof Error ? error.message : String(error) },
-        severity: 'high'
+        severity: 'high',
       });
       throw error;
     }
@@ -105,21 +110,20 @@ export class RecipeExecutorService {
    */
   async updateRecipe(id: string, updates: Partial<Recipe>): Promise<Recipe> {
     const existingRecipe = await this.getRecipe(id);
-    
+
     const updatedRecipe: Recipe = {
       ...existingRecipe,
       ...updates,
       id, // Ensure ID cannot be changed
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     // Validate updated recipe
     const validation = await this.validateRecipe(updatedRecipe);
     if (!validation.isValid) {
-      throw new ValidationError(
-        'Recipe validation failed',
-        { errors: validation.errors.map(e => e.message) }
-      );
+      throw new ValidationError('Recipe validation failed', {
+        errors: validation.errors.map(e => e.message),
+      });
     }
 
     RecipeSchema.parse(updatedRecipe);
@@ -130,7 +134,7 @@ export class RecipeExecutorService {
       resource: `recipe/${id}`,
       outcome: 'success',
       details: { recipeName: updatedRecipe.name, version: updatedRecipe.version },
-      severity: 'medium'
+      severity: 'medium',
     });
 
     return updatedRecipe;
@@ -141,17 +145,22 @@ export class RecipeExecutorService {
    */
   async deleteRecipe(id: string): Promise<void> {
     const recipe = await this.getRecipe(id);
-    
+
     // Check if recipe has active executions
-    const activeExecutions = Array.from(this.executions.values())
-      .filter(exec => exec.recipeId === id && 
-        [RecipeExecutionStatus.EXECUTING, RecipeExecutionStatus.PENDING, RecipeExecutionStatus.APPROVED].includes(exec.status));
-    
+    const activeExecutions = Array.from(this.executions.values()).filter(
+      exec =>
+        exec.recipeId === id &&
+        [
+          RecipeExecutionStatus.EXECUTING,
+          RecipeExecutionStatus.PENDING,
+          RecipeExecutionStatus.APPROVED,
+        ].includes(exec.status)
+    );
+
     if (activeExecutions.length > 0) {
-      throw new ValidationError(
-        'Cannot delete recipe with active executions',
-        { errors: [`Recipe has ${activeExecutions.length} active executions`] }
-      );
+      throw new ValidationError('Cannot delete recipe with active executions', {
+        errors: [`Recipe has ${activeExecutions.length} active executions`],
+      });
     }
 
     this.recipes.delete(id);
@@ -161,7 +170,7 @@ export class RecipeExecutorService {
       resource: `recipe/${id}`,
       outcome: 'success',
       details: { recipeName: recipe.name, version: recipe.version },
-      severity: 'high'
+      severity: 'high',
     });
   }
 
@@ -172,9 +181,9 @@ export class RecipeExecutorService {
     try {
       // Validate request
       RecipeExecutionRequestSchema.parse(request);
-      
+
       const recipe = await this.getRecipe(request.recipeId);
-      
+
       // Create execution record
       const execution: RecipeExecution = {
         id: generateId(),
@@ -197,7 +206,7 @@ export class RecipeExecutorService {
         tags: request.tags,
         metadata: request.metadata,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       RecipeExecutionSchema.parse(execution);
@@ -209,7 +218,9 @@ export class RecipeExecutorService {
       }
 
       if (recipe.requiresDualApproval && (!request.approvedBy || !request.secondApprover)) {
-        throw new ValidationError('Recipe requires dual approval', { errors: ['Two approvers are required'] });
+        throw new ValidationError('Recipe requires dual approval', {
+          errors: ['Two approvers are required'],
+        });
       }
 
       // Perform safety checks if enabled
@@ -220,8 +231,10 @@ export class RecipeExecutorService {
           execution.error = 'Safety checks failed';
           execution.safetyViolations = safetyResult.violations;
           this.executions.set(execution.id, execution);
-          
-          throw new ValidationError('Safety checks failed', { errors: safetyResult.violations.map(v => v.message) });
+
+          throw new ValidationError('Safety checks failed', {
+            errors: safetyResult.violations.map(v => v.message),
+          });
         }
       }
 
@@ -244,9 +257,9 @@ export class RecipeExecutorService {
           recipeId: recipe.id,
           recipeName: recipe.name,
           executedBy: request.executedBy,
-          dryRun: request.dryRun
+          dryRun: request.dryRun,
         },
-        severity: 'high'
+        severity: 'high',
       });
 
       return execution;
@@ -256,7 +269,7 @@ export class RecipeExecutorService {
         resource: `recipe/${request.recipeId}`,
         outcome: 'failure',
         details: { error: error instanceof Error ? error.message : String(error) },
-        severity: 'high'
+        severity: 'high',
       });
       throw error;
     }
@@ -278,9 +291,17 @@ export class RecipeExecutorService {
    */
   async cancelExecution(id: string, reason?: string): Promise<void> {
     const execution = await this.getExecution(id);
-    
-    if (![RecipeExecutionStatus.PENDING, RecipeExecutionStatus.EXECUTING, RecipeExecutionStatus.PAUSED].includes(execution.status)) {
-      throw new ValidationError('Cannot cancel execution', { errors: ['Execution is not in a cancellable state'] });
+
+    if (
+      ![
+        RecipeExecutionStatus.PENDING,
+        RecipeExecutionStatus.EXECUTING,
+        RecipeExecutionStatus.PAUSED,
+      ].includes(execution.status)
+    ) {
+      throw new ValidationError('Cannot cancel execution', {
+        errors: ['Execution is not in a cancellable state'],
+      });
     }
 
     execution.status = RecipeExecutionStatus.CANCELLED;
@@ -298,7 +319,7 @@ export class RecipeExecutorService {
       resource: `execution/${id}`,
       outcome: 'success',
       details: { reason, executionId: id },
-      severity: 'medium'
+      severity: 'medium',
     });
   }
 
@@ -307,14 +328,14 @@ export class RecipeExecutorService {
    */
   async emergencyStop(reason: string, authorizedBy: string): Promise<void> {
     const activeExecutionIds = Array.from(this.activeExecutions.keys());
-    
+
     for (const executionId of activeExecutionIds) {
       try {
         await this.cancelExecution(executionId, `Emergency stop: ${reason}`);
       } catch (error) {
         logger.error('Failed to cancel execution during emergency stop', {
           executionId,
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
     }
@@ -326,15 +347,15 @@ export class RecipeExecutorService {
       details: {
         reason,
         authorizedBy,
-        cancelledExecutions: activeExecutionIds.length
+        cancelledExecutions: activeExecutionIds.length,
       },
-      severity: 'critical'
+      severity: 'critical',
     });
 
     logger.warn('Emergency stop executed', {
       reason,
       authorizedBy,
-      cancelledExecutions: activeExecutionIds.length
+      cancelledExecutions: activeExecutionIds.length,
     });
   }
 
@@ -350,30 +371,31 @@ export class RecipeExecutorService {
   }> {
     try {
       RecipeQuerySchema.parse(query);
-      
+
       let filteredRecipes = Array.from(this.recipes.values());
 
       // Apply filters
       if (query.category) {
         filteredRecipes = filteredRecipes.filter(r => r.category === query.category);
       }
-      
+
       if (query.priority) {
         filteredRecipes = filteredRecipes.filter(r => r.priority === query.priority);
       }
-      
+
       if (query.safetyLevel) {
         filteredRecipes = filteredRecipes.filter(r => r.safetyLevel === query.safetyLevel);
       }
-      
+
       if (query.search) {
         const searchTerm = query.search.toLowerCase();
-        filteredRecipes = filteredRecipes.filter(r =>
-          r.name.toLowerCase().includes(searchTerm) ||
-          r.description?.toLowerCase().includes(searchTerm)
+        filteredRecipes = filteredRecipes.filter(
+          r =>
+            r.name.toLowerCase().includes(searchTerm) ||
+            r.description?.toLowerCase().includes(searchTerm)
         );
       }
-      
+
       if (query.tags && query.tags.length > 0) {
         filteredRecipes = filteredRecipes.filter(r =>
           query.tags!.some(tag => r.tags.includes(tag))
@@ -384,7 +406,7 @@ export class RecipeExecutorService {
       if (query.createdAfter) {
         filteredRecipes = filteredRecipes.filter(r => r.createdAt >= query.createdAfter!);
       }
-      
+
       if (query.createdBefore) {
         filteredRecipes = filteredRecipes.filter(r => r.createdAt <= query.createdBefore!);
       }
@@ -392,7 +414,7 @@ export class RecipeExecutorService {
       // Sort results
       filteredRecipes.sort((a, b) => {
         let comparison = 0;
-        
+
         switch (query.sortBy) {
           case 'name':
             comparison = a.name.localeCompare(b.name);
@@ -410,7 +432,7 @@ export class RecipeExecutorService {
           default:
             comparison = a.createdAt.getTime() - b.createdAt.getTime();
         }
-        
+
         return query.sortOrder === 'desc' ? -comparison : comparison;
       });
 
@@ -426,14 +448,16 @@ export class RecipeExecutorService {
         total,
         page: query.page,
         pageSize: query.pageSize,
-        totalPages
+        totalPages,
       };
     } catch (error) {
       logger.error('Recipe query failed', {
         query,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
-      throw new InternalServerError('Failed to query recipes', { errors: [error instanceof Error ? error.message : String(error)] });
+      throw new InternalServerError('Failed to query recipes', {
+        errors: [error instanceof Error ? error.message : String(error)],
+      });
     }
   }
 
@@ -443,18 +467,24 @@ export class RecipeExecutorService {
   async getExecutionStats(): Promise<RecipeExecutionStats> {
     const executions = Array.from(this.executions.values());
     const recipes = Array.from(this.recipes.values());
-    
+
     // Calculate basic statistics
     const totalRecipes = recipes.length;
     const totalExecutions = executions.length;
-    const successfulExecutions = executions.filter(e => e.status === RecipeExecutionStatus.COMPLETED).length;
-    const failedExecutions = executions.filter(e => e.status === RecipeExecutionStatus.FAILED).length;
-    
+    const successfulExecutions = executions.filter(
+      e => e.status === RecipeExecutionStatus.COMPLETED
+    ).length;
+    const failedExecutions = executions.filter(
+      e => e.status === RecipeExecutionStatus.FAILED
+    ).length;
+
     // Calculate average execution time
     const completedExecutions = executions.filter(e => e.duration !== undefined);
-    const averageExecutionTime = completedExecutions.length > 0
-      ? completedExecutions.reduce((sum, e) => sum + (e.duration || 0), 0) / completedExecutions.length
-      : 0;
+    const averageExecutionTime =
+      completedExecutions.length > 0
+        ? completedExecutions.reduce((sum, e) => sum + (e.duration || 0), 0) /
+          completedExecutions.length
+        : 0;
 
     // Execution status breakdown
     const executionsByStatus: Record<string, number> = {};
@@ -474,9 +504,8 @@ export class RecipeExecutorService {
     const rollbacksExecuted = executions.filter(e => e.rollbackExecuted).length;
 
     // Performance metrics
-    const averageStepsPerRecipe = recipes.length > 0
-      ? recipes.reduce((sum, r) => sum + r.steps.length, 0) / recipes.length
-      : 0;
+    const averageStepsPerRecipe =
+      recipes.length > 0 ? recipes.reduce((sum, r) => sum + r.steps.length, 0) / recipes.length : 0;
 
     // Most executed recipes
     const recipeExecutionCounts: Record<string, number> = {};
@@ -490,7 +519,7 @@ export class RecipeExecutorService {
         return {
           recipeId,
           recipeName: recipe?.name || 'Unknown',
-          executionCount: count
+          executionCount: count,
         };
       })
       .sort((a, b) => b.executionCount - a.executionCount)
@@ -514,7 +543,7 @@ export class RecipeExecutorService {
       rollbacksExecuted,
       averageStepsPerRecipe,
       mostExecutedRecipes,
-      recentExecutions
+      recentExecutions,
     };
 
     return RecipeExecutionStatsSchema.parse(stats);
@@ -525,17 +554,18 @@ export class RecipeExecutorService {
    */
   async getExecutionProgress(id: string): Promise<RecipeExecutionProgress> {
     const execution = await this.getExecution(id);
-    
-    const progressPercentage = execution.totalSteps > 0
-      ? Math.round((execution.completedSteps / execution.totalSteps) * 100)
-      : 0;
+
+    const progressPercentage =
+      execution.totalSteps > 0
+        ? Math.round((execution.completedSteps / execution.totalSteps) * 100)
+        : 0;
 
     // Estimate time remaining based on average step time
     let estimatedTimeRemaining: number | null = null;
     if (execution.status === RecipeExecutionStatus.EXECUTING && execution.startedAt) {
       const elapsedTime = Date.now() - execution.startedAt.getTime();
       const remainingSteps = execution.totalSteps - execution.completedSteps;
-      
+
       if (execution.completedSteps > 0) {
         const averageStepTime = elapsedTime / execution.completedSteps;
         estimatedTimeRemaining = Math.round(averageStepTime * remainingSteps);
@@ -550,7 +580,7 @@ export class RecipeExecutorService {
       totalSteps: execution.totalSteps,
       progressPercentage,
       estimatedTimeRemaining,
-      lastUpdated: execution.updatedAt
+      lastUpdated: execution.updatedAt,
     };
   }
 
@@ -558,18 +588,32 @@ export class RecipeExecutorService {
    * Validate recipe for safety and correctness
    */
   private async validateRecipe(recipe: Recipe): Promise<RecipeValidationResult> {
-    const errors: Array<{ field: string; message: string; severity: 'error' | 'warning' | 'info' }> = [];
+    const errors: Array<{
+      field: string;
+      message: string;
+      severity: 'error' | 'warning' | 'info';
+    }> = [];
     const warnings: Array<{ field: string; message: string }> = [];
-    const safetyChecks: Array<{ type: SafetyCheckType; status: 'passed' | 'failed' | 'warning'; message: string }> = [];
+    const safetyChecks: Array<{
+      type: SafetyCheckType;
+      status: 'passed' | 'failed' | 'warning';
+      message: string;
+    }> = [];
 
     // Validate steps
     if (recipe.steps.length === 0) {
-      errors.push({ field: 'steps', message: 'Recipe must have at least one step', severity: 'error' });
+      errors.push({
+        field: 'steps',
+        message: 'Recipe must have at least one step',
+        severity: 'error',
+      });
     }
 
     // Check for duplicate step orders
     const stepOrders = recipe.steps.map(s => s.order);
-    const duplicateOrders = stepOrders.filter((order, index) => stepOrders.indexOf(order) !== index);
+    const duplicateOrders = stepOrders.filter(
+      (order, index) => stepOrders.indexOf(order) !== index
+    );
     if (duplicateOrders.length > 0) {
       errors.push({ field: 'steps', message: 'Duplicate step orders found', severity: 'error' });
     }
@@ -577,11 +621,17 @@ export class RecipeExecutorService {
     // Validate safety requirements for high/critical safety levels
     if (recipe.safetyLevel === 'critical' || recipe.safetyLevel === 'high') {
       if (!recipe.requiresApproval) {
-        warnings.push({ field: 'requiresApproval', message: 'High/critical safety recipes should require approval' });
+        warnings.push({
+          field: 'requiresApproval',
+          message: 'High/critical safety recipes should require approval',
+        });
       }
 
       if (recipe.safetyLevel === 'critical' && !recipe.requiresDualApproval) {
-        warnings.push({ field: 'requiresDualApproval', message: 'Critical safety recipes should require dual approval' });
+        warnings.push({
+          field: 'requiresDualApproval',
+          message: 'Critical safety recipes should require dual approval',
+        });
       }
     }
 
@@ -589,27 +639,30 @@ export class RecipeExecutorService {
     safetyChecks.push({
       type: SafetyCheckType.PLC_INTERLOCK,
       status: 'passed',
-      message: 'PLC interlock validation passed'
+      message: 'PLC interlock validation passed',
     });
 
     safetyChecks.push({
       type: SafetyCheckType.POLICY_COMPLIANCE,
       status: 'passed',
-      message: 'Policy compliance check passed'
+      message: 'Policy compliance check passed',
     });
 
     return {
       isValid: errors.filter(e => e.severity === 'error').length === 0,
       errors,
       warnings,
-      safetyChecks
+      safetyChecks,
     };
   }
 
   /**
    * Perform comprehensive safety checks before execution
    */
-  private async performSafetyChecks(recipe: Recipe, request: RecipeExecutionRequest): Promise<{
+  private async performSafetyChecks(
+    recipe: Recipe,
+    request: RecipeExecutionRequest
+  ): Promise<{
     passed: boolean;
     violations: Array<{
       type: string;
@@ -626,7 +679,7 @@ export class RecipeExecutorService {
     }> = [];
 
     // Mock safety checks (in real implementation, these would check actual system state)
-    
+
     // Check PLC interlocks
     const plcInterlockActive = false; // Mock check
     if (plcInterlockActive) {
@@ -634,7 +687,7 @@ export class RecipeExecutorService {
         type: 'plc_interlock',
         message: 'PLC safety interlock is active',
         severity: 'critical',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -645,7 +698,7 @@ export class RecipeExecutorService {
         type: 'emergency_stop',
         message: 'Emergency stop is active',
         severity: 'critical',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -657,21 +710,25 @@ export class RecipeExecutorService {
           type: 'resource_unavailable',
           message: `Required resource ${resource} is not available`,
           severity: 'high',
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       }
     }
 
     return {
       passed: violations.filter(v => v.severity === 'critical').length === 0,
-      violations
+      violations,
     };
   }
 
   /**
    * Start recipe execution (internal method)
    */
-  private async startExecution(execution: RecipeExecution, recipe: Recipe, request: RecipeExecutionRequest): Promise<void> {
+  private async startExecution(
+    execution: RecipeExecution,
+    recipe: Recipe,
+    request: RecipeExecutionRequest
+  ): Promise<void> {
     try {
       execution.status = RecipeExecutionStatus.EXECUTING;
       execution.startedAt = new Date();
@@ -681,7 +738,7 @@ export class RecipeExecutorService {
       logger.info('Starting recipe execution', {
         executionId: execution.id,
         recipeId: recipe.id,
-        recipeName: recipe.name
+        recipeName: recipe.name,
       });
 
       // Execute steps sequentially (simplified implementation)
@@ -699,7 +756,7 @@ export class RecipeExecutorService {
         try {
           // Mock step execution
           await this.executeStep(step, execution, request);
-          
+
           execution.completedSteps++;
           execution.stepResults.push({
             stepId: step.id,
@@ -707,9 +764,8 @@ export class RecipeExecutorService {
             startedAt: new Date(),
             completedAt: new Date(),
             duration: 1000, // Mock duration
-            result: { success: true }
+            result: { success: true },
           });
-
         } catch (stepError) {
           execution.failedSteps++;
           execution.stepResults.push({
@@ -718,7 +774,7 @@ export class RecipeExecutorService {
             startedAt: new Date(),
             completedAt: new Date(),
             duration: 500,
-            error: stepError instanceof Error ? stepError.message : String(stepError)
+            error: stepError instanceof Error ? stepError.message : String(stepError),
           });
 
           if (!step.skipOnFailure) {
@@ -740,9 +796,8 @@ export class RecipeExecutorService {
 
       logger.info('Recipe execution completed successfully', {
         executionId: execution.id,
-        duration: execution.duration
+        duration: execution.duration,
       });
-
     } catch (error) {
       execution.status = RecipeExecutionStatus.FAILED;
       execution.completedAt = new Date();
@@ -752,7 +807,7 @@ export class RecipeExecutorService {
 
       logger.error('Recipe execution failed', {
         executionId: execution.id,
-        error: execution.error
+        error: execution.error,
       });
     } finally {
       this.activeExecutions.delete(execution.id);
@@ -762,7 +817,11 @@ export class RecipeExecutorService {
   /**
    * Execute a single recipe step (mock implementation)
    */
-  private async executeStep(step: RecipeStep, execution: RecipeExecution, request: RecipeExecutionRequest): Promise<void> {
+  private async executeStep(
+    step: RecipeStep,
+    execution: RecipeExecution,
+    request: RecipeExecutionRequest
+  ): Promise<void> {
     // Mock step execution with delay
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -781,7 +840,7 @@ export class RecipeExecutorService {
    */
   private async executeRollback(execution: RecipeExecution, recipe: Recipe): Promise<void> {
     logger.info('Starting recipe rollback', { executionId: execution.id });
-    
+
     execution.status = RecipeExecutionStatus.ROLLING_BACK;
     execution.rollbackExecuted = true;
     execution.updatedAt = new Date();
@@ -806,9 +865,9 @@ export class RecipeExecutorService {
     execution.updatedAt = new Date();
     this.executions.set(execution.id, execution);
 
-    logger.info('Recipe rollback completed', { 
+    logger.info('Recipe rollback completed', {
       executionId: execution.id,
-      rollbackSteps: execution.rollbackSteps.length
+      rollbackSteps: execution.rollbackSteps.length,
     });
   }
 }

@@ -1,6 +1,7 @@
 ---
 name: Issue Template
-about: Standard issue template for the <APPLICATION_NAME> engineering organization
+about:
+  Standard issue template for the <APPLICATION_NAME> engineering organization
 ---
 
 ## Issue Type
@@ -105,4 +106,3 @@ As a [type of user], I want [goal] so that [benefit].
 <!-- Which agent should handle this? Leave blank for Chief of Staff to route -->
 
 **Suggested Agent:**
-

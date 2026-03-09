@@ -5,24 +5,24 @@ module.exports = {
       2,
       'always',
       [
-        'feat',     // New feature
-        'fix',      // Bug fix
-        'docs',     // Documentation only changes
-        'style',    // Changes that do not affect the meaning of the code
+        'feat', // New feature
+        'fix', // Bug fix
+        'docs', // Documentation only changes
+        'style', // Changes that do not affect the meaning of the code
         'refactor', // Code change that neither fixes a bug nor adds a feature
-        'perf',     // Code change that improves performance
-        'test',     // Adding missing tests or correcting existing tests
-        'build',    // Changes that affect the build system or external dependencies
-        'ci',       // Changes to CI configuration files and scripts
-        'chore',    // Other changes that don't modify src or test files
-        'revert',   // Reverts a previous commit
+        'perf', // Code change that improves performance
+        'test', // Adding missing tests or correcting existing tests
+        'build', // Changes that affect the build system or external dependencies
+        'ci', // Changes to CI configuration files and scripts
+        'chore', // Other changes that don't modify src or test files
+        'revert', // Reverts a previous commit
         'security', // Security improvements
-        'config'    // Configuration changes
-      ]
+        'config', // Configuration changes
+      ],
     ],
     'subject-case': [2, 'always', 'sentence-case'],
     'subject-max-length': [2, 'always', 100],
     'body-max-line-length': [2, 'always', 200],
-    'footer-max-line-length': [2, 'always', 200]
-  }
+    'footer-max-line-length': [2, 'always', 200],
+  },
 };

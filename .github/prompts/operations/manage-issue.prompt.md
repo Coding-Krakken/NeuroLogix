@@ -9,7 +9,8 @@
 
 ## Objective
 
-Create, update, and close GitHub issues to track all work items (features, bugs, epics, technical debt).
+Create, update, and close GitHub issues to track all work items (features, bugs,
+epics, technical debt).
 
 **Authority:**
 
@@ -21,7 +22,8 @@ Create, update, and close GitHub issues to track all work items (features, bugs,
 
 ## Context
 
-You are operating in the Core-3 model (with specialist escalation). Every significant work item must be tracked in GitHub Issues with:
+You are operating in the Core-3 model (with specialist escalation). Every
+significant work item must be tracked in GitHub Issues with:
 
 - Clear title and description
 - Acceptance criteria
@@ -50,7 +52,8 @@ You are operating in the Core-3 model (with specialist escalation). Every signif
 
 ### Step 1: Prepare Issue Body
 
-Use deterministic templates from `.github/ISSUE_TEMPLATE/deterministic-*.yml` and ensure the issue body includes:
+Use deterministic templates from `.github/ISSUE_TEMPLATE/deterministic-*.yml`
+and ensure the issue body includes:
 
 ```markdown
 ## Issue Title
@@ -446,13 +449,14 @@ Next steps:
 
 ## Related Prompts
 
-- [git-commit.prompt.md](git-commit.prompt.md) — Commit changes (reference issue number)
+- [git-commit.prompt.md](git-commit.prompt.md) — Commit changes (reference issue
+  number)
 - [create-pr.prompt.md](create-pr.prompt.md) — Create PR (links to issue)
-- [branch-strategy.prompt.md](branch-strategy.prompt.md) — Create branches (named after issue)
+- [branch-strategy.prompt.md](branch-strategy.prompt.md) — Create branches
+  (named after issue)
 
 ---
 
 **Version:** 1.0.0  
 **Last Updated:** 2026-02-25  
 **Owner:** Chief of Staff, Program Manager
-

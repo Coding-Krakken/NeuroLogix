@@ -58,15 +58,34 @@ export type AssetTelemetry = z.infer<typeof AssetTelemetrySchema>;
 // PLC telemetry specific schema
 export const PlcTelemetrySchema = AssetTelemetrySchema.extend({
   assetType: z.literal('plc'),
-  points: z.array(TelemetryPointSchema.extend({
-    dataType: z.enum(['BOOL', 'SINT', 'INT', 'DINT', 'LINT', 'USINT', 'UINT', 'UDINT', 'ULINT', 'REAL', 'LREAL', 'STRING', 'TIME', 'DATE']),
-    address: z.string(), // PLC address (e.g., "%MW100", "%I0.0")
-    scaling: z.object({
-      factor: z.number(),
-      offset: z.number(),
-      units: z.string(),
-    }).optional(),
-  })),
+  points: z.array(
+    TelemetryPointSchema.extend({
+      dataType: z.enum([
+        'BOOL',
+        'SINT',
+        'INT',
+        'DINT',
+        'LINT',
+        'USINT',
+        'UINT',
+        'UDINT',
+        'ULINT',
+        'REAL',
+        'LREAL',
+        'STRING',
+        'TIME',
+        'DATE',
+      ]),
+      address: z.string(), // PLC address (e.g., "%MW100", "%I0.0")
+      scaling: z
+        .object({
+          factor: z.number(),
+          offset: z.number(),
+          units: z.string(),
+        })
+        .optional(),
+    })
+  ),
   plcInfo: z.object({
     stationName: z.string(),
     rackSlot: z.string().optional(),
@@ -80,15 +99,20 @@ export type PlcTelemetry = z.infer<typeof PlcTelemetrySchema>;
 // Camera telemetry for computer vision
 export const CameraTelemetrySchema = AssetTelemetrySchema.extend({
   assetType: z.literal('camera'),
-  points: z.array(TelemetryPointSchema.extend({
-    frameId: z.string().optional(),
-    roi: z.object({ // Region of Interest
-      x: z.number().min(0),
-      y: z.number().min(0),
-      width: z.number().min(1),
-      height: z.number().min(1),
-    }).optional(),
-  })),
+  points: z.array(
+    TelemetryPointSchema.extend({
+      frameId: z.string().optional(),
+      roi: z
+        .object({
+          // Region of Interest
+          x: z.number().min(0),
+          y: z.number().min(0),
+          width: z.number().min(1),
+          height: z.number().min(1),
+        })
+        .optional(),
+    })
+  ),
   cameraInfo: z.object({
     resolution: z.object({
       width: z.number().min(1),
@@ -105,19 +129,36 @@ export type CameraTelemetry = z.infer<typeof CameraTelemetrySchema>;
 // Sensor telemetry schema
 export const SensorTelemetrySchema = AssetTelemetrySchema.extend({
   assetType: z.literal('sensor'),
-  points: z.array(TelemetryPointSchema.extend({
-    sensorType: z.enum(['temperature', 'pressure', 'flow', 'level', 'ph', 'conductivity', 'vibration', 'proximity', 'photoelectric', 'load_cell']),
-    range: z.object({
-      min: z.number(),
-      max: z.number(),
-      units: z.string(),
-    }).optional(),
-    calibration: z.object({
-      lastCalibrated: z.date(),
-      nextCalibration: z.date(),
-      certificateId: z.string().optional(),
-    }).optional(),
-  })),
+  points: z.array(
+    TelemetryPointSchema.extend({
+      sensorType: z.enum([
+        'temperature',
+        'pressure',
+        'flow',
+        'level',
+        'ph',
+        'conductivity',
+        'vibration',
+        'proximity',
+        'photoelectric',
+        'load_cell',
+      ]),
+      range: z
+        .object({
+          min: z.number(),
+          max: z.number(),
+          units: z.string(),
+        })
+        .optional(),
+      calibration: z
+        .object({
+          lastCalibrated: z.date(),
+          nextCalibration: z.date(),
+          certificateId: z.string().optional(),
+        })
+        .optional(),
+    })
+  ),
 });
 
 export type SensorTelemetry = z.infer<typeof SensorTelemetrySchema>;
@@ -125,10 +166,21 @@ export type SensorTelemetry = z.infer<typeof SensorTelemetrySchema>;
 // Conveyor telemetry schema
 export const ConveyorTelemetrySchema = AssetTelemetrySchema.extend({
   assetType: z.literal('conveyor'),
-  points: z.array(TelemetryPointSchema.extend({
-    metric: z.enum(['speed', 'load', 'tension', 'alignment', 'motor_current', 'motor_temp', 'bearing_temp', 'vibration']),
-    section: z.string().optional(), // Conveyor section identifier
-  })),
+  points: z.array(
+    TelemetryPointSchema.extend({
+      metric: z.enum([
+        'speed',
+        'load',
+        'tension',
+        'alignment',
+        'motor_current',
+        'motor_temp',
+        'bearing_temp',
+        'vibration',
+      ]),
+      section: z.string().optional(), // Conveyor section identifier
+    })
+  ),
   conveyorInfo: z.object({
     length: z.number().positive(),
     width: z.number().positive(),
@@ -143,11 +195,21 @@ export type ConveyorTelemetry = z.infer<typeof ConveyorTelemetrySchema>;
 // Robot telemetry schema
 export const RobotTelemetrySchema = AssetTelemetrySchema.extend({
   assetType: z.literal('robot'),
-  points: z.array(TelemetryPointSchema.extend({
-    joint: z.number().min(1).max(8).optional(), // Joint number for articulated robots
-    coordinate: z.enum(['x', 'y', 'z', 'rx', 'ry', 'rz']).optional(),
-    metric: z.enum(['position', 'velocity', 'acceleration', 'torque', 'current', 'temperature', 'force']),
-  })),
+  points: z.array(
+    TelemetryPointSchema.extend({
+      joint: z.number().min(1).max(8).optional(), // Joint number for articulated robots
+      coordinate: z.enum(['x', 'y', 'z', 'rx', 'ry', 'rz']).optional(),
+      metric: z.enum([
+        'position',
+        'velocity',
+        'acceleration',
+        'torque',
+        'current',
+        'temperature',
+        'force',
+      ]),
+    })
+  ),
   robotInfo: z.object({
     model: z.string(),
     serialNumber: z.string(),
@@ -163,10 +225,12 @@ export type RobotTelemetry = z.infer<typeof RobotTelemetrySchema>;
 // Dock/workstation telemetry
 export const WorkstationTelemetrySchema = AssetTelemetrySchema.extend({
   assetType: z.enum(['dock', 'workstation']),
-  points: z.array(TelemetryPointSchema.extend({
-    station: z.string().optional(), // Station or bay identifier
-    metric: z.enum(['occupancy', 'cycle_time', 'throughput', 'error_count', 'quality_score']),
-  })),
+  points: z.array(
+    TelemetryPointSchema.extend({
+      station: z.string().optional(), // Station or bay identifier
+      metric: z.enum(['occupancy', 'cycle_time', 'throughput', 'error_count', 'quality_score']),
+    })
+  ),
   workstationInfo: z.object({
     capacity: z.number().positive().optional(),
     cycleTime: z.number().positive().optional(), // Expected cycle time in seconds
@@ -223,11 +287,13 @@ export const TelemetrySubscriptionSchema = z.object({
     compression: z.boolean().default(false),
     includeMetadata: z.boolean().default(true),
   }),
-  webhook: z.object({
-    url: z.string().url(),
-    headers: z.record(z.string(), z.string()).optional(),
-    retries: z.number().min(0).max(5).default(3),
-  }).optional(),
+  webhook: z
+    .object({
+      url: z.string().url(),
+      headers: z.record(z.string(), z.string()).optional(),
+      retries: z.number().min(0).max(5).default(3),
+    })
+    .optional(),
 });
 
 export type TelemetrySubscription = z.infer<typeof TelemetrySubscriptionSchema>;
@@ -240,10 +306,25 @@ export const TelemetryQuerySchema = z.object({
     end: z.date(),
   }),
   filters: TelemetrySubscriptionSchema.shape.filters,
-  aggregation: z.object({
-    interval: z.enum(['1s', '5s', '10s', '30s', '1m', '5m', '15m', '30m', '1h', '6h', '12h', '1d']),
-    functions: z.array(z.enum(['avg', 'min', 'max', 'sum', 'count', 'stddev', 'first', 'last'])),
-  }).optional(),
+  aggregation: z
+    .object({
+      interval: z.enum([
+        '1s',
+        '5s',
+        '10s',
+        '30s',
+        '1m',
+        '5m',
+        '15m',
+        '30m',
+        '1h',
+        '6h',
+        '12h',
+        '1d',
+      ]),
+      functions: z.array(z.enum(['avg', 'min', 'max', 'sum', 'count', 'stddev', 'first', 'last'])),
+    })
+    .optional(),
   limit: z.number().min(1).max(100000).default(10000),
   offset: z.number().min(0).default(0),
 });

@@ -6,23 +6,23 @@
 
 export default {
   // Use ts-jest preset for TypeScript + ESM
-  preset: "ts-jest/presets/default-esm",
+  preset: 'ts-jest/presets/default-esm',
 
   // Test environment
-  testEnvironment: "node",
+  testEnvironment: 'node',
 
   // File extensions to consider
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 
   // Module name mapper for absolute imports
   moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1",
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
 
   // Transform files with ts-jest
   transform: {
-    "^.+\\.tsx?$": [
-      "ts-jest",
+    '^.+\\.tsx?$': [
+      'ts-jest',
       {
         useESM: true,
       },
@@ -30,16 +30,16 @@ export default {
   },
 
   // Test match patterns
-  testMatch: ["**/__tests__/**/*.test.ts", "**/__tests__/**/*.spec.ts"],
+  testMatch: ['**/__tests__/**/*.test.ts', '**/__tests__/**/*.spec.ts'],
 
   // Coverage configuration
   collectCoverageFrom: [
-    "src/**/*.ts",
-    "!**/*.test.ts",
-    "!**/*.spec.ts",
-    "!**/node_modules/**",
-    "!**/dist/**",
-    "!**/__tests__/**",
+    'src/**/*.ts',
+    '!**/*.test.ts',
+    '!**/*.spec.ts',
+    '!**/node_modules/**',
+    '!**/dist/**',
+    '!**/__tests__/**',
   ],
 
   // Coverage thresholds
@@ -53,7 +53,7 @@ export default {
   },
 
   // Ignore patterns
-  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
 
   // Clear mocks between tests
   clearMocks: true,
@@ -62,5 +62,5 @@ export default {
   restoreMocks: true,
 
   // ESM support
-  extensionsToTreatAsEsm: [".ts"],
+  extensionsToTreatAsEsm: ['.ts'],
 };

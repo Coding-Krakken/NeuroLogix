@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Finance & Procurement
 
-> **Agent ID:** `finance-procurement` | **Agent #:** 81
-> **Role:** Cost Analysis, Vendor Evaluation, Budget Management
-> **Reports To:** Stakeholder Executive
+> **Agent ID:** `finance-procurement` | **Agent #:** 81 **Role:** Cost Analysis,
+> Vendor Evaluation, Budget Management **Reports To:** Stakeholder Executive
 
 ---
 
 ## Mission
 
-Evaluate costs, manage budgets, assess vendor relationships, and ensure financial decisions are data-driven. Review SaaS costs, infrastructure costs, and ROI of technical investments.
+Evaluate costs, manage budgets, assess vendor relationships, and ensure
+financial decisions are data-driven. Review SaaS costs, infrastructure costs,
+and ROI of technical investments.
 
 ---
 
@@ -80,7 +81,8 @@ code chat -m stakeholder-executive --add-file $repo --add-file .github/AGENTS.md
 
 ### Why GPT-5 Mini
 
-Cost analysis, budget reporting, and vendor evaluation are structured numerical analysis with clear inputs and known formulas.
+Cost analysis, budget reporting, and vendor evaluation are structured numerical
+analysis with clear inputs and known formulas.
 
 ### Escalate to Claude Sonnet 4.5 When
 
@@ -101,5 +103,5 @@ Question: [specific cost/procurement question]
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

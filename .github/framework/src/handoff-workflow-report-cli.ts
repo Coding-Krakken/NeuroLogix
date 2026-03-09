@@ -1,17 +1,17 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 import {
   buildHandoffWorkflowReportFromText,
   formatHandoffWorkflowReport,
-} from "./handoff-workflow-report.js";
+} from './handoff-workflow-report.js';
 
 interface CliArgs {
   filePath?: string;
   json: boolean;
 }
 
-const DEFAULT_SAMPLE_LOG = "qa-evidence/handoff-workflow-sample.log";
+const DEFAULT_SAMPLE_LOG = 'qa-evidence/handoff-workflow-sample.log';
 
 const parseArgs = (argv: string[]): CliArgs => {
   const args: CliArgs = {
@@ -20,12 +20,12 @@ const parseArgs = (argv: string[]): CliArgs => {
 
   for (let index = 0; index < argv.length; index += 1) {
     const value = argv[index];
-    if (value === "--json") {
+    if (value === '--json') {
       args.json = true;
       continue;
     }
 
-    if (value === "--input" || value === "--file") {
+    if (value === '--input' || value === '--file') {
       const nextValue = argv[index + 1];
       if (nextValue) {
         args.filePath = nextValue;
@@ -54,9 +54,9 @@ const main = (): void => {
   const selectedPath = args.filePath ?? DEFAULT_SAMPLE_LOG;
   const absolutePath = resolve(process.cwd(), selectedPath);
 
-  let input = "";
+  let input = '';
   try {
-    input = readFileSync(absolutePath, "utf8");
+    input = readFileSync(absolutePath, 'utf8');
   } catch (error) {
     writeStderr(usage());
     writeStderr(`Failed to read input file: ${absolutePath}`);

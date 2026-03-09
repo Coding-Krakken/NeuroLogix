@@ -52,25 +52,33 @@ export type PolicyEvaluationRequest = z.infer<typeof PolicyEvaluationRequestSche
 export const PolicyEvaluationResultSchema = z.object({
   requestId: z.string().uuid(),
   decision: z.enum(['allow', 'deny', 'approval_required']),
-  policyMatches: z.array(z.object({
-    policyId: z.string().uuid(),
-    policyName: z.string(),
-    decision: z.enum(['allow', 'deny', 'approval_required']),
-    reasoning: z.string(),
-    priority: z.enum(['critical', 'high', 'medium', 'low']),
-  })),
+  policyMatches: z.array(
+    z.object({
+      policyId: z.string().uuid(),
+      policyName: z.string(),
+      decision: z.enum(['allow', 'deny', 'approval_required']),
+      reasoning: z.string(),
+      priority: z.enum(['critical', 'high', 'medium', 'low']),
+    })
+  ),
   overallReasoning: z.string(),
-  approvalWorkflow: z.object({
-    required: z.boolean(),
-    approvers: z.array(z.string()),
-    minimumApprovals: z.number().int().min(0),
-    emergencyOverrideEnabled: z.boolean(),
-  }).optional(),
-  constraints: z.array(z.object({
-    type: z.string(),
-    description: z.string(),
-    parameters: z.record(z.any()),
-  })).default([]),
+  approvalWorkflow: z
+    .object({
+      required: z.boolean(),
+      approvers: z.array(z.string()),
+      minimumApprovals: z.number().int().min(0),
+      emergencyOverrideEnabled: z.boolean(),
+    })
+    .optional(),
+  constraints: z
+    .array(
+      z.object({
+        type: z.string(),
+        description: z.string(),
+        parameters: z.record(z.any()),
+      })
+    )
+    .default([]),
   validUntil: z.date().optional(),
   evaluatedAt: z.date(),
 });
@@ -90,27 +98,35 @@ export const ApprovalRequestSchema = z.object({
     name: z.string(),
     email: z.string(),
   }),
-  approvers: z.array(z.object({
-    userId: z.string(),
-    name: z.string(),
-    email: z.string(),
-    required: z.boolean().default(true),
-  })),
+  approvers: z.array(
+    z.object({
+      userId: z.string(),
+      name: z.string(),
+      email: z.string(),
+      required: z.boolean().default(true),
+    })
+  ),
   minimumApprovals: z.number().int().min(1),
-  currentApprovals: z.array(z.object({
-    approverId: z.string(),
-    decision: z.enum(['approved', 'rejected']),
-    reasoning: z.string().optional(),
-    timestamp: z.date(),
-  })).default([]),
+  currentApprovals: z
+    .array(
+      z.object({
+        approverId: z.string(),
+        decision: z.enum(['approved', 'rejected']),
+        reasoning: z.string().optional(),
+        timestamp: z.date(),
+      })
+    )
+    .default([]),
   status: z.enum(['pending', 'approved', 'rejected', 'expired', 'cancelled']),
   priority: z.enum(['critical', 'high', 'medium', 'low']),
-  emergencyOverride: z.object({
-    enabled: z.boolean(),
-    usedBy: z.string().optional(),
-    reasoning: z.string().optional(),
-    timestamp: z.date().optional(),
-  }).optional(),
+  emergencyOverride: z
+    .object({
+      enabled: z.boolean(),
+      usedBy: z.string().optional(),
+      reasoning: z.string().optional(),
+      timestamp: z.date().optional(),
+    })
+    .optional(),
   context: z.record(z.any()),
   expiresAt: z.date(),
   createdAt: z.date(),
@@ -126,7 +142,12 @@ export const PolicyViolationSchema = z.object({
   id: z.string().uuid(),
   policyId: z.string().uuid(),
   policyName: z.string(),
-  violationType: z.enum(['denied_action', 'constraint_violation', 'unauthorized_access', 'safety_breach']),
+  violationType: z.enum([
+    'denied_action',
+    'constraint_violation',
+    'unauthorized_access',
+    'safety_breach',
+  ]),
   severity: z.enum(['critical', 'high', 'medium', 'low']),
   action: z.string(),
   resource: z.string(),
@@ -201,7 +222,9 @@ export type ApprovalQuery = z.infer<typeof ApprovalQuerySchema>;
 
 export const ViolationQuerySchema = z.object({
   policyId: z.string().uuid().optional(),
-  violationType: z.enum(['denied_action', 'constraint_violation', 'unauthorized_access', 'safety_breach']).optional(),
+  violationType: z
+    .enum(['denied_action', 'constraint_violation', 'unauthorized_access', 'safety_breach'])
+    .optional(),
   severity: z.enum(['critical', 'high', 'medium', 'low']).optional(),
   acknowledged: z.boolean().optional(),
   userId: z.string().optional(),

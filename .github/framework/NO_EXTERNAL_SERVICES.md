@@ -2,10 +2,12 @@
 
 ## TL;DR
 
-**The framework is NOT a separate service. It's library code agents import and call directly.**
+**The framework is NOT a separate service. It's library code agents import and
+call directly.**
 
 Think of it like:
-- **Old:** `fs.writeFileSync()` then `exec('code chat')`  
+
+- **Old:** `fs.writeFileSync()` then `exec('code chat')`
 - **New:** `provider.postHandoff()` then `dispatcher.dispatch()`
 
 Same concept. Just posting to GitHub instead of writing files.
@@ -33,13 +35,14 @@ Agent Process
 
 ## CLI Tools Used (Already Installed)
 
-| Tool | Purpose | Status |
-|------|---------|--------|
-| `gh` | Post GitHub comments | ✅ Already have (GitHub CLI) |
-| `code` | Dispatch agents | ✅ Already have (VS Code) |
-| `git` | Detect context | ✅ Already have (Git) |
+| Tool   | Purpose              | Status                       |
+| ------ | -------------------- | ---------------------------- |
+| `gh`   | Post GitHub comments | ✅ Already have (GitHub CLI) |
+| `code` | Dispatch agents      | ✅ Already have (VS Code)    |
+| `git`  | Detect context       | ✅ Already have (Git)        |
 
-**These are commands, not services.** The framework just wraps them with `execFile()`.
+**These are commands, not services.** The framework just wraps them with
+`execFile()`.
 
 ---
 
@@ -48,18 +51,20 @@ Agent Process
 The framework is just `.ts` files. Agents import them:
 
 ```typescript
-import { postHandoffAndDispatch } from './.github/framework/dispatcher'
+import { postHandoffAndDispatch } from './.github/framework/dispatcher';
 ```
 
 No:
+
 - ❌ HTTP server
-- ❌ Background daemon  
+- ❌ Background daemon
 - ❌ Docker container
 - ❌ Separate process
 - ❌ Database
 - ❌ Message queue
 
 Just:
+
 - ✅ TypeScript files
 - ✅ Node.js child_process
 - ✅ CLI tool wrappers
@@ -69,10 +74,10 @@ Just:
 ## Dry-Run Mode (No Network Calls)
 
 ```typescript
-const provider = createGitHubHandoffProvider({ dryRun: true })
-const dispatcher = new AgentDispatcher({ dryRun: true })
+const provider = createGitHubHandoffProvider({ dryRun: true });
+const dispatcher = new AgentDispatcher({ dryRun: true });
 
-await postHandoffAndDispatch(provider, dispatcher, context, handoffData)
+await postHandoffAndDispatch(provider, dispatcher, context, handoffData);
 // Simulates everything, makes NO actual system calls
 ```
 

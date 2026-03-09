@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { 
+import {
   TelemetryPointSchema,
   AssetTelemetrySchema,
   PlcTelemetrySchema,
   CameraTelemetrySchema,
   SensorTelemetrySchema,
   TelemetryBatchSchema,
-  TelemetrySubscriptionSchema
+  TelemetrySubscriptionSchema,
 } from '@/telemetry/index';
 
 describe('Telemetry Schemas', () => {
@@ -271,7 +271,7 @@ describe('Telemetry Schemas', () => {
         webhook: {
           url: 'https://api.example.com/telemetry',
           headers: {
-            'Authorization': 'Bearer token123',
+            Authorization: 'Bearer token123',
           },
           retries: 3,
         },

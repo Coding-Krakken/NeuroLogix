@@ -1,13 +1,13 @@
 # Framework Audit Plan
 
-> **Category:** Framework Audit
-> **File:** `framework-audit/audit-plan.prompt.md`
+> **Category:** Framework Audit **File:** `framework-audit/audit-plan.prompt.md`
 
 ---
 
 ## Purpose
 
-Create a structured audit execution plan with baseline framework state capture, synthetic task selection, expected outcomes, and pass/fail criteria.
+Create a structured audit execution plan with baseline framework state capture,
+synthetic task selection, expected outcomes, and pass/fail criteria.
 
 ## When to Use
 
@@ -26,9 +26,8 @@ Create a structured audit execution plan with baseline framework state capture, 
 ```markdown
 ## Framework Audit Plan
 
-**Mode:** [FAST|STANDARD|THOROUGH]
-**Date:** [YYYY-MM-DD]
-**Auditor:** Framework Auditor (Agent #90)
+**Mode:** [FAST|STANDARD|THOROUGH] **Date:** [YYYY-MM-DD] **Auditor:** Framework
+Auditor (Agent #90)
 
 ### Baseline Framework State
 
@@ -77,9 +76,7 @@ Create a structured audit execution plan with baseline framework state capture, 
 
 1. **Baseline Capture** (5 min)
 2. **Task 1 Execution** (est. X min)
-3. **Task 2 Execution** (est. X min)
-   ...
-   N. **Metrics Calculation** (10 min)
+3. **Task 2 Execution** (est. X min) ... N. **Metrics Calculation** (10 min)
    N+1. **Report Generation** (15 min)
 
 **Total Estimated Time:** [30 min | 2 hours | 6 hours]
@@ -131,7 +128,8 @@ Based on mode, select tasks from `synthetic-task-battery.prompt.md`:
 
 For each task, specify:
 
-- Expected agent chain (e.g., Chief of Staff → Tech Lead → Frontend Engineer → QA → Quality Director)
+- Expected agent chain (e.g., Chief of Staff → Tech Lead → Frontend Engineer →
+  QA → Quality Director)
 - Expected handoff count (e.g., 4 handoffs)
 - Expected execution time (e.g., 15 minutes)
 - Pass criteria (e.g., code passes all quality gates, PR created)
@@ -182,11 +180,8 @@ Specify when to abort audit:
 ````markdown
 ## Framework Audit Plan
 
-**Mode:** STANDARD
-**Date:** 2026-02-25
-**Auditor:** Framework Auditor (Agent #90)
-**User:** David
-**Approval:** ✅ 2026-02-25T14:35:00
+**Mode:** STANDARD **Date:** 2026-02-25 **Auditor:** Framework Auditor (Agent
+#90) **User:** David **Approval:** ✅ 2026-02-25T14:35:00
 
 ### Baseline Framework State
 
@@ -201,21 +196,37 @@ Specify when to abort audit:
 | Task Completion Rate | Unknown\*     | >98%         | ⚠️ Measure |
 | Error Rate           | Unknown\*     | <1%          | ⚠️ Measure |
 
-\*Will be measured during audit
-\*\*From manual testing (needs validation)
+\*Will be measured during audit \*\*From manual testing (needs validation)
 
 ### Synthetic Tasks Selected (12 tasks)
 
 **Trivial (2 tasks):**
 
-1. Fix typo in README (expected: Chief → Doc Engineer → Quality Director, 5 min, 2 handoffs)
-2. Update changelog (expected: Chief → Doc Engineer → Quality Director, 5 min, 2 handoffs)
+1. Fix typo in README (expected: Chief → Doc Engineer → Quality Director, 5 min,
+   2 handoffs)
+2. Update changelog (expected: Chief → Doc Engineer → Quality Director, 5 min, 2
+   handoffs)
 
-**Simple (4 tasks):** 3. Add unit test for existing function (expected: Chief → QA → Quality Director, 10 min, 2 handoffs) 4. Update component prop types (expected: Chief → Frontend → QA → Quality Director, 12 min, 3 handoffs) 5. Add error logging to API route (expected: Chief → Backend → QA → Quality Director, 12 min, 3 handoffs) 6. Create ADR for minor decision (expected: Chief → Solution Architect → Quality Director, 15 min, 2 handoffs)
+**Simple (4 tasks):** 3. Add unit test for existing function (expected: Chief →
+QA → Quality Director, 10 min, 2 handoffs) 4. Update component prop types
+(expected: Chief → Frontend → QA → Quality Director, 12 min, 3 handoffs) 5. Add
+error logging to API route (expected: Chief → Backend → QA → Quality Director,
+12 min, 3 handoffs) 6. Create ADR for minor decision (expected: Chief → Solution
+Architect → Quality Director, 15 min, 2 handoffs)
 
-**Medium (4 tasks):** 7. Implement new UI component (expected: Chief → Tech Lead → Frontend → QA → Quality Director, 25 min, 4 handoffs) 8. Add new API endpoint (expected: Chief → Tech Lead → Backend → QA → Security → Quality Director, 30 min, 5 handoffs) 9. Refactor shared utility (expected: Chief → Tech Lead → Engineer → QA → Quality Director, 20 min, 4 handoffs) 10. Update SEO metadata schema (expected: Chief → Solution Architect → Tech Lead → Frontend → QA → Quality Director, 30 min, 5 handoffs)
+**Medium (4 tasks):** 7. Implement new UI component (expected: Chief → Tech Lead
+→ Frontend → QA → Quality Director, 25 min, 4 handoffs) 8. Add new API endpoint
+(expected: Chief → Tech Lead → Backend → QA → Security → Quality Director, 30
+min, 5 handoffs) 9. Refactor shared utility (expected: Chief → Tech Lead →
+Engineer → QA → Quality Director, 20 min, 4 handoffs) 10. Update SEO metadata
+schema (expected: Chief → Solution Architect → Tech Lead → Frontend → QA →
+Quality Director, 30 min, 5 handoffs)
 
-**Complex (2 tasks):** 11. Design and implement caching layer (expected: Chief → Solution Architect → Tech Lead → Backend → QA → Security → Performance → Quality Director, 50 min, 7 handoffs) 12. Security audit of checkout flow (expected: Chief → Security → Red Team → Backend → QA → Quality Director, 45 min, 5 handoffs)
+**Complex (2 tasks):** 11. Design and implement caching layer (expected: Chief →
+Solution Architect → Tech Lead → Backend → QA → Security → Performance → Quality
+Director, 50 min, 7 handoffs) 12. Security audit of checkout flow (expected:
+Chief → Security → Red Team → Backend → QA → Quality Director, 45 min, 5
+handoffs)
 
 ### Expected Outcomes (STANDARD Mode)
 
@@ -294,4 +305,3 @@ After audit plan creation, proceed to:
 - **Input:** Audit plan (tasks, expected outcomes, monitoring setup)
 - **Task:** Execute tasks and monitor in real-time
 ```
-

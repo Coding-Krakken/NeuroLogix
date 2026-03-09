@@ -9,13 +9,16 @@
 
 ## Objective
 
-Commit code changes to git with proper conventional commit messages, ensuring all quality gates pass before committing.
+Commit code changes to git with proper conventional commit messages, ensuring
+all quality gates pass before committing.
 
 ---
 
 ## Context
 
-You are an AI agent in the Core-3 operating model (with specialist escalation). Your team uses strict git workflows with conventional commits and quality gates. Every commit must:
+You are an AI agent in the Core-3 operating model (with specialist escalation).
+Your team uses strict git workflows with conventional commits and quality gates.
+Every commit must:
 
 - Pass local quality gates (lint, typecheck, test)
 - Use conventional commit message format
@@ -176,17 +179,17 @@ gh issue comment 42 --body "Committed metadata helpers (feat: enforce INV-SEO-1)
 
 ## Commit Types Reference
 
-| Type       | Usage                                   | Example                                   |
-| ---------- | --------------------------------------- | ----------------------------------------- |
-| `feat`     | New feature or enhancement              | `feat(seo): add BreadcrumbList schema`    |
-| `fix`      | Bug fix                                 | `fix(cart): prevent duplicate items`      |
-| `refactor` | Code restructuring (no behavior change) | `refactor(payment): extract validation`   |
-| `docs`     | Documentation changes                   | `docs(readme): update setup instructions` |
-| `test`     | Adding or updating tests                | `test(checkout): add e2e test for flow`   |
-| `chore`    | Maintenance (deps, config, etc.)        | `chore(deps): update <WEB_FRAMEWORK> to 16.1.7`   |
-| `security` | Security improvements/fixes             | `security(auth): sanitize user input`     |
-| `perf`     | Performance improvements                | `perf(api): cache product catalog`        |
-| `style`    | Formatting only (no code change)        | `style(cart): format with Prettier`       |
+| Type       | Usage                                   | Example                                         |
+| ---------- | --------------------------------------- | ----------------------------------------------- |
+| `feat`     | New feature or enhancement              | `feat(seo): add BreadcrumbList schema`          |
+| `fix`      | Bug fix                                 | `fix(cart): prevent duplicate items`            |
+| `refactor` | Code restructuring (no behavior change) | `refactor(payment): extract validation`         |
+| `docs`     | Documentation changes                   | `docs(readme): update setup instructions`       |
+| `test`     | Adding or updating tests                | `test(checkout): add e2e test for flow`         |
+| `chore`    | Maintenance (deps, config, etc.)        | `chore(deps): update <WEB_FRAMEWORK> to 16.1.7` |
+| `security` | Security improvements/fixes             | `security(auth): sanitize user input`           |
+| `perf`     | Performance improvements                | `perf(api): cache product catalog`              |
+| `style`    | Formatting only (no code change)        | `style(cart): format with Prettier`             |
 
 ---
 
@@ -306,7 +309,8 @@ Next steps:
 
 ## Related Prompts
 
-- [branch-strategy.prompt.md](branch-strategy.prompt.md) — Creating and managing branches
+- [branch-strategy.prompt.md](branch-strategy.prompt.md) — Creating and managing
+  branches
 - [create-pr.prompt.md](create-pr.prompt.md) — Creating pull requests
 - [manage-issue.prompt.md](manage-issue.prompt.md) — Managing GitHub issues
 
@@ -315,4 +319,3 @@ Next steps:
 **Version:** 1.0.0  
 **Last Updated:** 2026-02-25  
 **Owner:** operations (git workflows)
-

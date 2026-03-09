@@ -6,12 +6,7 @@
  * @module framework/context-hierarchy
  */
 
-import type {
-  ContextHierarchyResult,
-  ContextSlice,
-  HybridExecutionConfig,
-  Task,
-} from "./types";
+import type { ContextHierarchyResult, ContextSlice, HybridExecutionConfig, Task } from './types';
 
 export interface ContextSource {
   source: string;
@@ -19,7 +14,7 @@ export interface ContextSource {
 }
 
 export interface ContextHierarchyInput {
-  task: Pick<Task, "id" | "title" | "description" | "acceptanceCriteria">;
+  task: Pick<Task, 'id' | 'title' | 'description' | 'acceptanceCriteria'>;
   l2Items: ContextSource[];
   l3Items: ContextSource[];
 }
@@ -46,7 +41,7 @@ export class ContextHierarchy {
 
   constructor(
     private readonly config: HybridExecutionConfig,
-    deps: ContextHierarchyDependencies = {},
+    deps: ContextHierarchyDependencies = {}
   ) {
     this.estimateTokens = deps.estimateTokens ?? DEFAULT_TOKEN_ESTIMATOR;
   }
@@ -66,27 +61,23 @@ export class ContextHierarchy {
       `Task: ${input.task.title}`,
       `Task ID: ${input.task.id}`,
       `Description: ${input.task.description}`,
-      `Acceptance Criteria: ${input.task.acceptanceCriteria.join(" | ")}`,
-    ].join("\n");
+      `Acceptance Criteria: ${input.task.acceptanceCriteria.join(' | ')}`,
+    ].join('\n');
 
-    slices.push(this.createSlice("L1", "task-core", l1Content));
+    slices.push(this.createSlice('L1', 'task-core', l1Content));
 
     for (const item of input.l2Items.slice(0, this.config.maxL2Comments)) {
-      slices.push(this.createSlice("L2", item.source, item.content));
+      slices.push(this.createSlice('L2', item.source, item.content));
     }
 
     for (const item of input.l3Items) {
-      slices.push(this.createSlice("L3", item.source, item.content));
+      slices.push(this.createSlice('L3', item.source, item.content));
     }
 
     return this.applyBudget(slices);
   }
 
-  private createSlice(
-    tier: ContextSlice["tier"],
-    source: string,
-    content: string,
-  ): ContextSlice {
+  private createSlice(tier: ContextSlice['tier'], source: string, content: string): ContextSlice {
     const sanitized = this.sanitize(content);
     return {
       tier,
@@ -98,7 +89,7 @@ export class ContextHierarchy {
 
   private sanitize(content: string): string {
     return SECRET_OR_PII_PATTERNS.reduce((current, pattern) => {
-      return current.replace(pattern, "[REDACTED]");
+      return current.replace(pattern, '[REDACTED]');
     }, content);
   }
 
@@ -116,7 +107,7 @@ export class ContextHierarchy {
         continue;
       }
 
-      if (slice.tier === "L1" && this.config.l1TokenBudget > 0) {
+      if (slice.tier === 'L1' && this.config.l1TokenBudget > 0) {
         const capped = this.capL1Slice(slice);
         const cappedTotal = used + capped.estimatedTokens;
         if (cappedTotal <= this.config.maxContextTokens) {

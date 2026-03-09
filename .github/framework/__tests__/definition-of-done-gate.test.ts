@@ -1,8 +1,8 @@
-import { describe, it, expect } from "@jest/globals";
-import { DefinitionOfDoneGate } from "../definition-of-done-gate";
+import { describe, it, expect } from '@jest/globals';
+import { DefinitionOfDoneGate } from '../definition-of-done-gate';
 
-describe("DefinitionOfDoneGate", () => {
-  it("passes when all required fields are satisfied", () => {
+describe('DefinitionOfDoneGate', () => {
+  it('passes when all required fields are satisfied', () => {
     const result = DefinitionOfDoneGate.evaluate({
       testsUpdated: true,
       lintPassed: true,
@@ -17,7 +17,7 @@ describe("DefinitionOfDoneGate", () => {
     expect(result.failures).toHaveLength(0);
   });
 
-  it("fails with multiple unmet requirements", () => {
+  it('fails with multiple unmet requirements', () => {
     const result = DefinitionOfDoneGate.evaluate({
       testsUpdated: false,
       lintPassed: true,

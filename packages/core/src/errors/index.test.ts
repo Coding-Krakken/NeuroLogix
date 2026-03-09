@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { 
-  NeuroLogixError, 
-  AuthenticationError, 
-  ValidationError, 
+import {
+  NeuroLogixError,
+  AuthenticationError,
+  ValidationError,
   AssetNotFoundError,
   isOperationalError,
-  createErrorFromHttpStatus
+  createErrorFromHttpStatus,
 } from '@/errors/index';
 
 describe('Error Classes', () => {
@@ -29,7 +29,7 @@ describe('Error Classes', () => {
     it('should serialize to JSON correctly', () => {
       const error = new AuthenticationError('Auth failed', { userId: '123' });
       const json = error.toJSON();
-      
+
       expect(json).toHaveProperty('name', 'AuthenticationError');
       expect(json).toHaveProperty('message', 'Auth failed');
       expect(json).toHaveProperty('code', 'AUTH_001');

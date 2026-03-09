@@ -1,13 +1,13 @@
 # API Contract Design
 
-> **Category:** Architecture
-> **File:** `architecture/api-contract.prompt.md`
+> **Category:** Architecture **File:** `architecture/api-contract.prompt.md`
 
 ---
 
 ## Purpose
 
-Define complete API contracts: endpoints, request/response schemas, error codes, authentication, rate limits, and versioning.
+Define complete API contracts: endpoints, request/response schemas, error codes,
+authentication, rate limits, and versioning.
 
 ## When to Use
 

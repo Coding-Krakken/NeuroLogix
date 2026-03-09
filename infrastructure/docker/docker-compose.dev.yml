@@ -8,8 +8,8 @@ services:
     image: eclipse-mosquitto:2.0
     container_name: neurologix-mosquitto
     ports:
-      - "1883:1883"
-      - "9001:9001"
+      - '1883:1883'
+      - '9001:9001'
     volumes:
       - ./mosquitto/config:/mosquitto/config:ro
       - ./mosquitto/data:/mosquitto/data
@@ -35,16 +35,16 @@ services:
       - --mode dev-container
       - --default-log-level=info
     ports:
-      - "18081:18081"
-      - "18082:18082"
-      - "19092:19092"
-      - "19644:9644"
+      - '18081:18081'
+      - '18082:18082'
+      - '19092:19092'
+      - '19644:9644'
     volumes:
       - redpanda:/var/lib/redpanda/data
     networks:
       - neurologix-network
     healthcheck:
-      test: ["CMD-SHELL", "rpk cluster health | grep -E 'healthy|Healthy'"]
+      test: ['CMD-SHELL', "rpk cluster health | grep -E 'healthy|Healthy'"]
       interval: 15s
       timeout: 3s
       retries: 5
@@ -57,16 +57,16 @@ services:
       POSTGRES_DB: neurologix
       POSTGRES_USER: neurologix
       POSTGRES_PASSWORD: dev-password-change-in-production
-      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --lc-collate=C --lc-ctype=C'
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres:/var/lib/postgresql/data
       - ./postgres/init:/docker-entrypoint-initdb.d:ro
     networks:
       - neurologix-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U neurologix"]
+      test: ['CMD-SHELL', 'pg_isready -U neurologix']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -76,13 +76,13 @@ services:
     container_name: neurologix-redis
     command: redis-server --appendonly yes --requirepass dev-password-change-in-production
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis:/data
     networks:
       - neurologix-network
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
       interval: 10s
       timeout: 3s
       retries: 5
@@ -100,7 +100,7 @@ services:
       - '--web.enable-lifecycle'
       - '--web.enable-admin-api'
     ports:
-      - "9090:9090"
+      - '9090:9090'
     volumes:
       - ./prometheus/config:/etc/prometheus:ro
       - prometheus:/prometheus
@@ -115,10 +115,10 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: dev-password-change-in-production
-      GF_USERS_ALLOW_SIGN_UP: "false"
-      GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: "false"
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: 'false'
     ports:
-      - "3001:3000"
+      - '3001:3000'
     volumes:
       - grafana:/var/lib/grafana
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
@@ -135,7 +135,7 @@ services:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
     ports:
-      - "9093:9093"
+      - '9093:9093'
     volumes:
       - ./alertmanager:/etc/alertmanager:ro
       - alertmanager:/alertmanager
@@ -146,14 +146,14 @@ services:
     image: jaegertracing/all-in-one:1.49
     container_name: neurologix-jaeger
     environment:
-      COLLECTOR_OTLP_ENABLED: "true"
+      COLLECTOR_OTLP_ENABLED: 'true'
     ports:
-      - "16686:16686"
-      - "14250:14250"
-      - "14268:14268"
-      - "14269:14269"
-      - "4317:4317"   # OTLP gRPC
-      - "4318:4318"   # OTLP HTTP
+      - '16686:16686'
+      - '14250:14250'
+      - '14268:14268'
+      - '14269:14269'
+      - '4317:4317' # OTLP gRPC
+      - '4318:4318' # OTLP HTTP
     networks:
       - neurologix-network
 
@@ -162,12 +162,12 @@ services:
     image: openpolicyagent/opa:0.57.0-envoy
     container_name: neurologix-opa
     command:
-      - "run"
-      - "--server"
-      - "--config-file=/config/config.yaml"
-      - "/policies"
+      - 'run'
+      - '--server'
+      - '--config-file=/config/config.yaml'
+      - '/policies'
     ports:
-      - "8181:8181"
+      - '8181:8181'
     volumes:
       - ./opa/policies:/policies:ro
       - ./opa/config:/config:ro
@@ -181,9 +181,9 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@neurologix.local
       PGADMIN_DEFAULT_PASSWORD: dev-password-change-in-production
-      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
-      - "5050:80"
+      - '5050:80'
     volumes:
       - pgadmin:/var/lib/pgadmin
     networks:
@@ -195,8 +195,8 @@ services:
     image: mailhog/mailhog:v1.0.1
     container_name: neurologix-mailhog
     ports:
-      - "1025:1025"
-      - "8025:8025"
+      - '1025:1025'
+      - '8025:8025'
     networks:
       - neurologix-network
 

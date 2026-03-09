@@ -9,7 +9,9 @@
 
 ## Overview
 
-This document identifies all critical failure modes for the framework modernization and defines recovery strategies, circuit breakers, and retry policies.
+This document identifies all critical failure modes for the framework
+modernization and defines recovery strategies, circuit breakers, and retry
+policies.
 
 **Goal:** 99.9% uptime, graceful degradation, <5 minute recovery time
 
@@ -21,7 +23,8 @@ This document identifies all critical failure modes for the framework modernizat
 
 **Component:** `routing-optimizer.ts`
 
-**Failure Scenario:** Routing optimizer throws exception during `determineRoute()`
+**Failure Scenario:** Routing optimizer throws exception during
+`determineRoute()`
 
 **Symptoms:**
 
@@ -54,7 +57,7 @@ This document identifies all critical failure modes for the framework modernizat
 
    ```typescript
    try {
-     const decision = await RoutingOptimizer.determineRoute(task)
+     const decision = await RoutingOptimizer.determineRoute(task);
    } catch (error) {
      // Fallback to default routing chain
      const decision = {
@@ -63,7 +66,7 @@ This document identifies all critical failure modes for the framework modernizat
        reason: 'Routing optimizer failed - using default chain',
        confidence: 1.0,
        expressLane: false,
-     }
+     };
    }
    ```
 
@@ -124,15 +127,15 @@ This document identifies all critical failure modes for the framework modernizat
    ```typescript
    const timeout = new Promise((_, reject) =>
      setTimeout(() => reject(new Error(`Gate ${gate.id} timeout`)), 300000)
-   )
-   const result = await Promise.race([gate.validator(), timeout])
+   );
+   const result = await Promise.race([gate.validator(), timeout]);
    ```
 
 2. **Kill Hung Process:**
 
    ```typescript
    if (gateProcess.pid) {
-     process.kill(gateProcess.pid, 'SIGKILL')
+     process.kill(gateProcess.pid, 'SIGKILL');
    }
    ```
 
@@ -144,7 +147,7 @@ This document identifies all critical failure modes for the framework modernizat
      passed: false,
      duration: 300000,
      errors: ['Gate timeout after 5 minutes'],
-   }
+   };
    ```
 
 4. **Abort Remaining Gates:**
@@ -198,10 +201,10 @@ This document identifies all critical failure modes for the framework modernizat
    function detectCycle(graph: QualityGate[]): boolean {
      // Topological sort - if fails, cycle exists
      try {
-       topologicalSort(graph)
-       return false // No cycle
+       topologicalSort(graph);
+       return false; // No cycle
      } catch (error) {
-       return true // Cycle detected
+       return true; // Cycle detected
      }
    }
    ```
@@ -211,7 +214,7 @@ This document identifies all critical failure modes for the framework modernizat
    ```typescript
    // At framework startup
    if (detectCycle(QUALITY_GATES)) {
-     throw new DeadlockError('Circular dependency in quality gates')
+     throw new DeadlockError('Circular dependency in quality gates');
    }
    ```
 
@@ -233,7 +236,8 @@ This document identifies all critical failure modes for the framework modernizat
 
 **Component:** `telemetry.ts`
 
-**Failure Scenario:** Telemetry storage unavailable (disk full, permission denied)
+**Failure Scenario:** Telemetry storage unavailable (disk full, permission
+denied)
 
 **Symptoms:**
 
@@ -265,9 +269,9 @@ This document identifies all critical failure modes for the framework modernizat
 
    ```typescript
    try {
-     await fs.appendFile('telemetry.jsonl', event)
+     await fs.appendFile('telemetry.jsonl', event);
    } catch (error) {
-     console.warn('Telemetry write failed, buffering in memory')
+     console.warn('Telemetry write failed, buffering in memory');
      // Continue execution - telemetry is not critical
    }
    ```
@@ -275,15 +279,15 @@ This document identifies all critical failure modes for the framework modernizat
 2. **Buffer in Memory:**
 
    ```typescript
-   const buffer: TelemetryEvent[] = []
-   const MAX_BUFFER_SIZE = 1000
+   const buffer: TelemetryEvent[] = [];
+   const MAX_BUFFER_SIZE = 1000;
 
    function bufferEvent(event: TelemetryEvent) {
      if (buffer.length < MAX_BUFFER_SIZE) {
-       buffer.push(event)
+       buffer.push(event);
      } else {
-       buffer.shift() // Drop oldest event
-       buffer.push(event)
+       buffer.shift(); // Drop oldest event
+       buffer.push(event);
      }
    }
    ```
@@ -294,13 +298,13 @@ This document identifies all critical failure modes for the framework modernizat
    setInterval(async () => {
      if (buffer.length > 0) {
        try {
-         await flushBuffer(buffer)
-         buffer.length = 0 // Clear buffer on success
+         await flushBuffer(buffer);
+         buffer.length = 0; // Clear buffer on success
        } catch (error) {
          // Retry next interval
        }
      }
-   }, 30000)
+   }, 30000);
    ```
 
 4. **Drop Oldest Events if Buffer Full:**
@@ -350,11 +354,15 @@ This document identifies all critical failure modes for the framework modernizat
 1. **File Watching (Auto-Invalidation):**
 
    ```typescript
-   watch('.github/.system-state/', { recursive: true }, (eventType, filename) => {
-     if (eventType === 'change') {
-       ContextCache.invalidateByTag('model')
+   watch(
+     '.github/.system-state/',
+     { recursive: true },
+     (eventType, filename) => {
+       if (eventType === 'change') {
+         ContextCache.invalidateByTag('model');
+       }
      }
-   })
+   );
    ```
 
 2. **TTL Enforcement:**
@@ -382,11 +390,11 @@ This document identifies all critical failure modes for the framework modernizat
 4. **Validation (Future Enhancement):**
    ```typescript
    // Compare cached content with disk content
-   const cached = await ContextCache.get('repo:structure:v1')
-   const actual = await loadRepoStructure()
+   const cached = await ContextCache.get('repo:structure:v1');
+   const actual = await loadRepoStructure();
    if (cached !== actual) {
-     console.warn('Cache mismatch detected, invalidating')
-     await ContextCache.invalidate('repo:structure:v1')
+     console.warn('Cache mismatch detected, invalidating');
+     await ContextCache.invalidate('repo:structure:v1');
    }
    ```
 
@@ -436,18 +444,18 @@ This document identifies all critical failure modes for the framework modernizat
 
    ```typescript
    try {
-     await agent.execute(task)
+     await agent.execute(task);
    } catch (error) {
-     console.error(`Agent ${agent.id} failed: ${error.message}`)
+     console.error(`Agent ${agent.id} failed: ${error.message}`);
      await Telemetry.track({
        eventType: 'agent.failed',
        taskId: task.id,
        agentId: agent.id,
        metadata: { error: error.message, stack: error.stack },
-     })
+     });
 
      // Mark task as failed
-     task.status = 'failed'
+     task.status = 'failed';
    }
    ```
 
@@ -458,17 +466,17 @@ This document identifies all critical failure modes for the framework modernizat
 3. **Retry Logic (Optional):**
 
    ```typescript
-   const MAX_RETRIES = 2
-   let retries = 0
+   const MAX_RETRIES = 2;
+   let retries = 0;
 
    while (retries < MAX_RETRIES) {
      try {
-       await agent.execute(task)
-       break // Success
+       await agent.execute(task);
+       break; // Success
      } catch (error) {
-       retries++
+       retries++;
        if (retries >= MAX_RETRIES) {
-         task.status = 'failed'
+         task.status = 'failed';
        }
      }
    }
@@ -520,12 +528,12 @@ This document identifies all critical failure modes for the framework modernizat
 
    ```typescript
    try {
-     const handoffV2 = await createHandoffV2(from, to, taskId, delta)
-     await deliverHandoff(handoffV2)
+     const handoffV2 = await createHandoffV2(from, to, taskId, delta);
+     await deliverHandoff(handoffV2);
    } catch (error) {
-     console.warn('HandoffV2 failed, falling back to V1')
-     const handoffV1 = await createHandoffV1(from, to, task)
-     await deliverHandoff(handoffV1)
+     console.warn('HandoffV2 failed, falling back to V1');
+     const handoffV1 = await createHandoffV1(from, to, task);
+     await deliverHandoff(handoffV1);
    }
    ```
 
@@ -534,8 +542,8 @@ This document identifies all critical failure modes for the framework modernizat
    ```typescript
    function validateHandoff(handoff: Handoff): void {
      if (handoff.version === 2) {
-       if (!handoff.taskId) throw new ValidationError('taskId required')
-       if (!handoff.delta) throw new ValidationError('delta required')
+       if (!handoff.taskId) throw new ValidationError('taskId required');
+       if (!handoff.delta) throw new ValidationError('delta required');
      }
    }
    ```
@@ -589,7 +597,7 @@ This document identifies all critical failure modes for the framework modernizat
 
    ```typescript
    if (pattern.confidence < 0.8) {
-     console.warn(`Low-confidence pattern ignored: ${pattern.signature}`)
+     console.warn(`Low-confidence pattern ignored: ${pattern.signature}`);
      // Fall back to rule-based routing
    }
    ```
@@ -598,7 +606,7 @@ This document identifies all critical failure modes for the framework modernizat
 
    ```typescript
    if (pattern.sampleCount < 5) {
-     console.warn(`Insufficient samples for pattern: ${pattern.signature}`)
+     console.warn(`Insufficient samples for pattern: ${pattern.signature}`);
      // Don't use pattern yet
    }
    ```
@@ -662,7 +670,7 @@ This document identifies all critical failure modes for the framework modernizat
 
    ```typescript
    if (queue.length >= MAX_QUEUE_SIZE) {
-     throw new CapacityError('Task queue full, try again later')
+     throw new CapacityError('Task queue full, try again later');
    }
    ```
 
@@ -670,10 +678,10 @@ This document identifies all critical failure modes for the framework modernizat
 
    ```typescript
    if (queue.length >= MAX_QUEUE_SIZE && task.priority === 'P3') {
-     const p3Tasks = queue.filter((t) => t.priority === 'P3')
+     const p3Tasks = queue.filter(t => t.priority === 'P3');
      if (p3Tasks.length > 0) {
-       const dropped = p3Tasks.shift()
-       console.warn(`Dropping low-priority task: ${dropped.id}`)
+       const dropped = p3Tasks.shift();
+       console.warn(`Dropping low-priority task: ${dropped.id}`);
      }
    }
    ```
@@ -682,7 +690,7 @@ This document identifies all critical failure modes for the framework modernizat
    ```typescript
    if (queue.length > 50) {
      // Increase max concurrent tasks from 4 to 8
-     MAX_CONCURRENT_TASKS = 8
+     MAX_CONCURRENT_TASKS = 8;
    }
    ```
 
@@ -743,7 +751,7 @@ This document identifies all critical failure modes for the framework modernizat
    ```typescript
    // Context cache
    if (diskUsage > 0.9) {
-     ContextCache.invalidateAll() // Clear entire cache
+     ContextCache.invalidateAll(); // Clear entire cache
    }
    ```
 
@@ -751,7 +759,7 @@ This document identifies all critical failure modes for the framework modernizat
 
    ```typescript
    if (diskUsage > 0.95) {
-     TELEMETRY_ENABLED = false // Stop telemetry writes
+     TELEMETRY_ENABLED = false; // Stop telemetry writes
    }
    ```
 
@@ -785,34 +793,34 @@ This document identifies all critical failure modes for the framework modernizat
 
 ```typescript
 class TelemetryCircuitBreaker {
-  private failures = 0
-  private state: 'closed' | 'open' = 'closed'
-  private lastAttempt: Date | null = null
+  private failures = 0;
+  private state: 'closed' | 'open' = 'closed';
+  private lastAttempt: Date | null = null;
 
   async write(event: TelemetryEvent): Promise<void> {
     if (this.state === 'open') {
       // Check if 5 minutes have passed
       if (Date.now() - this.lastAttempt!.getTime() > 300000) {
-        this.state = 'closed' // Retry
-        this.failures = 0
+        this.state = 'closed'; // Retry
+        this.failures = 0;
       } else {
-        throw new Error('Circuit breaker open')
+        throw new Error('Circuit breaker open');
       }
     }
 
     try {
-      await fs.appendFile('telemetry.jsonl', JSON.stringify(event) + '\n')
-      this.failures = 0 // Reset on success
+      await fs.appendFile('telemetry.jsonl', JSON.stringify(event) + '\n');
+      this.failures = 0; // Reset on success
     } catch (error) {
-      this.failures++
-      this.lastAttempt = new Date()
+      this.failures++;
+      this.lastAttempt = new Date();
 
       if (this.failures >= 3) {
-        this.state = 'open'
-        console.warn('Telemetry circuit breaker opened')
+        this.state = 'open';
+        console.warn('Telemetry circuit breaker opened');
       }
 
-      throw error
+      throw error;
     }
   }
 }
@@ -834,25 +842,29 @@ class TelemetryCircuitBreaker {
 
 ```typescript
 class FileWatcherCircuitBreaker {
-  private crashes = 0
+  private crashes = 0;
 
   startWatcher() {
     try {
-      const watcher = watch('.github/.system-state/', { recursive: true }, this.handleChange)
+      const watcher = watch(
+        '.github/.system-state/',
+        { recursive: true },
+        this.handleChange
+      );
 
-      watcher.on('error', (error) => {
-        this.crashes++
+      watcher.on('error', error => {
+        this.crashes++;
         if (this.crashes >= 3) {
-          console.error('File watcher circuit breaker opened')
-          watcher.close()
+          console.error('File watcher circuit breaker opened');
+          watcher.close();
           // Fall back to TTL-only expiration
         } else {
           // Restart watcher
-          this.startWatcher()
+          this.startWatcher();
         }
-      })
+      });
     } catch (error) {
-      console.error('File watcher failed to start')
+      console.error('File watcher failed to start');
     }
   }
 }
@@ -869,14 +881,14 @@ class FileWatcherCircuitBreaker {
 **Conditions:** Agent exits with error **Example:**
 
 ```typescript
-const MAX_RETRIES = 2
+const MAX_RETRIES = 2;
 for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
   try {
-    await agent.execute(task)
-    break // Success
+    await agent.execute(task);
+    break; // Success
   } catch (error) {
     if (attempt === MAX_RETRIES - 1) {
-      task.status = 'failed' // Give up
+      task.status = 'failed'; // Give up
     }
   }
 }
@@ -896,13 +908,13 @@ for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
 setInterval(async () => {
   if (buffer.length > 0) {
     try {
-      await flushBuffer(buffer)
-      buffer.length = 0 // Success
+      await flushBuffer(buffer);
+      buffer.length = 0; // Success
     } catch (error) {
       // Retry next interval (30 seconds)
     }
   }
-}, 30000)
+}, 30000);
 ```
 
 ---
@@ -917,12 +929,12 @@ setInterval(async () => {
 
 ```typescript
 try {
-  result = await runGate(gate)
+  result = await runGate(gate);
 } catch (error) {
   if (error.message.includes('timeout')) {
-    console.warn('Gate timeout, retrying in 1 minute')
-    await sleep(60000)
-    result = await runGate(gate) // Retry once
+    console.warn('Gate timeout, retrying in 1 minute');
+    await sleep(60000);
+    result = await runGate(gate); // Retry once
   }
 }
 ```
@@ -954,11 +966,15 @@ try {
 
 **Tests:**
 
-1. **Kill Agent Mid-Execution:** `kill -9 <agent-pid>` → Validate task marked as failed
-2. **Fill Disk:** `dd if=/dev/zero of=/tmp/bigfile` → Validate telemetry circuit breaker opens
+1. **Kill Agent Mid-Execution:** `kill -9 <agent-pid>` → Validate task marked as
+   failed
+2. **Fill Disk:** `dd if=/dev/zero of=/tmp/bigfile` → Validate telemetry circuit
+   breaker opens
 3. **Corrupt Handoff File:** Modify handoff JSON → Validate fallback to V1
-4. **Circular Dependency:** Add G1 depends on G10, G10 depends on G1 → Validate deadlock detection
-5. **Poison Learning System:** Submit 100 fake tasks → Validate confidence threshold prevents bad routing
+4. **Circular Dependency:** Add G1 depends on G10, G10 depends on G1 → Validate
+   deadlock detection
+5. **Poison Learning System:** Submit 100 fake tasks → Validate confidence
+   threshold prevents bad routing
 
 **Frequency:** Monthly
 

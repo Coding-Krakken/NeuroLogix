@@ -6,7 +6,8 @@ agent: agent
 
 # Objective
 
-Conduct a **complete, exhaustive Microsoft-grade engineering review and governance audit** of this Pull Request acting simultaneously as:
+Conduct a **complete, exhaustive Microsoft-grade engineering review and
+governance audit** of this Pull Request acting simultaneously as:
 
 - Senior Staff Engineer
 - QA Lead
@@ -26,12 +27,14 @@ No superficial review allowed.
 
 # 0. Mandatory Pre-Review Branch/PR Sync (EXECUTE FIRST)
 
-Before running any review checks, you MUST detect PR linkage + working tree state and resolve it using the following deterministic flow.
+Before running any review checks, you MUST detect PR linkage + working tree
+state and resolve it using the following deterministic flow.
 
 ## Detection
 
 - `HAS_CHANGES`: `git status --porcelain` is non-empty.
-- `HAS_PR`: current branch is linked to a PR (for example via `gh pr view --json number --jq '.number'`).
+- `HAS_PR`: current branch is linked to a PR (for example via
+  `gh pr view --json number --jq '.number'`).
 
 ## Required Branch State Matrix
 
@@ -41,7 +44,8 @@ You MUST:
 
 1. Stay on the current branch.
 2. Stage all changes (`git add -A`).
-3. Commit all staged changes (single commit is acceptable; message should clearly indicate review prep).
+3. Commit all staged changes (single commit is acceptable; message should
+   clearly indicate review prep).
 4. Push branch to remote (`git push -u origin HEAD`).
 5. Create a PR for the branch (`gh pr create`) targeting the default branch.
 6. Ensure the branch is the checked-out branch for the remainder of the task.
@@ -65,13 +69,16 @@ You MUST:
 
 ### Case D — Branch is NOT connected to a PR + no uncommitted changes
 
-If no PR exists and there are no changes to commit, state that there is no active PR context to review and provide explicit next action(s) to create/select a PR.
+If no PR exists and there are no changes to commit, state that there is no
+active PR context to review and provide explicit next action(s) to create/select
+a PR.
 
 ## Enforcement Rules
 
 - Do NOT skip this pre-review sync.
 - Do NOT run review sections #1–#14 until the branch state matrix is resolved.
-- Include in your final deliverables which case (A/B/C/D) was executed and what commands/actions were taken.
+- Include in your final deliverables which case (A/B/C/D) was executed and what
+  commands/actions were taken.
 
 ---
 
@@ -261,7 +268,8 @@ Identify:
 
 The PR description must function as:
 
-> A complete execution contract, audit trail, reviewer guide, and deployment reference.
+> A complete execution contract, audit trail, reviewer guide, and deployment
+> reference.
 
 You MUST continuously maintain and update it.
 
@@ -481,39 +489,43 @@ Rules:
 1. Always send ONE notification (even if nothing changed).
 2. Keep the lock-screen section short and scannable.
 3. Always include NEXT ACTIONS.
-4. If you’re blocked, say why + what escalation/dispatch was executed + what fallback was attempted.
+4. If you’re blocked, say why + what escalation/dispatch was executed + what
+   fallback was attempted.
 
-Topic:
-https://ntfy.sh/copilot-notifications
+Topic: https://ntfy.sh/copilot-notifications
 
 EXECUTE (copy/paste runnable):
 
 REPO="$(git rev-parse --show-toplevel 2>/dev/null | xargs basename || echo N/A)"
-BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo N/A)"
-COMMIT="$(git rev-parse --short HEAD 2>/dev/null || echo N/A)"
+BRANCH="$(git
+rev-parse --abbrev-ref HEAD 2>/dev/null || echo N/A)" COMMIT="$(git rev-parse
+--short HEAD 2>/dev/null || echo N/A)"
 
 # Prefer staged/working-tree stats; fall back to last commit if clean
 
 CHANGE_SUMMARY="$(git diff --shortstat 2>/dev/null)"
-if [ -z "$CHANGE_SUMMARY" ]; then
+if [ -z "$CHANGE_SUMMARY" ];
+then
 CHANGE_SUMMARY="$(git show --stat --oneline --format= 2>/dev/null | head -n 1 | sed 's/^ //')"
 fi
-if [ -z "$CHANGE_SUMMARY" ]; then
-CHANGE_SUMMARY="No changes detected"
-fi
+if [ -z "$CHANGE_SUMMARY"
+]; then CHANGE_SUMMARY="No changes detected" fi
 
 curl -fsS -X POST "https://ntfy.sh/copilot-notifications" \
- -H "Title: 🚨 Copilot Update — ${REPO}" \
+ -H "Title: 🚨 Copilot Update —
+${REPO}" \
   -H "Priority: urgent" \
   -H "Tags: rotating_light,robot,rocket" \
   -H "Click: https://github.com" \
   -H "Markdown: yes" \
   -H "Sound: default" \
-  -d "$(cat <<EOF
+  -d "$(cat
+<<EOF
 
 ## ✅ Task Completed
 
-**Repo:** \`${REPO}\`
+**Repo:**
+\`${REPO}\`
 **Scope:** <PR / Issue / Feature / Refactor / Fix>
 **Outcome:** <ONE sentence: biggest achievement>
 **Changes:** \`${CHANGE_SUMMARY}\`

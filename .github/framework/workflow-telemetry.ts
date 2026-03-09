@@ -9,16 +9,16 @@ import type {
   DispatchRunSummary,
   HybridDispatchEventType,
   WorkflowTaskSummary,
-} from "./types";
+} from './types';
 
 type WorkflowEventType =
-  | "issue.created"
-  | "branch.created"
-  | "commit.created"
-  | "pr.opened"
-  | "review.requested"
-  | "review.iteration"
-  | "task.completed"
+  | 'issue.created'
+  | 'branch.created'
+  | 'commit.created'
+  | 'pr.opened'
+  | 'review.requested'
+  | 'review.iteration'
+  | 'task.completed'
   | HybridDispatchEventType;
 
 interface WorkflowEvent {
@@ -46,14 +46,8 @@ interface TaskTimeline {
 export class WorkflowTelemetry {
   private readonly events: WorkflowEvent[] = [];
   private readonly timelines = new Map<string, TaskTimeline>();
-  private readonly hybridDispatchEvents = new Map<
-    string,
-    DispatchLifecycleEvent[]
-  >();
-  private readonly hybridDispatchSummary = new Map<
-    string,
-    DispatchRunSummary
-  >();
+  private readonly hybridDispatchEvents = new Map<string, DispatchLifecycleEvent[]>();
+  private readonly hybridDispatchSummary = new Map<string, DispatchRunSummary>();
 
   markTaskStart(taskId: string): void {
     if (!this.timelines.has(taskId)) {
@@ -66,18 +60,14 @@ export class WorkflowTelemetry {
     }
   }
 
-  trackIssueCreated(
-    taskId: string,
-    issueNumber: number,
-    issueUrl: string,
-  ): void {
+  trackIssueCreated(taskId: string, issueNumber: number, issueUrl: string): void {
     this.ensureTimeline(taskId);
     const timeline = this.timelines.get(taskId);
     if (timeline) {
       timeline.issueNumber = issueNumber;
       timeline.issueUrl = issueUrl;
     }
-    this.pushEvent("issue.created", taskId, { issueNumber, issueUrl });
+    this.pushEvent('issue.created', taskId, { issueNumber, issueUrl });
   }
 
   trackBranchCreated(taskId: string, branchName: string): void {
@@ -86,7 +76,7 @@ export class WorkflowTelemetry {
     if (timeline) {
       timeline.branchName = branchName;
     }
-    this.pushEvent("branch.created", taskId, { branchName });
+    this.pushEvent('branch.created', taskId, { branchName });
   }
 
   trackCommit(taskId: string, hash: string, message: string): void {
@@ -98,14 +88,10 @@ export class WorkflowTelemetry {
         timeline.firstCommitAt = new Date();
       }
     }
-    this.pushEvent("commit.created", taskId, { hash, message });
+    this.pushEvent('commit.created', taskId, { hash, message });
   }
 
-  trackPrOpened(
-    taskId: string,
-    pullRequestNumber: number,
-    pullRequestUrl: string,
-  ): void {
+  trackPrOpened(taskId: string, pullRequestNumber: number, pullRequestUrl: string): void {
     this.ensureTimeline(taskId);
     const timeline = this.timelines.get(taskId);
     if (timeline) {
@@ -113,7 +99,7 @@ export class WorkflowTelemetry {
       timeline.pullRequestUrl = pullRequestUrl;
       timeline.prOpenedAt = new Date();
     }
-    this.pushEvent("pr.opened", taskId, { pullRequestNumber, pullRequestUrl });
+    this.pushEvent('pr.opened', taskId, { pullRequestNumber, pullRequestUrl });
   }
 
   trackReviewIteration(taskId: string): void {
@@ -122,7 +108,7 @@ export class WorkflowTelemetry {
     if (timeline) {
       timeline.reviewIterations += 1;
     }
-    this.pushEvent("review.iteration", taskId);
+    this.pushEvent('review.iteration', taskId);
   }
 
   markTaskCompleted(taskId: string): void {
@@ -131,13 +117,10 @@ export class WorkflowTelemetry {
     if (timeline) {
       timeline.completedAt = new Date();
     }
-    this.pushEvent("task.completed", taskId);
+    this.pushEvent('task.completed', taskId);
   }
 
-  trackHybridDispatchEvent(
-    taskId: string,
-    event: DispatchLifecycleEvent,
-  ): void {
+  trackHybridDispatchEvent(taskId: string, event: DispatchLifecycleEvent): void {
     const events = this.hybridDispatchEvents.get(taskId) ?? [];
     events.push({ ...event, timestamp: event.timestamp ?? new Date() });
     this.hybridDispatchEvents.set(taskId, events);
@@ -149,15 +132,12 @@ export class WorkflowTelemetry {
       agentId: event.agentId,
       priority: event.priority,
       schedulePlanHash: event.schedulePlanHash,
-      durationMs: "durationMs" in event ? event.durationMs : undefined,
+      durationMs: 'durationMs' in event ? event.durationMs : undefined,
       seq: event.seq,
     });
   }
 
-  trackHybridDispatchSummary(
-    taskId: string,
-    summary: DispatchRunSummary,
-  ): void {
+  trackHybridDispatchSummary(taskId: string, summary: DispatchRunSummary): void {
     this.hybridDispatchSummary.set(taskId, { ...summary });
   }
 
@@ -202,20 +182,13 @@ export class WorkflowTelemetry {
       timeToFirstCommitMinutes: timeline.firstCommitAt
         ? Math.max(
             0,
-            Math.round(
-              (timeline.firstCommitAt.getTime() -
-                timeline.startedAt.getTime()) /
-                60000,
-            ),
+            Math.round((timeline.firstCommitAt.getTime() - timeline.startedAt.getTime()) / 60000)
           )
         : undefined,
       timeToPrMinutes: timeline.prOpenedAt
         ? Math.max(
             0,
-            Math.round(
-              (timeline.prOpenedAt.getTime() - timeline.startedAt.getTime()) /
-                60000,
-            ),
+            Math.round((timeline.prOpenedAt.getTime() - timeline.startedAt.getTime()) / 60000)
           )
         : undefined,
       reviewIterations: timeline.reviewIterations,
@@ -263,7 +236,7 @@ export class WorkflowTelemetry {
   private pushEvent(
     type: WorkflowEventType,
     taskId: string,
-    metadata?: Record<string, unknown>,
+    metadata?: Record<string, unknown>
   ): void {
     this.events.push({ type, taskId, timestamp: new Date(), metadata });
   }

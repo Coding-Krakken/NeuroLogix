@@ -5,8 +5,8 @@
  * with safe, idempotent command execution.
  */
 
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import type {
   IssueCreateInput,
   IssueRef,
@@ -14,7 +14,7 @@ import type {
   PullRequestCreateInput,
   PullRequestRef,
   WorkflowTaskSummary,
-} from "./types";
+} from './types';
 
 const execFileAsync = promisify(execFile);
 
@@ -35,8 +35,8 @@ class DefaultCommandExecutor implements CommandExecutor {
         windowsHide: true,
       });
       return {
-        stdout: String(stdout || ""),
-        stderr: String(stderr || ""),
+        stdout: String(stdout || ''),
+        stderr: String(stderr || ''),
         code: 0,
       };
     } catch (error) {
@@ -47,9 +47,9 @@ class DefaultCommandExecutor implements CommandExecutor {
         message?: string;
       };
       return {
-        stdout: String(err.stdout || ""),
-        stderr: String(err.stderr || err.message || ""),
-        code: typeof err.code === "number" ? err.code : 1,
+        stdout: String(err.stdout || ''),
+        stderr: String(err.stderr || err.message || ''),
+        code: typeof err.code === 'number' ? err.code : 1,
       };
     }
   }
@@ -64,32 +64,32 @@ export class GithubWorkManagement {
 
   async createIssue(input: IssueCreateInput): Promise<IssueRef> {
     const args = [
-      "issue",
-      "create",
-      "--title",
+      'issue',
+      'create',
+      '--title',
       input.title,
-      "--body",
+      '--body',
       input.body,
-      "--json",
-      "number,title,url,state",
+      '--json',
+      'number,title,url,state',
     ];
 
     for (const label of input.labels) {
-      args.push("--label", label);
+      args.push('--label', label);
     }
 
     for (const assignee of input.assignees || []) {
-      args.push("--assignee", assignee);
+      args.push('--assignee', assignee);
     }
 
-    const result = await this.executor.run("gh", args);
-    this.ensureSuccess(result, "Failed to create issue");
+    const result = await this.executor.run('gh', args);
+    this.ensureSuccess(result, 'Failed to create issue');
 
     const parsed = this.parseJson<{
       number: number;
       title: string;
       url: string;
-      state: "open" | "closed";
+      state: 'open' | 'closed';
     }>(result.stdout);
 
     return {
@@ -102,40 +102,40 @@ export class GithubWorkManagement {
 
   async listIssues(filters: IssueSearchFilters = {}): Promise<IssueRef[]> {
     const args = [
-      "issue",
-      "list",
-      "--json",
-      "number,title,url,state",
-      "--state",
-      filters.state ?? "open",
-      "--limit",
+      'issue',
+      'list',
+      '--json',
+      'number,title,url,state',
+      '--state',
+      filters.state ?? 'open',
+      '--limit',
       String(filters.limit ?? 30),
     ];
 
     for (const label of filters.labels || []) {
-      args.push("--label", label);
+      args.push('--label', label);
     }
 
     if (filters.assignee) {
-      args.push("--assignee", filters.assignee);
+      args.push('--assignee', filters.assignee);
     }
 
     if (filters.search) {
-      args.push("--search", filters.search);
+      args.push('--search', filters.search);
     }
 
-    const result = await this.executor.run("gh", args);
-    this.ensureSuccess(result, "Failed to list issues");
+    const result = await this.executor.run('gh', args);
+    this.ensureSuccess(result, 'Failed to list issues');
 
     const parsed = this.parseJson<
       Array<{
         number: number;
         title: string;
         url: string;
-        state: "open" | "closed";
+        state: 'open' | 'closed';
       }>
     >(result.stdout);
-    return parsed.map((issue) => ({
+    return parsed.map(issue => ({
       id: issue.number,
       title: issue.title,
       url: issue.url,
@@ -144,11 +144,11 @@ export class GithubWorkManagement {
   }
 
   async commentOnIssue(issueNumber: number, comment: string): Promise<void> {
-    const result = await this.executor.run("gh", [
-      "issue",
-      "comment",
+    const result = await this.executor.run('gh', [
+      'issue',
+      'comment',
       String(issueNumber),
-      "--body",
+      '--body',
       comment,
     ]);
     this.ensureSuccess(result, `Failed to comment on issue #${issueNumber}`);
@@ -156,14 +156,14 @@ export class GithubWorkManagement {
 
   async createBranchFromIssue(
     issueNumber: number,
-    kind: "feature" | "bugfix" | "chore",
-    slug: string,
+    kind: 'feature' | 'bugfix' | 'chore',
+    slug: string
   ): Promise<string> {
     const normalizedSlug = slug
       .toLowerCase()
-      .replace(/[^a-z0-9-]+/g, "-")
-      .replace(/--+/g, "-")
-      .replace(/^-|-$/g, "");
+      .replace(/[^a-z0-9-]+/g, '-')
+      .replace(/--+/g, '-')
+      .replace(/^-|-$/g, '');
 
     const branchName = `${kind}/${issueNumber}-${normalizedSlug}`;
 
@@ -174,62 +174,54 @@ export class GithubWorkManagement {
   }
 
   async currentBranch(): Promise<string> {
-    const result = await this.executor.run("git", ["branch", "--show-current"]);
-    this.ensureSuccess(result, "Failed to determine current branch");
+    const result = await this.executor.run('git', ['branch', '--show-current']);
+    this.ensureSuccess(result, 'Failed to determine current branch');
     return result.stdout.trim();
   }
 
-  async commitCheckpoint(
-    message: string,
-    issueNumber: number,
-    body?: string,
-  ): Promise<void> {
+  async commitCheckpoint(message: string, issueNumber: number, body?: string): Promise<void> {
     const fullSubject = `${message} (#${issueNumber})`;
-    const args = body
-      ? ["commit", "-m", fullSubject, "-m", body]
-      : ["commit", "-m", fullSubject];
-    const result = await this.executor.run("git", args);
-    this.ensureSuccess(result, "Failed to create commit checkpoint");
+    const args = body ? ['commit', '-m', fullSubject, '-m', body] : ['commit', '-m', fullSubject];
+    const result = await this.executor.run('git', args);
+    this.ensureSuccess(result, 'Failed to create commit checkpoint');
   }
 
-  async createPullRequest(
-    input: PullRequestCreateInput,
-  ): Promise<PullRequestRef> {
+  async createPullRequest(input: PullRequestCreateInput): Promise<PullRequestRef> {
     const body = this.withIssueClosure(input.body, input.issueNumber);
     const args = [
-      "pr",
-      "create",
-      "--title",
+      'pr',
+      'create',
+      '--title',
       input.title,
-      "--body",
+      '--body',
       body,
-      "--base",
+      '--base',
       input.base,
-      "--head",
+      '--head',
       input.head,
     ];
 
     for (const label of input.labels || []) {
-      args.push("--label", label);
+      args.push('--label', label);
     }
 
-    const createResult = await this.executor.run("gh", args);
-    this.ensureSuccess(createResult, "Failed to create pull request");
+    const createResult = await this.executor.run('gh', args);
+    this.ensureSuccess(createResult, 'Failed to create pull request');
 
-    const viewResult = await this.executor.run("gh", [
-      "pr",
-      "view",
+    const viewResult = await this.executor.run('gh', [
+      'pr',
+      'view',
       input.head,
-      "--json",
-      "number,title,url,state",
+      '--json',
+      'number,title,url,state',
     ]);
-    this.ensureSuccess(viewResult, "Failed to fetch pull request details");
+    this.ensureSuccess(viewResult, 'Failed to fetch pull request details');
 
     const parsed = this.parseJson<{
       number: number;
       title: string;
       url: string;
-      state: "OPEN" | "MERGED" | "CLOSED";
+      state: 'OPEN' | 'MERGED' | 'CLOSED';
     }>(viewResult.stdout);
 
     if (input.reviewers && input.reviewers.length > 0) {
@@ -247,14 +239,14 @@ export class GithubWorkManagement {
   async updatePullRequestDescription(
     prNumber: number,
     body: string,
-    issueNumber: number,
+    issueNumber: number
   ): Promise<void> {
     const mergedBody = this.withIssueClosure(body, issueNumber);
-    const result = await this.executor.run("gh", [
-      "pr",
-      "edit",
+    const result = await this.executor.run('gh', [
+      'pr',
+      'edit',
       String(prNumber),
-      "--body",
+      '--body',
       mergedBody,
     ]);
     this.ensureSuccess(result, `Failed to update PR #${prNumber}`);
@@ -265,58 +257,49 @@ export class GithubWorkManagement {
       return;
     }
 
-    const result = await this.executor.run("gh", [
-      "pr",
-      "edit",
+    const result = await this.executor.run('gh', [
+      'pr',
+      'edit',
       String(prNumber),
-      "--add-reviewer",
-      reviewers.join(","),
+      '--add-reviewer',
+      reviewers.join(','),
     ]);
-    this.ensureSuccess(
-      result,
-      `Failed to request reviewers for PR #${prNumber}`,
-    );
+    this.ensureSuccess(result, `Failed to request reviewers for PR #${prNumber}`);
   }
 
   async mergePullRequest(
     prNumber: number,
-    mergeMethod: "--squash" | "--merge" = "--squash",
+    mergeMethod: '--squash' | '--merge' = '--squash'
   ): Promise<void> {
-    const result = await this.executor.run("gh", [
-      "pr",
-      "merge",
+    const result = await this.executor.run('gh', [
+      'pr',
+      'merge',
       String(prNumber),
       mergeMethod,
-      "--delete-branch",
+      '--delete-branch',
     ]);
     this.ensureSuccess(result, `Failed to merge PR #${prNumber}`);
   }
 
-  async listTaskCommits(
-    issueNumber: number,
-  ): Promise<Array<{ hash: string; message: string }>> {
-    const result = await this.executor.run("git", [
-      "log",
-      "--pretty=format:%h|%s",
-      "--max-count",
-      "100",
+  async listTaskCommits(issueNumber: number): Promise<Array<{ hash: string; message: string }>> {
+    const result = await this.executor.run('git', [
+      'log',
+      '--pretty=format:%h|%s',
+      '--max-count',
+      '100',
     ]);
-    this.ensureSuccess(result, "Failed to list commits");
+    this.ensureSuccess(result, 'Failed to list commits');
 
     const commits = result.stdout
-      .split("\n")
-      .map((line) => line.trim())
+      .split('\n')
+      .map(line => line.trim())
       .filter(Boolean)
-      .filter(
-        (line) =>
-          line.includes(`(#${issueNumber})`) ||
-          line.includes(` #${issueNumber}`),
-      )
-      .map((line) => {
-        const [hash, ...messageParts] = line.split("|");
-        return { hash: hash || "", message: messageParts.join("|") };
+      .filter(line => line.includes(`(#${issueNumber})`) || line.includes(` #${issueNumber}`))
+      .map(line => {
+        const [hash, ...messageParts] = line.split('|');
+        return { hash: hash || '', message: messageParts.join('|') };
       })
-      .filter((commit) => commit.hash !== ""); // Remove commits with empty hash
+      .filter(commit => commit.hash !== ''); // Remove commits with empty hash
 
     return commits;
   }
@@ -324,7 +307,7 @@ export class GithubWorkManagement {
   async buildTaskSummary(
     taskId: string,
     issueNumber?: number,
-    pullRequest?: PullRequestRef,
+    pullRequest?: PullRequestRef
   ): Promise<WorkflowTaskSummary> {
     const commits = issueNumber ? await this.listTaskCommits(issueNumber) : [];
     const branchName = await this.currentBranch();
@@ -347,42 +330,23 @@ export class GithubWorkManagement {
   }
 
   private async ensureMainCheckedOut(): Promise<void> {
-    await this.executor.run("git", ["checkout", "main"]);
-    await this.executor.run("git", ["pull", "origin", "main"]);
+    await this.executor.run('git', ['checkout', 'main']);
+    await this.executor.run('git', ['pull', 'origin', 'main']);
   }
 
   private async ensureBranchCreated(branchName: string): Promise<void> {
-    const exists = await this.executor.run("git", [
-      "rev-parse",
-      "--verify",
-      branchName,
-    ]);
+    const exists = await this.executor.run('git', ['rev-parse', '--verify', branchName]);
 
     if (exists.code === 0) {
-      const checkoutExisting = await this.executor.run("git", [
-        "checkout",
-        branchName,
-      ]);
-      this.ensureSuccess(
-        checkoutExisting,
-        `Failed to checkout existing branch ${branchName}`,
-      );
+      const checkoutExisting = await this.executor.run('git', ['checkout', branchName]);
+      this.ensureSuccess(checkoutExisting, `Failed to checkout existing branch ${branchName}`);
       return;
     }
 
-    const create = await this.executor.run("git", [
-      "checkout",
-      "-b",
-      branchName,
-    ]);
+    const create = await this.executor.run('git', ['checkout', '-b', branchName]);
     this.ensureSuccess(create, `Failed to create branch ${branchName}`);
 
-    const push = await this.executor.run("git", [
-      "push",
-      "-u",
-      "origin",
-      branchName,
-    ]);
+    const push = await this.executor.run('git', ['push', '-u', 'origin', branchName]);
     this.ensureSuccess(push, `Failed to push branch ${branchName}`);
   }
 
@@ -397,15 +361,13 @@ export class GithubWorkManagement {
     try {
       return JSON.parse(value) as T;
     } catch {
-      throw new Error("Failed to parse command JSON output");
+      throw new Error('Failed to parse command JSON output');
     }
   }
 
   private ensureSuccess(result: CommandExecutionResult, message: string): void {
     if (result.code !== 0) {
-      throw new Error(
-        `${message}: ${result.stderr || result.stdout || "unknown error"}`,
-      );
+      throw new Error(`${message}: ${result.stderr || result.stdout || 'unknown error'}`);
     }
   }
 }

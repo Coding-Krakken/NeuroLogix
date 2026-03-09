@@ -1,13 +1,13 @@
 # Observability Setup
 
-> **Category:** Operations
-> **File:** `operations/observability.prompt.md`
+> **Category:** Operations **File:** `operations/observability.prompt.md`
 
 ---
 
 ## Purpose
 
-Design and implement the observability stack: structured logging, metrics collection, error tracking, and distributed tracing.
+Design and implement the observability stack: structured logging, metrics
+collection, error tracking, and distributed tracing.
 
 ## When to Use
 
@@ -71,4 +71,3 @@ Design and implement the observability stack: structured logging, metrics collec
 - Sentry setup verification
 - Alert rule definitions
 - Dashboard specifications
-

@@ -6,7 +6,8 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in this project, please report it responsibly:
+If you discover a security vulnerability in this project, please report it
+responsibly:
 
 1. **DO NOT** open a public GitHub issue
 2. Email: security@<APPLICATION_DOMAIN> (or use GitHub Security Advisories)
@@ -60,7 +61,8 @@ If you discover a security vulnerability in this project, please report it respo
 
 - **Scope:** SAQ A (fully delegated to <PAYMENT_PROVIDER>)
 - **Card data:** NEVER touches our servers
-- **Payment flow:** <PAYMENT_PROVIDER> Web Payments SDK → <PAYMENT_PROVIDER> APIs
+- **Payment flow:** <PAYMENT_PROVIDER> Web Payments SDK → <PAYMENT_PROVIDER>
+  APIs
 - **Prohibited:** Logging, storing, or transmitting card data
 
 ### Authentication & Authorization
@@ -100,12 +102,12 @@ Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 
 ### Secrets Management
 
-| Secret                | Storage              | Rotation      |
-| --------------------- | -------------------- | ------------- |
-| <PAYMENT_PROVIDER>_ACCESS_TOKEN   | <DEPLOYMENT_PLATFORM> env vars      | 90 days       |
-| <PAYMENT_PROVIDER>_APPLICATION_ID | <DEPLOYMENT_PLATFORM> env vars      | On compromise |
-| <PAYMENT_PROVIDER>_LOCATION_ID    | <DEPLOYMENT_PLATFORM> env vars      | N/A (static)  |
-| NEXT*PUBLIC*\*        | Build-time injection | N/A           |
+| Secret                             | Storage                        | Rotation      |
+| ---------------------------------- | ------------------------------ | ------------- |
+| <PAYMENT_PROVIDER>\_ACCESS_TOKEN   | <DEPLOYMENT_PLATFORM> env vars | 90 days       |
+| <PAYMENT_PROVIDER>\_APPLICATION_ID | <DEPLOYMENT_PLATFORM> env vars | On compromise |
+| <PAYMENT_PROVIDER>\_LOCATION_ID    | <DEPLOYMENT_PLATFORM> env vars | N/A (static)  |
+| NEXT*PUBLIC*\*                     | Build-time injection           | N/A           |
 
 ### Dependency Security
 
@@ -151,4 +153,3 @@ See `.github/RUNBOOK.md` for detailed incident procedures.
 | Current (main)   | ✅                       |
 | Previous release | ✅ (security fixes only) |
 | Older            | ❌                       |
-

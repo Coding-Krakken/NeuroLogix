@@ -1,13 +1,14 @@
 # Microsoft-Grade PR Review
 
-> **Category:** Review
-> **File:** `review/microsoft-grade-pr-review.prompt.md`
+> **Category:** Review **File:** `review/microsoft-grade-pr-review.prompt.md`
 
 ---
 
 ## Purpose
 
-Conduct a thorough, enterprise-grade code review covering correctness, security, performance, accessibility, maintainability, and production readiness. This is the highest-quality review standard.
+Conduct a thorough, enterprise-grade code review covering correctness, security,
+performance, accessibility, maintainability, and production readiness. This is
+the highest-quality review standard.
 
 ## When to Use
 

@@ -1,13 +1,13 @@
 # Repo Scan
 
-> **Category:** Discovery
-> **File:** `discovery/repo-scan.prompt.md`
+> **Category:** Discovery **File:** `discovery/repo-scan.prompt.md`
 
 ---
 
 ## Purpose
 
-Perform a comprehensive scan of the repository to understand its current state, structure, technology stack, health, and areas needing attention.
+Perform a comprehensive scan of the repository to understand its current state,
+structure, technology stack, health, and areas needing attention.
 
 ## When to Use
 
@@ -110,4 +110,3 @@ Produce a structured report containing:
 2. Add E2E tests for checkout flow
 3. Update outdated dependencies
 ```
-

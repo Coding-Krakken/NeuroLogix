@@ -1,13 +1,14 @@
 # Vertical Slice Implementation
 
-> **Category:** Implementation
-> **File:** `implementation/vertical-slice.prompt.md`
+> **Category:** Implementation **File:**
+> `implementation/vertical-slice.prompt.md`
 
 ---
 
 ## Purpose
 
-Implement a complete vertical slice: types, API route, component, state management, tests, and documentation — all in one cohesive unit.
+Implement a complete vertical slice: types, API route, component, state
+management, tests, and documentation — all in one cohesive unit.
 
 ## When to Use
 
@@ -58,7 +59,8 @@ Implement a complete vertical slice: types, API route, component, state manageme
 
 ## Failure Cases
 
-- Domain model undefined → Do NOT implement. Request model from Solution Architect.
+- Domain model undefined → Do NOT implement. Request model from Solution
+  Architect.
 - API contract undefined → Do NOT implement API. Request contract.
 - Tests fail → Fix code, not tests (unless test is wrong)
 - Lint errors → Fix before committing
@@ -85,4 +87,3 @@ Files:
   - src/components/products/__tests__/ProductGrid.test.tsx
   - src/app/api/products/__tests__/route.test.ts
 ```
-

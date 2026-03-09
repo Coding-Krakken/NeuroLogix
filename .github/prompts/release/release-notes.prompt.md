@@ -1,13 +1,13 @@
 # Release Notes
 
-> **Category:** Release
-> **File:** `release/release-notes.prompt.md`
+> **Category:** Release **File:** `release/release-notes.prompt.md`
 
 ---
 
 ## Purpose
 
-Generate comprehensive release notes for a version release, covering features, fixes, breaking changes, and upgrade instructions.
+Generate comprehensive release notes for a version release, covering features,
+fixes, breaking changes, and upgrade instructions.
 
 ## When to Use
 
@@ -28,8 +28,7 @@ Generate comprehensive release notes for a version release, covering features, f
 ```markdown
 # Release Notes: v[X.Y.Z]
 
-**Date:** YYYY-MM-DD
-**Type:** Major | Minor | Patch
+**Date:** YYYY-MM-DD **Type:** Major | Minor | Patch
 
 ## Highlights
 

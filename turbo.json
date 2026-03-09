@@ -48,9 +48,5 @@
       "outputs": []
     }
   },
-  "globalEnv": [
-    "NODE_ENV",
-    "CI",
-    "GITHUB_TOKEN"
-  ]
+  "globalEnv": ["NODE_ENV", "CI", "GITHUB_TOKEN"]
 }

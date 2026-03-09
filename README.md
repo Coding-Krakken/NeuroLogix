@@ -2,7 +2,7 @@
 
 > **Enterprise-Grade AI-Powered Industrial Control System**
 >
-> *Mission-critical automation platform for warehouse & industrial operations*
+> _Mission-critical automation platform for warehouse & industrial operations_
 
 [![License](https://img.shields.io/badge/license-PROPRIETARY-red.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/typescript-5.3.2-blue.svg)](https://www.typescriptlang.org/)
@@ -11,12 +11,17 @@
 
 ## 🎯 Mission Statement
 
-NeuroLogix is a state-of-the-art AI-powered Industrial Control System that orchestrates warehouse and industrial automation through a **safety-first, AI-augmented approach**. Built to NASA mission control standards with Google-scale architecture and Microsoft enterprise reliability.
+NeuroLogix is a state-of-the-art AI-powered Industrial Control System that
+orchestrates warehouse and industrial automation through a **safety-first,
+AI-augmented approach**. Built to NASA mission control standards with
+Google-scale architecture and Microsoft enterprise reliability.
 
 ### Core Principles
 
-- **Safety First**: AI never bypasses PLC interlocks; all control flows through validated recipes
-- **Deterministic**: Predictable, auditable, and compliant with IEC 62443 / ISA-95 / ISO 27001
+- **Safety First**: AI never bypasses PLC interlocks; all control flows through
+  validated recipes
+- **Deterministic**: Predictable, auditable, and compliant with IEC 62443 /
+  ISA-95 / ISO 27001
 - **Modular**: Capabilities can be added/removed without core system changes
 - **Observable**: Complete telemetry, tracing, and audit trails for every action
 - **Scalable**: Designed for 10k+ tags/second with millisecond response times
@@ -31,59 +36,59 @@ flowchart TB
         SENS[Sensors]
         RADIO[Radio Systems]
     end
-    
+
     subgraph "Ingestion Layer"
         MQTT[MQTT Sparkplug]
         OPC[OPC UA Adapters]
         CV[CV Pipeline]
     end
-    
+
     subgraph "Core Platform"
         CR[Capability Registry]
         PE[Policy Engine]
         RE[Recipe Executor]
         DT[Digital Twin]
     end
-    
+
     subgraph "AI Services"
         ASR[ASR/NLU Engine]
         VISION[Computer Vision]
         OPT[Optimizers]
     end
-    
+
     subgraph "Integration Layer"
         WMS[WMS Connector]
         WCS[WCS Connector]
         DISPATCH[Dispatch Service]
     end
-    
+
     subgraph "Mission Control UI"
         CMD[Command Center]
         LINE[Line View]
         RADIO_UI[Radio Console]
         CONFIG[Config Studio]
     end
-    
+
     PLC --> MQTT
     CAM --> CV
     SENS --> OPC
     RADIO --> ASR
-    
+
     MQTT --> CR
     OPC --> CR
     CV --> VISION
-    
+
     CR --> PE
     PE --> RE
     RE --> DT
-    
+
     ASR --> OPT
     VISION --> OPT
     OPT --> DISPATCH
-    
+
     WMS --> DISPATCH
     WCS --> RE
-    
+
     DT --> CMD
     DISPATCH --> LINE
     ASR --> RADIO_UI
@@ -179,6 +184,7 @@ docker compose logs -f capability-registry
 ## 📋 Development Phases
 
 ### ✅ Phase 0 — Foundations (Current)
+
 - [x] Monorepo structure with Turbo
 - [x] TypeScript configuration
 - [x] ESLint + Prettier + Husky
@@ -188,48 +194,57 @@ docker compose logs -f capability-registry
 - [ ] Architecture documentation
 
 ### 🔄 Phase 1 — Data Spine & Contracts
+
 - [ ] Schema definitions (Zod + JSON Schema)
 - [ ] Message broker setup (MQTT + Kafka)
 - [ ] Contract testing framework
 - [ ] Topic ACLs & security
 
 ### ✅ Phase 2 — Core Runtime
+
 - [x] Capability Registry service
 - [x] Policy Engine (OPA/Rego)
 - [x] Recipe Executor with safety checks
 - [x] Digital Twin foundation
 
 ### ⏳ Phase 3 — Edge & Adapters
+
 - [ ] OPC UA/MQTT Sparkplug adapters
 - [ ] Camera ingestion pipeline
 - [ ] Demo line simulator
 
 ### ⏳ Phase 4 — AI Services
+
 - [ ] ASR/NLU for radio communications
 - [ ] Computer Vision models
 - [ ] Optimization algorithms
 
 ### ⏳ Phase 5 — WMS/WCS Integration
+
 - [ ] WMS connector
 - [ ] WCS connector
 - [ ] Dispatch service
 
 ### ⏳ Phase 6 — Mission Control UI
+
 - [ ] React-based operator interface
 - [ ] Real-time data visualization
 - [ ] Accessibility compliance
 
 ### ⏳ Phase 7 — Security & Compliance
+
 - [ ] IEC 62443 alignment
 - [ ] mTLS implementation
 - [ ] Audit trail system
 
 ### ⏳ Phase 8 — Testing & Validation
+
 - [ ] E2E scenario testing
 - [ ] Performance benchmarking
 - [ ] Chaos engineering
 
 ### ⏳ Phase 9 — Multi-Site Federation
+
 - [ ] Site template system
 - [ ] Federation architecture
 - [ ] Controlled rollout mechanisms
@@ -237,12 +252,14 @@ docker compose logs -f capability-registry
 ## 🛡️ Security & Compliance
 
 ### Standards Alignment
+
 - **IEC 62443**: Industrial cybersecurity framework
 - **ISA-95**: Enterprise-control system integration
 - **ISO 27001**: Information security management
 - **NIST Cybersecurity Framework**: Risk management approach
 
 ### Security Features
+
 - Zero-trust architecture
 - mTLS for all inter-service communication
 - RBAC/ABAC with zone-based access control
@@ -253,16 +270,19 @@ docker compose logs -f capability-registry
 ## 📊 Observability
 
 ### Metrics
+
 - **Prometheus** for metrics collection
 - **Grafana** for visualization
 - **Custom SLI/SLO** dashboards for each service
 
 ### Logging
+
 - **Structured logging** (JSON format)
 - **ELK Stack** for log aggregation
 - **Audit trails** for regulatory compliance
 
 ### Tracing
+
 - **OpenTelemetry** for distributed tracing
 - **Jaeger** for trace visualization
 - **Performance profiling** for optimization
@@ -270,6 +290,7 @@ docker compose logs -f capability-registry
 ## 🧪 Testing Strategy
 
 ### Test Pyramid
+
 - **Unit Tests**: ≥90% coverage on core modules
 - **Integration Tests**: Service-to-service contracts
 - **E2E Tests**: Complete workflow validation
@@ -277,6 +298,7 @@ docker compose logs -f capability-registry
 - **Security Tests**: Automated vulnerability scanning
 
 ### Quality Gates
+
 - All PRs require passing CI/CD pipeline
 - Code review from security & architecture teams
 - Automated dependency vulnerability scanning
@@ -284,19 +306,23 @@ docker compose logs -f capability-registry
 
 ## 📚 Documentation
 
-- **[Architecture Decision Records](docs/architecture/README.md)**: Design decisions & trade-offs
+- **[Architecture Decision Records](docs/architecture/README.md)**: Design
+  decisions & trade-offs
 - **[API Documentation](docs/api/README.md)**: Service interfaces & contracts
-- **[Deployment Guide](docs/deployment/README.md)**: Installation & configuration
+- **[Deployment Guide](docs/deployment/README.md)**: Installation &
+  configuration
 - **[Compliance Guide](docs/compliance/README.md)**: Regulatory alignment
 - **[Runbooks](docs/runbooks/README.md)**: Operational procedures
 
 ## 🤝 Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code standards, and submission process.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code
+standards, and submission process.
 
 ## 📄 License
 
-This software is proprietary and confidential. Unauthorized copying, modification, or distribution is strictly prohibited.
+This software is proprietary and confidential. Unauthorized copying,
+modification, or distribution is strictly prohibited.
 
 ---
 

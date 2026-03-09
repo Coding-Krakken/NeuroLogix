@@ -1,13 +1,14 @@
 # Framework Monitoring Rubric
 
-> **Category:** Framework Audit
-> **File:** `framework-audit/monitoring-rubric.prompt.md`
+> **Category:** Framework Audit **File:**
+> `framework-audit/monitoring-rubric.prompt.md`
 
 ---
 
 ## Purpose
 
-Real-time monitoring of framework audit execution. Track metrics, detect failures, abort on critical errors, and provide live progress updates.
+Real-time monitoring of framework audit execution. Track metrics, detect
+failures, abort on critical errors, and provide live progress updates.
 
 ## When to Use
 
@@ -26,10 +27,8 @@ Real-time monitoring of framework audit execution. Track metrics, detect failure
 ```markdown
 ## Real-Time Monitoring Dashboard
 
-**Audit Mode:** [FAST|STANDARD|THOROUGH]
-**Start Time:** [timestamp]
-**Elapsed:** [XX:XX]
-**Estimated Remaining:** [XX:XX]
+**Audit Mode:** [FAST|STANDARD|THOROUGH] **Start Time:** [timestamp]
+**Elapsed:** [XX:XX] **Estimated Remaining:** [XX:XX]
 
 ### Progress
 
@@ -255,7 +254,8 @@ if (($metrics.expressLaneUsed / $tasksCompleted) -lt 0.15) {
 
 ### 5. Update Progress
 
-Update dashboard every 5 seconds (during execution) or 30 seconds (between tasks).
+Update dashboard every 5 seconds (during execution) or 30 seconds (between
+tasks).
 
 ## Quality Expectations
 

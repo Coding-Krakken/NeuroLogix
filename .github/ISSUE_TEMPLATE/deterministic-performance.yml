@@ -1,27 +1,27 @@
 name: Deterministic Performance
 description: Performance optimization with benchmark evidence
-title: "performance(<component>): <summary>"
-labels: ["performance", "triage"]
+title: 'performance(<component>): <summary>'
+labels: ['performance', 'triage']
 body:
   - type: dropdown
     id: work_item_type
     attributes:
       label: Work Item Type
-      options: ["performance", "reliability"]
+      options: ['performance', 'reliability']
     validations:
       required: true
   - type: dropdown
     id: severity
     attributes:
       label: Severity
-      options: ["S1", "S2", "S3", "S4"]
+      options: ['S1', 'S2', 'S3', 'S4']
     validations:
       required: true
   - type: dropdown
     id: priority
     attributes:
       label: Priority
-      options: ["P0", "P1", "P2", "P3"]
+      options: ['P0', 'P1', 'P2', 'P3']
     validations:
       required: true
   - type: textarea

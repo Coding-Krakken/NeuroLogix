@@ -4,11 +4,11 @@
  * Dispatches next agent via code chat CLI with handoff context
  */
 
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
-import type { AgentId, HandoffCommentData, WorkItemContext } from "./types";
-import { logError, logInfo } from "./logger";
-import { MetadataHeaderBuilder } from "./metadata-header-builder";
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import type { AgentId, HandoffCommentData, WorkItemContext } from './types';
+import { logError, logInfo } from './logger';
+import { MetadataHeaderBuilder } from './metadata-header-builder';
 
 const execFileAsync = promisify(execFile);
 
@@ -33,7 +33,7 @@ export class AgentDispatcher {
     this.config = {
       codeCommand: config.codeCommand ?? this.detectCodeCommand(),
       timeout: config.timeout ?? 300000, // 5 minutes
-      dryRun: config.dryRun ?? process.env["SUBZERO_DISPATCH_DRY_RUN"] === "1",
+      dryRun: config.dryRun ?? process.env['SUBZERO_DISPATCH_DRY_RUN'] === '1',
     };
   }
 
@@ -46,7 +46,7 @@ export class AgentDispatcher {
     nextAgent: AgentId,
     context: WorkItemContext,
     handoffCommentUrl: string,
-    extraInstructions?: string,
+    extraInstructions?: string
   ): Promise<DispatchResult> {
     const chainTaskNumber = this.resolveChainTaskNumber(context);
 
@@ -56,42 +56,38 @@ export class AgentDispatcher {
       context,
       handoffCommentUrl,
       chainTaskNumber,
-      extraInstructions,
+      extraInstructions
     );
 
     // Get repository path
     const repoPath = process.cwd();
 
     // Build command
-    const args = ["chat", "-m", nextAgent, "--add-file", repoPath];
+    const args = ['chat', '-m', nextAgent, '--add-file', repoPath];
 
     // Add prompt as final argument
     args.push(prompt);
 
     // Execute
     if (this.config.dryRun) {
-      logInfo("[DRY RUN] Would dispatch agent:");
+      logInfo('[DRY RUN] Would dispatch agent:');
       logInfo(`  Agent: ${nextAgent}`);
-      logInfo(`  Command: ${this.config.codeCommand} ${args.join(" ")}`);
+      logInfo(`  Command: ${this.config.codeCommand} ${args.join(' ')}`);
       logInfo(`  Prompt: ${prompt}`);
       this.persistNextChainTaskNumber(context, chainTaskNumber);
 
       return {
         success: true,
-        stdout: "[DRY RUN] Simulated dispatch success",
+        stdout: '[DRY RUN] Simulated dispatch success',
       };
     }
 
     try {
-      const { stdout, stderr } = await execFileAsync(
-        this.config.codeCommand!,
-        args,
-        {
-          timeout: this.config.timeout,
-          windowsHide: true,
-          cwd: repoPath,
-        },
-      );
+      const { stdout, stderr } = await execFileAsync(this.config.codeCommand!, args, {
+        timeout: this.config.timeout,
+        windowsHide: true,
+        cwd: repoPath,
+      });
 
       logInfo(`✅ Successfully dispatched to ${nextAgent}`);
       logInfo(`   Handoff: ${handoffCommentUrl}`);
@@ -112,7 +108,7 @@ export class AgentDispatcher {
 
       logError(`❌ Failed to dispatch to ${nextAgent}`);
       logError(`   Error: ${err.message}`);
-      logError(`   Stderr: ${err.stderr || "N/A"}`);
+      logError(`   Stderr: ${err.stderr || 'N/A'}`);
 
       return {
         success: false,
@@ -136,7 +132,7 @@ export class AgentDispatcher {
     context: WorkItemContext,
     handoffCommentUrl: string,
     chainTaskNumber: number,
-    extraInstructions?: string,
+    extraInstructions?: string
   ): string {
     const header = MetadataHeaderBuilder.build({
       issueNumber: context.issueNumber,
@@ -150,7 +146,7 @@ export class AgentDispatcher {
     const parts = [
       `Handoff URL: ${handoffCommentUrl}`,
       ``,
-      `Work Item: Issue #${context.issueNumber}${context.prNumber ? ` | PR #${context.prNumber}` : ""}`,
+      `Work Item: Issue #${context.issueNumber}${context.prNumber ? ` | PR #${context.prNumber}` : ''}`,
       `Branch: ${context.branchName}`,
       ``,
       `🔗 READ THIS HANDOFF FIRST:`,
@@ -174,43 +170,38 @@ export class AgentDispatcher {
     }
 
     parts.push(
-      `⚠️  CRITICAL: If you encounter blockers, post a "Blocked" handoff and dispatch to the appropriate escalation path.`,
+      `⚠️  CRITICAL: If you encounter blockers, post a "Blocked" handoff and dispatch to the appropriate escalation path.`
     );
     parts.push(``);
     parts.push(`Begin work now.`);
 
-    return `${header}\n\n${parts.join("\n")}`;
+    return `${header}\n\n${parts.join('\n')}`;
   }
 
   private resolveChainTaskNumber(context: WorkItemContext): number {
     if (
-      typeof context.chainTaskNumber === "number" &&
+      typeof context.chainTaskNumber === 'number' &&
       Number.isInteger(context.chainTaskNumber) &&
       context.chainTaskNumber > 0
     ) {
       return context.chainTaskNumber;
     }
 
-    const existing = this.chainTaskNumberStore.get(
-      this.getChainStateKey(context),
-    );
+    const existing = this.chainTaskNumberStore.get(this.getChainStateKey(context));
     return existing ?? 1;
   }
 
   private persistNextChainTaskNumber(
     context: WorkItemContext,
-    currentChainTaskNumber: number,
+    currentChainTaskNumber: number
   ): void {
     const nextChainTaskNumber = currentChainTaskNumber + 1;
-    this.chainTaskNumberStore.set(
-      this.getChainStateKey(context),
-      nextChainTaskNumber,
-    );
+    this.chainTaskNumberStore.set(this.getChainStateKey(context), nextChainTaskNumber);
     context.chainTaskNumber = nextChainTaskNumber;
   }
 
   private getChainStateKey(context: WorkItemContext): string {
-    const baseKey = `${context.repo}|issue:${context.issueNumber}|pr:${context.prNumber ?? "none"}`;
+    const baseKey = `${context.repo}|issue:${context.issueNumber}|pr:${context.prNumber ?? 'none'}`;
     if (context.runId) {
       return `${baseKey}|run:${context.runId}`;
     }
@@ -225,12 +216,12 @@ export class AgentDispatcher {
    */
   private detectCodeCommand(): string {
     // Check environment variable first
-    if (process.env["SUBZERO_CODE_COMMAND"]) {
-      return process.env["SUBZERO_CODE_COMMAND"];
+    if (process.env['SUBZERO_CODE_COMMAND']) {
+      return process.env['SUBZERO_CODE_COMMAND'];
     }
 
     // Default to 'code' (most common)
-    return "code";
+    return 'code';
   }
 
   /**
@@ -238,7 +229,7 @@ export class AgentDispatcher {
    */
   async validateCodeCommand(): Promise<boolean> {
     try {
-      await execFileAsync(this.config.codeCommand!, ["--version"], {
+      await execFileAsync(this.config.codeCommand!, ['--version'], {
         timeout: 5000,
         windowsHide: true,
       });
@@ -255,10 +246,7 @@ export class AgentDispatcher {
 export const defaultAgentDispatcher = new AgentDispatcher();
 
 interface HandoffProvider {
-  postHandoff(
-    context: WorkItemContext,
-    data: HandoffCommentData,
-  ): Promise<{ commentUrl: string }>;
+  postHandoff(context: WorkItemContext, data: HandoffCommentData): Promise<{ commentUrl: string }>;
 }
 
 /**
@@ -272,16 +260,11 @@ export async function postHandoffAndDispatch(
   dispatcher: AgentDispatcher,
   context: WorkItemContext,
   handoffData: HandoffCommentData,
-  extraInstructions?: string,
+  extraInstructions?: string
 ): Promise<{ commentUrl: string; dispatchResult: DispatchResult }> {
   // Step 1: Post handoff comment (MANDATORY)
-  logInfo(
-    `📤 Posting handoff comment for ${context.agent} → ${handoffData.nextAgent}`,
-  );
-  const { commentUrl } = await handoffProvider.postHandoff(
-    context,
-    handoffData,
-  );
+  logInfo(`📤 Posting handoff comment for ${context.agent} → ${handoffData.nextAgent}`);
+  const { commentUrl } = await handoffProvider.postHandoff(context, handoffData);
 
   // Step 2: Dispatch next agent (MANDATORY)
   logInfo(`📨 Dispatching to ${handoffData.nextAgent}`);
@@ -289,13 +272,13 @@ export async function postHandoffAndDispatch(
     handoffData.nextAgent,
     context,
     commentUrl,
-    extraInstructions,
+    extraInstructions
   );
 
   // Both must succeed
   if (!dispatchResult.success) {
     throw new Error(
-      `Dispatch failed after handoff was posted. Handoff: ${commentUrl}. Error: ${dispatchResult.error}`,
+      `Dispatch failed after handoff was posted. Handoff: ${commentUrl}. Error: ${dispatchResult.error}`
     );
   }
 

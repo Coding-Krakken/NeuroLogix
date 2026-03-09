@@ -1,13 +1,13 @@
 # E2E Test Design
 
-> **Category:** Testing
-> **File:** `testing/e2e-design.prompt.md`
+> **Category:** Testing **File:** `testing/e2e-design.prompt.md`
 
 ---
 
 ## Purpose
 
-Design end-to-end test scenarios for critical user journeys. Define test scripts for Playwright that cover the most important paths through the application.
+Design end-to-end test scenarios for critical user journeys. Define test scripts
+for Playwright that cover the most important paths through the application.
 
 ## When to Use
 
@@ -35,25 +35,25 @@ Design end-to-end test scenarios for critical user journeys. Define test scripts
 ```typescript
 test('complete purchase flow', async ({ page }) => {
   // 1. Browse products
-  await page.goto('/products')
-  await expect(page.getByRole('heading', { name: /products/i })).toBeVisible()
+  await page.goto('/products');
+  await expect(page.getByRole('heading', { name: /products/i })).toBeVisible();
 
   // 2. Click product
-  await page.getByRole('link', { name: /product-name/i }).click()
-  await expect(page).toHaveURL(/\/products\//)
+  await page.getByRole('link', { name: /product-name/i }).click();
+  await expect(page).toHaveURL(/\/products\//);
 
   // 3. Add to cart
-  await page.getByRole('button', { name: /add to cart/i }).click()
-  await expect(page.getByRole('status')).toContainText(/added/i)
+  await page.getByRole('button', { name: /add to cart/i }).click();
+  await expect(page.getByRole('status')).toContainText(/added/i);
 
   // 4. Go to cart
-  await page.getByRole('link', { name: /cart/i }).click()
-  await expect(page.getByRole('heading', { name: /cart/i })).toBeVisible()
+  await page.getByRole('link', { name: /cart/i }).click();
+  await expect(page.getByRole('heading', { name: /cart/i })).toBeVisible();
 
   // 5. Proceed to checkout
-  await page.getByRole('button', { name: /checkout/i }).click()
+  await page.getByRole('button', { name: /checkout/i }).click();
   // ... payment flow (<PAYMENT_PROVIDER> iframe)
-})
+});
 ```
 ````
 
@@ -91,4 +91,3 @@ test('complete purchase flow', async ({ page }) => {
 - Pass/fail results
 - Screenshot captures on failure
 ```
-

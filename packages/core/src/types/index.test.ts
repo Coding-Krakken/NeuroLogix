@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { AssetSchema, TelemetrySchema, IntentSchema, RecipeSchema, AuditEventSchema, UserSchema } from '@/types/index';
+import {
+  AssetSchema,
+  TelemetrySchema,
+  IntentSchema,
+  RecipeSchema,
+  AuditEventSchema,
+  UserSchema,
+} from '@/types/index';
 
 describe('Type Schemas', () => {
   describe('AssetSchema', () => {

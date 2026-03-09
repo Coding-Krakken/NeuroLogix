@@ -63,7 +63,8 @@ Evidence highlights:
 - G3 Typecheck: Pass
 - G5 Build: Pass
 - G4 Tests (targeted): Pass
-- G1 Lint (targeted modules): Pass using `npx eslint context-hierarchy.ts dependency-graph.ts hybrid-orchestrator.ts --ext .ts`
+- G1 Lint (targeted modules): Pass using
+  `npx eslint context-hierarchy.ts dependency-graph.ts hybrid-orchestrator.ts --ext .ts`
 
 Note: repository-wide legacy lint debt may still exist outside Phase A scope.
 

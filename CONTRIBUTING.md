@@ -2,7 +2,8 @@
 
 ## Overview
 
-NeuroLogix is a mission-critical enterprise system. All contributions must meet the highest standards for safety, security, reliability, and maintainability.
+NeuroLogix is a mission-critical enterprise system. All contributions must meet
+the highest standards for safety, security, reliability, and maintainability.
 
 ## Development Principles
 
@@ -41,24 +42,28 @@ npm run dev
 ## Code Standards
 
 ### TypeScript
+
 - Use strict mode TypeScript configuration
 - Prefer explicit types over `any`
 - Use Zod for runtime validation
 - Follow the existing naming conventions
 
 ### Security
+
 - Never commit secrets or sensitive data
 - Use environment variables for configuration
 - Validate all inputs
 - Follow OWASP security guidelines
 
 ### Testing
+
 - Unit tests: ≥90% coverage for core modules
 - Integration tests for service boundaries
 - E2E tests for critical user workflows
 - Security tests for authentication/authorization
 
 ### Documentation
+
 - Update ADRs for architectural decisions
 - Include JSDoc comments for public APIs
 - Update README files for package changes
@@ -67,13 +72,16 @@ npm run dev
 ## Workflow
 
 ### Branching Strategy
+
 - `main`: Production-ready code
 - `develop`: Integration branch
 - `feature/*`: Feature branches
 - `hotfix/*`: Production hotfixes
 
 ### Commit Messages
+
 Follow conventional commits:
+
 ```
 feat: add capability registry service
 fix: resolve authentication token expiry
@@ -84,6 +92,7 @@ security: implement rate limiting
 ### Pull Request Process
 
 1. **Create Feature Branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -94,6 +103,7 @@ security: implement rate limiting
    - Update documentation
 
 3. **Run Quality Checks**
+
    ```bash
    npm run lint
    npm run test
@@ -122,24 +132,28 @@ security: implement rate limiting
 ### What to Look For
 
 #### Security
+
 - Input validation and sanitization
 - Authentication and authorization
 - Secure communication protocols
 - Error handling without information leakage
 
 #### Safety
+
 - Proper handling of industrial control systems
 - Fail-safe mechanisms
 - Emergency stop procedures
 - Audit trail completeness
 
 #### Performance
+
 - Response time requirements
 - Resource usage optimization
 - Scalability considerations
 - Database query efficiency
 
 #### Maintainability
+
 - Code readability and clarity
 - Proper abstraction and modularity
 - Comprehensive error handling
@@ -159,13 +173,17 @@ security: implement rate limiting
 ## Release Process
 
 ### Versioning
+
 We follow semantic versioning (SemVer):
+
 - MAJOR: Breaking changes
 - MINOR: New features (backwards compatible)
 - PATCH: Bug fixes (backwards compatible)
 
 ### Release Steps
+
 1. **Prepare Release**
+
    ```bash
    npm run changeset
    npm run version-packages
@@ -185,16 +203,19 @@ We follow semantic versioning (SemVer):
 ## Environment Setup
 
 ### Development
+
 - Local development with hot reload
 - Mock external services
 - Test data and fixtures
 
 ### Staging
+
 - Production-like environment
 - Integration with external systems
 - Performance testing
 
 ### Production
+
 - High availability setup
 - Full monitoring and alerting
 - Disaster recovery procedures
@@ -202,24 +223,28 @@ We follow semantic versioning (SemVer):
 ## Architecture Guidelines
 
 ### Service Design
+
 - Follow domain-driven design principles
 - Implement proper error boundaries
 - Use appropriate design patterns
 - Consider scalability from the start
 
 ### API Design
+
 - RESTful endpoints where appropriate
 - GraphQL for complex data fetching
 - Real-time updates via WebSocket/SSE
 - Comprehensive input validation
 
 ### Database Design
+
 - Normalize data appropriately
 - Use indexes for performance
 - Implement proper backup strategies
 - Consider data retention policies
 
 ### Security Architecture
+
 - Zero-trust network model
 - Defense in depth strategy
 - Principle of least privilege
@@ -228,17 +253,21 @@ We follow semantic versioning (SemVer):
 ## Support
 
 ### Getting Help
+
 - GitHub Discussions for general questions
 - GitHub Issues for bugs and feature requests
 - Internal Slack channels for team communication
 - Architecture review meetings for design decisions
 
 ### Emergency Procedures
+
 For security vulnerabilities or critical issues:
+
 1. Create private issue or contact security team
 2. Do not publicly disclose until patched
 3. Follow responsible disclosure guidelines
 
 ## License
 
-This project is proprietary. By contributing, you agree that your contributions will be licensed under the same terms as the project.
+This project is proprietary. By contributing, you agree that your contributions
+will be licensed under the same terms as the project.

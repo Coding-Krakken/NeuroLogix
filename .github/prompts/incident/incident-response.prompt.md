@@ -1,13 +1,13 @@
 # Incident Response
 
-> **Category:** Incident
-> **File:** `incident/incident-response.prompt.md`
+> **Category:** Incident **File:** `incident/incident-response.prompt.md`
 
 ---
 
 ## Purpose
 
-Guide rapid, structured incident response to minimize user impact and restore service as quickly as possible.
+Guide rapid, structured incident response to minimize user impact and restore
+service as quickly as possible.
 
 ## When to Use
 

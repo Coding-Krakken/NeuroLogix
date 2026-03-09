@@ -63,20 +63,7 @@
     },
     "state": {
       "type": "string",
-      "enum": [
-        "draft",
-        "triage",
-        "planned",
-        "in-progress",
-        "in-review",
-        "approved",
-        "ready-to-release",
-        "released",
-        "verified",
-        "blocked",
-        "closed",
-        "cancelled"
-      ]
+      "enum": ["draft", "triage", "planned", "in-progress", "in-review", "approved", "ready-to-release", "released", "verified", "blocked", "closed", "cancelled"]
     },
     "priority": {
       "type": "string",

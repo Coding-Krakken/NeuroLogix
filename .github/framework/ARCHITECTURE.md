@@ -9,14 +9,17 @@
 
 ## Executive Summary
 
-This document defines the architecture for modernizing the Core-3-first agentic framework (with specialist escalation) to achieve:
+This document defines the architecture for modernizing the Core-3-first agentic
+framework (with specialist escalation) to achieve:
 
 - **70% faster task execution** (50 min → 5-15 min for simple tasks)
 - **40% reduction in dispatch handoffs** (5-6 → 3-4 agents average)
 - **50% faster developer feedback loop**
 - **90% confidence in framework resilience**
 
-The architecture introduces smart routing, parallel execution, streaming feedback, and adaptive learning while maintaining backward compatibility with existing agents.
+The architecture introduces smart routing, parallel execution, streaming
+feedback, and adaptive learning while maintaining backward compatibility with
+existing agents.
 
 ---
 
@@ -242,7 +245,7 @@ const handoff = {
   to: 'tech-lead',
   task: taskObject,
   context: '...',
-}
+};
 
 // Framework automatically upgrades to v2 if both agents support it
 // Falls back to v1 if either agent is on old version
@@ -257,14 +260,14 @@ const handoff = {
 
 ```typescript
 // Before: Sequential
-await runGate('G1') // Lint
-await runGate('G2') // Format
-await runGate('G3') // Type
-await runGate('G4') // Test
-await runGate('G5') // Build (depends on G1-G4)
+await runGate('G1'); // Lint
+await runGate('G2'); // Format
+await runGate('G3'); // Type
+await runGate('G4'); // Test
+await runGate('G5'); // Build (depends on G1-G4)
 
 // After: Parallel
-const results = await ParallelQualityGates.runAll()
+const results = await ParallelQualityGates.runAll();
 // G1, G2, G3, G4 run concurrently
 // G5 waits for G1-G4 to complete
 // Total time: max(G1, G2, G3, G4) + G5 time
@@ -333,20 +336,20 @@ features:
 
 ```typescript
 interface FrameworkState {
-  tasks: Map<string, Task> // All active tasks
-  agents: Map<AgentId, AgentState> // Agent status
-  routing: RoutingCache // Cached routing decisions
-  telemetry: TelemetryBuffer // Buffered events
-  cache: ContextCache // Preloaded contexts
+  tasks: Map<string, Task>; // All active tasks
+  agents: Map<AgentId, AgentState>; // Agent status
+  routing: RoutingCache; // Cached routing decisions
+  telemetry: TelemetryBuffer; // Buffered events
+  cache: ContextCache; // Preloaded contexts
 }
 
 interface AgentState {
-  id: AgentId
-  status: AgentStatus // idle | working | blocked | error
-  currentTask?: string // Task ID
-  queuedTasks: string[] // Waiting tasks
-  lastActive: Date
-  totalTasksCompleted: number
+  id: AgentId;
+  status: AgentStatus; // idle | working | blocked | error
+  currentTask?: string; // Task ID
+  queuedTasks: string[]; // Waiting tasks
+  lastActive: Date;
+  totalTasksCompleted: number;
 }
 ```
 
@@ -359,7 +362,8 @@ interface AgentState {
 **State Synchronization:**
 
 - Single-process architecture (no distributed state)
-- GitHub-native handoff comments for durability (resume via comment URL + issue/PR history)
+- GitHub-native handoff comments for durability (resume via comment URL +
+  issue/PR history)
 - Telemetry buffered in memory, flushed to disk every 30 seconds
 
 ### Task State Machine
@@ -557,8 +561,10 @@ interface AgentState {
 ### Environments
 
 1. **Local Development:** Feature flags off, manual testing
-2. **Beta (Synthetic Tasks):** Feature flags on, automated test suite (50+ tasks)
-3. **Dogfooding (Internal Tasks):** Feature flags on, real tasks on internal projects
+2. **Beta (Synthetic Tasks):** Feature flags on, automated test suite (50+
+   tasks)
+3. **Dogfooding (Internal Tasks):** Feature flags on, real tasks on internal
+   projects
 4. **Production (All Tasks):** Feature flags on, all user-facing tasks
 
 ### Rollout Plan
@@ -678,7 +684,8 @@ See [SECURITY.md](SECURITY.md) for detailed security architecture including:
 
 ## Failure Modes & Resilience
 
-See [FAILURE-MODES.md](FAILURE-MODES.md) for comprehensive failure mode analysis including:
+See [FAILURE-MODES.md](FAILURE-MODES.md) for comprehensive failure mode analysis
+including:
 
 - Component failure scenarios
 - Recovery strategies

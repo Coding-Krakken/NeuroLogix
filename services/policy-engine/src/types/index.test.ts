@@ -153,7 +153,7 @@ describe('Policy Engine Types', () => {
     it('should validate empty query with defaults', () => {
       const emptyQuery = {};
       const result = PolicyQuerySchema.parse(emptyQuery);
-      
+
       expect(result.page).toBe(1);
       expect(result.limit).toBe(20);
       expect(result.sortBy).toBe('name');
@@ -179,23 +179,31 @@ describe('Policy Engine Types', () => {
     it('should accept valid priority values', () => {
       const priorities = ['critical', 'high', 'medium', 'low'];
       priorities.forEach(priority => {
-        expect(() => PolicyDocumentSchema.pick({ priority: true }).parse({ priority })).not.toThrow();
+        expect(() =>
+          PolicyDocumentSchema.pick({ priority: true }).parse({ priority })
+        ).not.toThrow();
       });
     });
 
     it('should accept valid category values', () => {
       const categories = ['safety', 'security', 'operational', 'compliance', 'quality'];
       categories.forEach(category => {
-        expect(() => PolicyDocumentSchema.pick({ category: true }).parse({ category })).not.toThrow();
+        expect(() =>
+          PolicyDocumentSchema.pick({ category: true }).parse({ category })
+        ).not.toThrow();
       });
     });
 
     it('should reject invalid priority values', () => {
-      expect(() => PolicyDocumentSchema.pick({ priority: true }).parse({ priority: 'invalid' })).toThrow();
+      expect(() =>
+        PolicyDocumentSchema.pick({ priority: true }).parse({ priority: 'invalid' })
+      ).toThrow();
     });
 
     it('should reject invalid category values', () => {
-      expect(() => PolicyDocumentSchema.pick({ category: true }).parse({ category: 'invalid' })).toThrow();
+      expect(() =>
+        PolicyDocumentSchema.pick({ category: true }).parse({ category: 'invalid' })
+      ).toThrow();
     });
   });
 

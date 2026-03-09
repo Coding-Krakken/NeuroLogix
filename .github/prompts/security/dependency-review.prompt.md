@@ -1,13 +1,13 @@
 # Dependency Review
 
-> **Category:** Security
-> **File:** `security/dependency-review.prompt.md`
+> **Category:** Security **File:** `security/dependency-review.prompt.md`
 
 ---
 
 ## Purpose
 
-Audit project dependencies for security vulnerabilities, license compliance, maintenance status, and supply chain risks.
+Audit project dependencies for security vulnerabilities, license compliance,
+maintenance status, and supply chain risks.
 
 ## When to Use
 

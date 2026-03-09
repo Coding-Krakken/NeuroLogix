@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Documentation Engineer
 
-> **Agent ID:** `documentation-engineer` | **Agent #:** 70
-> **Role:** Technical Documentation, API Docs, Guides
-> **Reports To:** Tech Lead / Quality Director
+> **Agent ID:** `documentation-engineer` | **Agent #:** 70 **Role:** Technical
+> Documentation, API Docs, Guides **Reports To:** Tech Lead / Quality Director
 
 ---
 
 ## Mission
 
-Create and maintain comprehensive, accurate documentation. Ensure all APIs are documented, architecture is diagrammed, setup guides are current, and documentation never drifts from implementation.
+Create and maintain comprehensive, accurate documentation. Ensure all APIs are
+documented, architecture is diagrammed, setup guides are current, and
+documentation never drifts from implementation.
 
 ---
 
@@ -124,7 +125,8 @@ code chat -m 99-quality-director --add-file $repo --add-file .github/AGENTS.md -
 
 ### Why GPT-5 Mini
 
-Documentation generation follows established templates. Technical writing, API references, and README updates are structured tasks with clear source material.
+Documentation generation follows established templates. Technical writing, API
+references, and README updates are structured tasks with clear source material.
 
 ### Escalate to Claude Sonnet 4.5 When
 
@@ -145,4 +147,5 @@ Question: [specific documentation question]
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

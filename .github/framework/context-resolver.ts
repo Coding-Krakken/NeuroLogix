@@ -4,9 +4,9 @@
  * Resolves work item context from environment variables, CLI args, or auto-detection
  */
 
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
-import type { WorkItemContext, AgentId } from "./types";
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import type { WorkItemContext, AgentId } from './types';
 
 const execFileAsync = promisify(execFile);
 
@@ -26,51 +26,39 @@ export class ContextResolver {
    * Resolve work item context from multiple sources
    * Priority: Explicit config > Environment variables > Auto-detection
    */
-  async resolve(
-    config: Partial<ContextResolverConfig> = {},
-  ): Promise<WorkItemContext> {
-    const repo =
-      config.repo ||
-      this.getEnvVar("SUBZERO_REPO") ||
-      (await this.detectRepo());
+  async resolve(config: Partial<ContextResolverConfig> = {}): Promise<WorkItemContext> {
+    const repo = config.repo || this.getEnvVar('SUBZERO_REPO') || (await this.detectRepo());
     const issueNumber =
       config.issueNumber ||
-      this.getEnvVarInt("SUBZERO_ISSUE") ||
+      this.getEnvVarInt('SUBZERO_ISSUE') ||
       (await this.detectIssueFromBranch());
     const prNumber =
-      config.prNumber ||
-      this.getEnvVarInt("SUBZERO_PR") ||
-      (await this.detectPR(issueNumber));
+      config.prNumber || this.getEnvVarInt('SUBZERO_PR') || (await this.detectPR(issueNumber));
     const branchName =
-      config.branchName ||
-      this.getEnvVar("SUBZERO_BRANCH") ||
-      (await this.detectBranch());
+      config.branchName || this.getEnvVar('SUBZERO_BRANCH') || (await this.detectBranch());
     const agent =
       config.agent ||
-      (this.getEnvVar("SUBZERO_AGENT") as AgentId) ||
-      ("00-chief-of-staff" as AgentId);
+      (this.getEnvVar('SUBZERO_AGENT') as AgentId) ||
+      ('00-chief-of-staff' as AgentId);
     const nextAgent =
-      config.nextAgent ||
-      (this.getEnvVar("SUBZERO_NEXT_AGENT") as AgentId | undefined);
-    const runId = config.runId || this.getEnvVar("SUBZERO_RUN_ID");
-    const taskId = config.taskId || this.getEnvVar("SUBZERO_TASK_ID");
+      config.nextAgent || (this.getEnvVar('SUBZERO_NEXT_AGENT') as AgentId | undefined);
+    const runId = config.runId || this.getEnvVar('SUBZERO_RUN_ID');
+    const taskId = config.taskId || this.getEnvVar('SUBZERO_TASK_ID');
 
     if (!repo) {
       throw new Error(
-        "Failed to resolve repository. Set SUBZERO_REPO or ensure git remote origin is configured.",
+        'Failed to resolve repository. Set SUBZERO_REPO or ensure git remote origin is configured.'
       );
     }
 
     if (!issueNumber) {
       throw new Error(
-        "Failed to resolve issue number. Set SUBZERO_ISSUE or use branch naming convention (feature/123-description).",
+        'Failed to resolve issue number. Set SUBZERO_ISSUE or use branch naming convention (feature/123-description).'
       );
     }
 
     if (!branchName) {
-      throw new Error(
-        "Failed to resolve branch name. Ensure you are in a git repository.",
-      );
+      throw new Error('Failed to resolve branch name. Ensure you are in a git repository.');
     }
 
     return {
@@ -107,17 +95,15 @@ export class ContextResolver {
    */
   private async detectRepo(): Promise<string | undefined> {
     try {
-      const { stdout } = await execFileAsync(
-        "git",
-        ["remote", "get-url", "origin"],
-        { windowsHide: true },
-      );
+      const { stdout } = await execFileAsync('git', ['remote', 'get-url', 'origin'], {
+        windowsHide: true,
+      });
       const url = stdout.trim();
 
       // Parse GitHub URL: https://github.com/owner/repo.git or git@github.com:owner/repo.git
       const httpsMatch = url.match(/github\.com[:/]([^/]+)\/([^/]+?)(\.git)?$/);
       if (httpsMatch && httpsMatch[1] && httpsMatch[2]) {
-        return `${httpsMatch[1]}/${httpsMatch[2].replace(/\.git$/, "")}`;
+        return `${httpsMatch[1]}/${httpsMatch[2].replace(/\.git$/, '')}`;
       }
 
       return undefined;
@@ -131,11 +117,9 @@ export class ContextResolver {
    */
   private async detectBranch(): Promise<string | undefined> {
     try {
-      const { stdout } = await execFileAsync(
-        "git",
-        ["branch", "--show-current"],
-        { windowsHide: true },
-      );
+      const { stdout } = await execFileAsync('git', ['branch', '--show-current'], {
+        windowsHide: true,
+      });
       return stdout.trim() || undefined;
     } catch {
       return undefined;
@@ -150,9 +134,7 @@ export class ContextResolver {
     const branchName = await this.detectBranch();
     if (!branchName) return undefined;
 
-    const match = branchName.match(
-      /^(?:feature|bugfix|fix|chore|docs|hotfix)\/(\d+)-/,
-    );
+    const match = branchName.match(/^(?:feature|bugfix|fix|chore|docs|hotfix)\/(\d+)-/);
     if (match && match[1]) {
       return Number.parseInt(match[1], 10);
     }
@@ -163,26 +145,15 @@ export class ContextResolver {
   /**
    * Detect PR number linked to issue
    */
-  private async detectPR(
-    issueNumber: number | undefined,
-  ): Promise<number | undefined> {
+  private async detectPR(issueNumber: number | undefined): Promise<number | undefined> {
     if (!issueNumber) return undefined;
 
     try {
       // Try to find PR that closes this issue
       const { stdout } = await execFileAsync(
-        "gh",
-        [
-          "pr",
-          "list",
-          "--search",
-          `closes #${issueNumber}`,
-          "--json",
-          "number",
-          "--limit",
-          "1",
-        ],
-        { windowsHide: true },
+        'gh',
+        ['pr', 'list', '--search', `closes #${issueNumber}`, '--json', 'number', '--limit', '1'],
+        { windowsHide: true }
       );
 
       const prs = JSON.parse(stdout) as Array<{ number: number }>;
@@ -194,9 +165,9 @@ export class ContextResolver {
         if (!branchName) return undefined;
 
         const { stdout: prStdout } = await execFileAsync(
-          "gh",
-          ["pr", "view", branchName, "--json", "number"],
-          { windowsHide: true },
+          'gh',
+          ['pr', 'view', branchName, '--json', 'number'],
+          { windowsHide: true }
         );
 
         const pr = JSON.parse(prStdout) as { number: number };

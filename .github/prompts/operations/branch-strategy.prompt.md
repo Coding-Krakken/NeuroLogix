@@ -1,7 +1,8 @@
 # Prompt: Branch Strategy
 
 **Category:** operations  
-**Purpose:** Guide agents to create, manage, and merge feature branches properly  
+**Purpose:** Guide agents to create, manage, and merge feature branches
+properly  
 **Complexity:** Medium  
 **Expected Duration:** 5-10 minutes
 
@@ -9,7 +10,8 @@
 
 ## Objective
 
-Create and manage feature branches for isolated development work following strict naming conventions and merge protocols.
+Create and manage feature branches for isolated development work following
+strict naming conventions and merge protocols.
 
 **Authority:**
 
@@ -21,7 +23,8 @@ Create and manage feature branches for isolated development work following stric
 
 ## Context
 
-You are operating in the Core-3 model (with specialist escalation) using Git Flow with these branches:
+You are operating in the Core-3 model (with specialist escalation) using Git
+Flow with these branches:
 
 - `main` — Production-ready code (protected)
 - `feature/*` — New features/epics
@@ -73,7 +76,8 @@ gh issue view <issue-number>
 gh issue view 42
 ```
 
-If issue doesn't exist, create it first (see [manage-issue.prompt.md](manage-issue.prompt.md)).
+If issue doesn't exist, create it first (see
+[manage-issue.prompt.md](manage-issue.prompt.md)).
 
 ---
 
@@ -243,7 +247,8 @@ git pull origin main --rebase
 git push origin feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG> --force-with-lease
 ```
 
-**⚠️ Caution:** `--force-with-lease` rewrites history. Only use if you're the sole contributor to the branch.
+**⚠️ Caution:** `--force-with-lease` rewrites history. Only use if you're the
+sole contributor to the branch.
 
 ---
 
@@ -294,7 +299,7 @@ export function generateTitle(text: string, maxLength = 60): string {
 
 ```typescript
 export function generateTitle(text: string, maxLength = 60): string {
-  return text.slice(0, maxLength) // Kept main's version with default param
+  return text.slice(0, maxLength); // Kept main's version with default param
 }
 ```
 
@@ -364,7 +369,8 @@ git push origin --delete <branch-name>
 git push origin --delete feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>
 ```
 
-**Note:** GitHub auto-deletes remote branch when PR is merged with `--delete-branch` flag.
+**Note:** GitHub auto-deletes remote branch when PR is merged with
+`--delete-branch` flag.
 
 ---
 
@@ -648,4 +654,3 @@ git push origin feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>
 **Version:** 1.0.0  
 **Last Updated:** 2026-02-25  
 **Owner:** Tech Lead
-

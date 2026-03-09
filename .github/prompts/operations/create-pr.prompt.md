@@ -9,7 +9,8 @@
 
 ## Objective
 
-Create a pull request (PR) after all quality gates pass, security review approved, and model compliance verified.
+Create a pull request (PR) after all quality gates pass, security review
+approved, and model compliance verified.
 
 **Authority:** **ONLY Quality Director** can create PRs.
 
@@ -17,7 +18,9 @@ Create a pull request (PR) after all quality gates pass, security review approve
 
 ## Context
 
-You are the Quality Director in the Core-3 operating model (with specialist escalation). Creating a PR is the final step before code reaches production. Your PR must:
+You are the Quality Director in the Core-3 operating model (with specialist
+escalation). Creating a PR is the final step before code reaches production.
+Your PR must:
 
 - Include complete quality gate evidence (G1-G10)
 - Reference the GitHub issue
@@ -42,7 +45,8 @@ You are the Quality Director in the Core-3 operating model (with specialist esca
 - [ ] ✅ **G9: Accessibility** — (if UI changes, WCAG 2.1 AA compliant)
 - [ ] ✅ **G10: Security Review** — Security Engineer approved
 
-**If ANY gate fails:** DO NOT create PR. Escalate to owning agent for remediation.
+**If ANY gate fails:** DO NOT create PR. Escalate to owning agent for
+remediation.
 
 ---
 
@@ -76,7 +80,8 @@ npm audit --audit-level=high --json > qa-evidence/audit-output.json
 
 ### Step 2: Prepare PR Body
 
-Use the PR template from `.github/pull_request_template.md` and fill in all sections:
+Use the PR template from `.github/pull_request_template.md` and fill in all
+sections:
 
 **Required Sections:**
 
@@ -301,7 +306,8 @@ Phase: <Phase Number and Name>
 
 **None**
 
-This PR adds SEO enhancements with no breaking changes to existing functionality.
+This PR adds SEO enhancements with no breaking changes to existing
+functionality.
 
 ## Migration Required
 
@@ -311,8 +317,10 @@ No database migrations or environment variable changes required.
 
 ## Notes
 
-- Sitemap intentionally emits baseline telemetry log under test conditions (expected behavior)
-- One medium-priority recommendation from security: replace `console.error` with structured logger (non-blocking, tracked in issue #<FOLLOWUP_ISSUE_ID>)
+- Sitemap intentionally emits baseline telemetry log under test conditions
+  (expected behavior)
+- One medium-priority recommendation from security: replace `console.error` with
+  structured logger (non-blocking, tracked in issue #<FOLLOWUP_ISSUE_ID>)
 
 ---
 
@@ -454,4 +462,3 @@ Next steps:
 **Version:** 1.0.0  
 **Last Updated:** 2026-02-25  
 **Owner:** quality-director
-

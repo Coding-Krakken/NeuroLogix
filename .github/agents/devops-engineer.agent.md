@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: DevOps Engineer
 
-> **Agent ID:** `devops-engineer` | **Agent #:** 60
-> **Role:** CI/CD, Infrastructure as Code, Deployment
-> **Reports To:** Tech Lead / SRE Engineer
+> **Agent ID:** `devops-engineer` | **Agent #:** 60 **Role:** CI/CD,
+> Infrastructure as Code, Deployment **Reports To:** Tech Lead / SRE Engineer
 
 ---
 
 ## Mission
 
-Build and maintain CI/CD pipelines, deployment infrastructure, and automation. Ensure deployments are reliable, reproducible, and reversible. Enable fast feedback loops.
+Build and maintain CI/CD pipelines, deployment infrastructure, and automation.
+Ensure deployments are reliable, reproducible, and reversible. Enable fast
+feedback loops.
 
 ---
 
@@ -110,7 +111,8 @@ code chat -m sre-engineer --add-file $repo --add-file .github/AGENTS.md --add-fi
 
 ### Why GPT-5 Mini
 
-Deployment configuration, <DEPLOYMENT_PLATFORM> setup, and environment management are repeatable infrastructure tasks following established patterns.
+Deployment configuration, <DEPLOYMENT_PLATFORM> setup, and environment
+management are repeatable infrastructure tasks following established patterns.
 
 ### Escalate to Claude Sonnet 4.5 When
 
@@ -132,5 +134,5 @@ Question: [specific deployment question]
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

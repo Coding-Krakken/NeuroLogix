@@ -1,4 +1,4 @@
-import type { AgentId } from "./types";
+import type { AgentId } from './types';
 
 export interface MetadataHeaderContext {
   issueNumber?: number;
@@ -17,11 +17,11 @@ export class MetadataHeaderBuilder {
   }
 
   private static resolveWorkItem(context: MetadataHeaderContext): string {
-    if (typeof context.issueNumber === "number") {
+    if (typeof context.issueNumber === 'number') {
       return `Issue#${context.issueNumber}`;
     }
 
-    if (typeof context.prNumber === "number") {
+    if (typeof context.prNumber === 'number') {
       return `PR#${context.prNumber}`;
     }
 
@@ -36,7 +36,7 @@ export class MetadataHeaderBuilder {
 
   private static resolveChainTaskNumber(chainTaskNumber?: number): number {
     if (
-      typeof chainTaskNumber === "number" &&
+      typeof chainTaskNumber === 'number' &&
       Number.isInteger(chainTaskNumber) &&
       chainTaskNumber > 0
     ) {
@@ -50,12 +50,12 @@ export class MetadataHeaderBuilder {
       return undefined;
     }
 
-    const normalized = taskLabel.trim().replace(/\s+/g, " ");
+    const normalized = taskLabel.trim().replace(/\s+/g, ' ');
     if (!normalized) {
       return undefined;
     }
 
-    const words = normalized.split(" ");
+    const words = normalized.split(' ');
     if (words.length <= 2) {
       return normalized;
     }
@@ -65,12 +65,12 @@ export class MetadataHeaderBuilder {
 
   private static resolveTaskToken(taskId?: string): string {
     if (!taskId) {
-      return "1";
+      return '1';
     }
 
     const normalized = taskId.trim();
     if (!normalized) {
-      return "1";
+      return '1';
     }
 
     const numeric = normalized.match(/\d+/)?.[0];
@@ -78,6 +78,6 @@ export class MetadataHeaderBuilder {
       return numeric;
     }
 
-    return normalized.split(/\s+/)[0] || "1";
+    return normalized.split(/\s+/)[0] || '1';
   }
 }

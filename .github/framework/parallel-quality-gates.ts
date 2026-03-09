@@ -6,23 +6,20 @@
  * @module framework/parallel-quality-gates
  */
 
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
-import type { QualityGate, QualityGateId, QualityGateResult } from "./types";
-import { logError, logInfo } from "./logger";
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import type { QualityGate, QualityGateId, QualityGateResult } from './types';
+import { logError, logInfo } from './logger';
 
 const execFileAsync = promisify(execFile);
 
-const GATE_COMMANDS: Record<
-  Exclude<QualityGateId, "G7" | "G8" | "G9" | "G10">,
-  string[]
-> = {
-  G1: ["npm", "run", "lint"],
-  G2: ["npm", "run", "format:check"],
-  G3: ["npm", "run", "typecheck"],
-  G4: ["npm", "test", "--", "--coverage"],
-  G5: ["npm", "run", "build"],
-  G6: ["npm", "audit", "--omit=dev"],
+const GATE_COMMANDS: Record<Exclude<QualityGateId, 'G7' | 'G8' | 'G9' | 'G10'>, string[]> = {
+  G1: ['npm', 'run', 'lint'],
+  G2: ['npm', 'run', 'format:check'],
+  G3: ['npm', 'run', 'typecheck'],
+  G4: ['npm', 'test', '--', '--coverage'],
+  G5: ['npm', 'run', 'build'],
+  G6: ['npm', 'audit', '--omit=dev'],
 };
 
 // ============================================================================
@@ -31,76 +28,76 @@ const GATE_COMMANDS: Record<
 
 const QUALITY_GATES: Record<QualityGateId, QualityGate> = {
   G1: {
-    id: "G1",
-    name: "Lint Gate",
+    id: 'G1',
+    name: 'Lint Gate',
     blocking: true,
     dependencies: [],
-    validator: () => runCommand("G1", GATE_COMMANDS.G1),
+    validator: () => runCommand('G1', GATE_COMMANDS.G1),
   },
   G2: {
-    id: "G2",
-    name: "Format Gate",
+    id: 'G2',
+    name: 'Format Gate',
     blocking: true,
     dependencies: [],
-    validator: () => runCommand("G2", GATE_COMMANDS.G2),
+    validator: () => runCommand('G2', GATE_COMMANDS.G2),
   },
   G3: {
-    id: "G3",
-    name: "Type Safety Gate",
+    id: 'G3',
+    name: 'Type Safety Gate',
     blocking: true,
     dependencies: [],
-    validator: () => runCommand("G3", GATE_COMMANDS.G3),
+    validator: () => runCommand('G3', GATE_COMMANDS.G3),
   },
   G4: {
-    id: "G4",
-    name: "Test Gate",
+    id: 'G4',
+    name: 'Test Gate',
     blocking: true,
     dependencies: [],
-    validator: () => runCommand("G4", GATE_COMMANDS.G4),
+    validator: () => runCommand('G4', GATE_COMMANDS.G4),
   },
   G5: {
-    id: "G5",
-    name: "Build Gate",
+    id: 'G5',
+    name: 'Build Gate',
     blocking: true,
-    dependencies: ["G1", "G2", "G3", "G4"], // Must pass all before building
-    validator: () => runCommand("G5", GATE_COMMANDS.G5),
+    dependencies: ['G1', 'G2', 'G3', 'G4'], // Must pass all before building
+    validator: () => runCommand('G5', GATE_COMMANDS.G5),
   },
   G6: {
-    id: "G6",
-    name: "Security Scan Gate",
+    id: 'G6',
+    name: 'Security Scan Gate',
     blocking: true,
     dependencies: [],
-    validator: () => runCommand("G6", GATE_COMMANDS.G6),
+    validator: () => runCommand('G6', GATE_COMMANDS.G6),
   },
   G7: {
-    id: "G7",
-    name: "Documentation Gate",
+    id: 'G7',
+    name: 'Documentation Gate',
     blocking: false, // Warning only
     dependencies: [],
     validator: () => checkDocumentation(),
   },
   G8: {
-    id: "G8",
-    name: "PR Quality Gate",
+    id: 'G8',
+    name: 'PR Quality Gate',
     blocking: false,
-    dependencies: ["G1", "G2", "G3", "G4", "G5", "G6"],
+    dependencies: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6'],
     validator: () => validatePRDescription(),
   },
   G9: {
-    id: "G9",
-    name: "Performance Budget Gate",
+    id: 'G9',
+    name: 'Performance Budget Gate',
     blocking: true,
-    dependencies: ["G5"], // Must build first
+    dependencies: ['G5'], // Must build first
     validator: () => checkPerformanceBudget(),
   },
   G10: {
-    id: "G10",
-    name: "Ship Gate",
+    id: 'G10',
+    name: 'Ship Gate',
     blocking: true,
-    dependencies: ["G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9"],
+    dependencies: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9'],
     validator: () =>
       Promise.resolve({
-        gate: "G10" as QualityGateId,
+        gate: 'G10' as QualityGateId,
         passed: true,
         duration: 0,
       }),
@@ -131,12 +128,9 @@ export class ParallelQualityGates {
 
     const duration = Date.now() - startTime;
     const sequentialDuration = this.estimateSequentialDuration(results);
-    const parallelizationGain =
-      (sequentialDuration - duration) / sequentialDuration;
+    const parallelizationGain = (sequentialDuration - duration) / sequentialDuration;
 
-    const passed = results.every(
-      (r) => r.passed || !QUALITY_GATES[r.gate].blocking,
-    );
+    const passed = results.every(r => r.passed || !QUALITY_GATES[r.gate].blocking);
 
     return {
       results,
@@ -163,7 +157,7 @@ export class ParallelQualityGates {
    * Execute gates in parallel batches based on dependencies
    */
   private static async executeInBatches(
-    graph: Map<QualityGateId, QualityGateId[]>,
+    graph: Map<QualityGateId, QualityGateId[]>
   ): Promise<QualityGateResult[]> {
     const results: QualityGateResult[] = [];
     const completed = new Set<QualityGateId>();
@@ -174,19 +168,17 @@ export class ParallelQualityGates {
       const ready: QualityGateId[] = [];
       for (const gateId of pending) {
         const deps = graph.get(gateId) || [];
-        if (deps.every((dep) => completed.has(dep))) {
+        if (deps.every(dep => completed.has(dep))) {
           ready.push(gateId);
         }
       }
 
       if (ready.length === 0 && pending.size > 0) {
-        throw new Error("Circular dependency detected in quality gates");
+        throw new Error('Circular dependency detected in quality gates');
       }
 
       // Run ready gates in parallel
-      const batchResults = await Promise.all(
-        ready.map((gateId) => this.runGate(gateId)),
-      );
+      const batchResults = await Promise.all(ready.map(gateId => this.runGate(gateId)));
 
       // Update state
       for (const result of batchResults) {
@@ -208,9 +200,7 @@ export class ParallelQualityGates {
   /**
    * Run a single quality gate
    */
-  private static async runGate(
-    gateId: QualityGateId,
-  ): Promise<QualityGateResult> {
+  private static async runGate(gateId: QualityGateId): Promise<QualityGateResult> {
     const gate = QUALITY_GATES[gateId];
     logInfo(`🔍 Running ${gate.name}...`);
 
@@ -221,13 +211,12 @@ export class ParallelQualityGates {
       } else {
         logError(`❌ ${gate.name} failed`);
         if (result.errors) {
-          result.errors.forEach((err) => logError(`  - ${err}`));
+          result.errors.forEach(err => logError(`  - ${err}`));
         }
       }
       return result;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
       logError(`❌ ${gate.name} error: ${errorMessage}`);
       return {
         gate: gateId,
@@ -241,9 +230,7 @@ export class ParallelQualityGates {
   /**
    * Estimate sequential duration (for comparison)
    */
-  private static estimateSequentialDuration(
-    results: QualityGateResult[],
-  ): number {
+  private static estimateSequentialDuration(results: QualityGateResult[]): number {
     return results.reduce((sum, r) => sum + r.duration, 0);
   }
 
@@ -263,7 +250,7 @@ export class ParallelQualityGates {
 
 async function runCommand(
   gate: QualityGateId,
-  commandAndArgs: string[],
+  commandAndArgs: string[]
 ): Promise<QualityGateResult> {
   const startTime = Date.now();
   const [command, ...args] = commandAndArgs;
@@ -273,7 +260,7 @@ async function runCommand(
       gate,
       passed: false,
       duration: Date.now() - startTime,
-      errors: ["Command is not configured for this quality gate"],
+      errors: ['Command is not configured for this quality gate'],
     };
   }
 
@@ -301,46 +288,42 @@ async function runCommand(
 }
 
 function checkDocumentation(): Promise<QualityGateResult> {
-  const hasReadme = process.env["SUBZERO_DOCS_README_UPDATED"] === "1";
-  const hasDecision = process.env["SUBZERO_DOCS_ADR_UPDATED"] === "1";
+  const hasReadme = process.env['SUBZERO_DOCS_README_UPDATED'] === '1';
+  const hasDecision = process.env['SUBZERO_DOCS_ADR_UPDATED'] === '1';
   const passed = hasReadme || hasDecision;
 
   return Promise.resolve({
-    gate: "G7",
+    gate: 'G7',
     passed,
     duration: 100,
     errors: passed
       ? undefined
-      : [
-          "Documentation gate requires SUBZERO_DOCS_README_UPDATED=1 or SUBZERO_DOCS_ADR_UPDATED=1",
-        ],
+      : ['Documentation gate requires SUBZERO_DOCS_README_UPDATED=1 or SUBZERO_DOCS_ADR_UPDATED=1'],
   });
 }
 
 function validatePRDescription(): Promise<QualityGateResult> {
-  const isValid = process.env["SUBZERO_PR_DESCRIPTION_VALIDATED"] === "1";
+  const isValid = process.env['SUBZERO_PR_DESCRIPTION_VALIDATED'] === '1';
 
   return Promise.resolve({
-    gate: "G8",
+    gate: 'G8',
     passed: isValid,
     duration: 50,
     errors: isValid
       ? undefined
-      : ["Set SUBZERO_PR_DESCRIPTION_VALIDATED=1 after PR contract validation"],
+      : ['Set SUBZERO_PR_DESCRIPTION_VALIDATED=1 after PR contract validation'],
   });
 }
 
 function checkPerformanceBudget(): Promise<QualityGateResult> {
-  const isWithinBudget = process.env["SUBZERO_PERFORMANCE_BUDGET_PASS"] === "1";
+  const isWithinBudget = process.env['SUBZERO_PERFORMANCE_BUDGET_PASS'] === '1';
 
   return Promise.resolve({
-    gate: "G9",
+    gate: 'G9',
     passed: isWithinBudget,
     duration: 5000,
     errors: isWithinBudget
       ? undefined
-      : [
-          "Set SUBZERO_PERFORMANCE_BUDGET_PASS=1 after performance budget check",
-        ],
+      : ['Set SUBZERO_PERFORMANCE_BUDGET_PASS=1 after performance budget check'],
   });
 }

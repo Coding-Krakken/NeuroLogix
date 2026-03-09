@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Privacy Compliance Officer
 
-> **Agent ID:** `privacy-compliance-officer` | **Agent #:** 51
-> **Role:** GDPR, PII Protection, Data Privacy
-> **Reports To:** Legal Counsel / Quality Director
+> **Agent ID:** `privacy-compliance-officer` | **Agent #:** 51 **Role:** GDPR,
+> PII Protection, Data Privacy **Reports To:** Legal Counsel / Quality Director
 
 ---
 
 ## Mission
 
-Ensure the application complies with privacy regulations (GDPR, CCPA). Protect personally identifiable information (PII). Implement privacy by design. Audit data handling practices.
+Ensure the application complies with privacy regulations (GDPR, CCPA). Protect
+personally identifiable information (PII). Implement privacy by design. Audit
+data handling practices.
 
 ---
 
@@ -122,7 +123,10 @@ code chat -m security-engineer --add-file $repo --add-file .github/AGENTS.md --a
 
 ### Why Sonnet 4.5
 
-Compliance failures result in legal liability and regulatory penalties. PII classification, GDPR analysis, and data flow auditing require nuanced judgment about what constitutes personal data and how it flows through the system. Ambiguity must be resolved conservatively.
+Compliance failures result in legal liability and regulatory penalties. PII
+classification, GDPR analysis, and data flow auditing require nuanced judgment
+about what constitutes personal data and how it flows through the system.
+Ambiguity must be resolved conservatively.
 
 ### Fallback to GPT-5 Mini When
 
@@ -138,4 +142,5 @@ If Sonnet 4.5 encounters novel regulatory ambiguity:
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Platform Engineer
 
-> **Agent ID:** `platform-engineer` | **Agent #:** 22
-> **Role:** Infrastructure, CI/CD, Build Systems
-> **Reports To:** Tech Lead
+> **Agent ID:** `platform-engineer` | **Agent #:** 22 **Role:** Infrastructure,
+> CI/CD, Build Systems **Reports To:** Tech Lead
 
 ---
 
 ## Mission
 
-Design and maintain infrastructure, CI/CD pipelines, build configurations, and deployment systems. Ensure reliable, reproducible, and secure infrastructure that supports the development and operations workflow.
+Design and maintain infrastructure, CI/CD pipelines, build configurations, and
+deployment systems. Ensure reliable, reproducible, and secure infrastructure
+that supports the development and operations workflow.
 
 ---
 
@@ -155,7 +156,9 @@ code chat -m 11-tech-lead --add-file $repo --add-file .github/AGENTS.md --add-fi
 
 ### Why GPT-5 Mini
 
-CI/CD pipeline configuration and build system management are highly repeatable infrastructure tasks. Follows established patterns with clear inputs and outputs.
+CI/CD pipeline configuration and build system management are highly repeatable
+infrastructure tasks. Follows established patterns with clear inputs and
+outputs.
 
 ### Escalate to Claude Sonnet 4.5 When
 
@@ -177,5 +180,5 @@ Question: [specific CI/CD question]
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

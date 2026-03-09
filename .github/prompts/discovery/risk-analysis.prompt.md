@@ -1,13 +1,13 @@
 # Risk Analysis
 
-> **Category:** Discovery
-> **File:** `discovery/risk-analysis.prompt.md`
+> **Category:** Discovery **File:** `discovery/risk-analysis.prompt.md`
 
 ---
 
 ## Purpose
 
-Identify, categorize, and prioritize risks in the codebase, infrastructure, and delivery pipeline. Produce an actionable risk register.
+Identify, categorize, and prioritize risks in the codebase, infrastructure, and
+delivery pipeline. Produce an actionable risk register.
 
 ## When to Use
 
@@ -49,7 +49,8 @@ A risk register with the following per risk:
 
 ## Failure Cases
 
-- No risks found → Unlikely. Look harder. Check dependencies, error handling, test coverage.
+- No risks found → Unlikely. Look harder. Check dependencies, error handling,
+  test coverage.
 - Too many risks → Prioritize top 10, group others by category.
 
 ## Evidence Expectations
@@ -62,11 +63,10 @@ A risk register with the following per risk:
 ## Example Output
 
 ```markdown
-| ID  | Category    | Risk                                      | Likelihood | Impact   | Score  | Mitigation                      |
-| --- | ----------- | ----------------------------------------- | ---------- | -------- | ------ | ------------------------------- |
+| ID  | Category    | Risk                                                  | Likelihood | Impact   | Score  | Mitigation                      |
+| --- | ----------- | ----------------------------------------------------- | ---------- | -------- | ------ | ------------------------------- |
 | R1  | Security    | <PAYMENT_PROVIDER> API token has no rotation schedule | Medium     | Critical | HIGH   | Implement 90-day rotation       |
-| R2  | Quality     | Test coverage at 65% (target 80%)         | High       | Medium   | HIGH   | Add tests for uncovered modules |
-| R3  | Reliability | No E2E tests for checkout                 | Medium     | High     | HIGH   | Add Playwright tests            |
-| R4  | Performance | No bundle size monitoring                 | Low        | Medium   | MEDIUM | Add Lighthouse CI               |
+| R2  | Quality     | Test coverage at 65% (target 80%)                     | High       | Medium   | HIGH   | Add tests for uncovered modules |
+| R3  | Reliability | No E2E tests for checkout                             | Medium     | High     | HIGH   | Add Playwright tests            |
+| R4  | Performance | No bundle size monitoring                             | Low        | Medium   | MEDIUM | Add Lighthouse CI               |
 ```
-

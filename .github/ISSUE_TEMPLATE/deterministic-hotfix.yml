@@ -1,27 +1,27 @@
 name: Deterministic Hotfix
 description: P0/P1 critical production patch
-title: "hotfix(<component>): <summary>"
-labels: ["hotfix", "triage"]
+title: 'hotfix(<component>): <summary>'
+labels: ['hotfix', 'triage']
 body:
   - type: dropdown
     id: work_item_type
     attributes:
       label: Work Item Type
-      options: ["hotfix"]
+      options: ['hotfix']
     validations:
       required: true
   - type: dropdown
     id: severity
     attributes:
       label: Severity
-      options: ["S0", "S1", "S2"]
+      options: ['S0', 'S1', 'S2']
     validations:
       required: true
   - type: dropdown
     id: priority
     attributes:
       label: Priority
-      options: ["P0", "P1"]
+      options: ['P0', 'P1']
     validations:
       required: true
   - type: textarea

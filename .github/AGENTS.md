@@ -1,7 +1,7 @@
 # Engineering Organization Roster
 
-> **Version:** 1.0.0 | **Updated:** 2026-02-25
-> **Classification:** Enterprise Autonomous Engineering Organization
+> **Version:** 1.0.0 | **Updated:** 2026-02-25 **Classification:** Enterprise
+> Autonomous Engineering Organization
 
 ---
 
@@ -102,7 +102,8 @@
 
 ## Core-3 Operating Mode (Default)
 
-The organization retains the 28-agent roster, but daily delivery defaults to a 3-agent autonomous core with policy-triggered specialist escalation.
+The organization retains the 28-agent roster, but daily delivery defaults to a
+3-agent autonomous core with policy-triggered specialist escalation.
 
 **Always-on core agents:**
 
@@ -113,27 +114,35 @@ The organization retains the 28-agent roster, but daily delivery defaults to a 3
 **Role bundles:**
 
 - **Orchestrator (`00-chief-of-staff`)**
-     - Bundles: chief-of-staff, solution-architect, product-owner, program-manager
-     - Responsibilities: intake, routing, planning, lane assignment, architecture coordination, issue/branch orchestration
+  - Bundles: chief-of-staff, solution-architect, product-owner, program-manager
+  - Responsibilities: intake, routing, planning, lane assignment, architecture
+    coordination, issue/branch orchestration
 - **Implementer (`11-tech-lead`)**
-     - Bundles: frontend-engineer, backend-engineer, platform-engineer, documentation-engineer, qa-test-engineer (execution role)
-     - Responsibilities: implementation, tests, docs updates, remediation, evidence packaging
+  - Bundles: frontend-engineer, backend-engineer, platform-engineer,
+    documentation-engineer, qa-test-engineer (execution role)
+  - Responsibilities: implementation, tests, docs updates, remediation, evidence
+    packaging
 - **Assurance (`99-quality-director`)**
-     - Bundles: 99-quality-director, security-engineer, privacy-compliance-officer, performance-engineer
-     - Responsibilities: independent validation, security/compliance signoff, Microsoft-grade review, final ship/no-ship authority
+  - Bundles: 99-quality-director, security-engineer, privacy-compliance-officer,
+    performance-engineer
+  - Responsibilities: independent validation, security/compliance signoff,
+    Microsoft-grade review, final ship/no-ship authority
 
 **Specialist escalation policy:**
 
 - Core-3 remains default in all lanes.
-- Specialists are invoked when required by policy triggers (security/compliance/incident/data migration/legal/regulatory).
+- Specialists are invoked when required by policy triggers
+  (security/compliance/incident/data migration/legal/regulatory).
 - Escalation does not remove Assurance independence requirements.
 
 **PR authority model:**
 
-- Low/Medium risk: Orchestrator-authorized creator (allowlisted engineering lead)
+- Low/Medium risk: Orchestrator-authorized creator (allowlisted engineering
+  lead)
 - High/Critical risk: Quality Director
 
-Specialists remain available and are engaged by policy trigger (domain, compliance, incident, platform, or documentation needs).
+Specialists remain available and are engaged by policy trigger (domain,
+compliance, incident, platform, or documentation needs).
 
 ---
 
@@ -141,32 +150,34 @@ Specialists remain available and are engaged by policy trigger (domain, complian
 
 ### When to Call Which Agent
 
-| Situation                | Route To                 | Prompt to Use                                |
-| ------------------------ | ------------------------ | -------------------------------------------- |
-| New feature request      | `00-chief-of-staff`      | `discovery/repo-scan.prompt.md`              |
-| Bug report               | `00-chief-of-staff`      | `discovery/risk-analysis.prompt.md`          |
-| Low-risk docs/chore work | `11-tech-lead`           | `planning/slice-planning.prompt.md`          |
-| Dependency-only updates  | `11-tech-lead`           | `implementation/refactor.prompt.md`          |
-| Architecture question    | `solution-architect`     | `architecture/system-design.prompt.md`       |
-| Need acceptance criteria | `00-chief-of-staff`      | `planning/acceptance-criteria.prompt.md`     |
-| Implement a feature      | `11-tech-lead`           | `implementation/vertical-slice.prompt.md`    |
-| Review a PR              | `99-quality-director`    | `review/microsoft-grade-pr-review.prompt.md` |
-| Fix failing tests        | `qa-test-engineer`       | `testing/test-gap.prompt.md`                 |
-| Security concern         | `99-quality-director`    | `security/threat-model.prompt.md`            |
-| Performance issue        | `99-quality-director`    | `optimization/performance-audit.prompt.md`   |
-| Deploy to production     | `devops-engineer`        | `operations/deployment-plan.prompt.md`       |
-| Incident in production   | `99-quality-director`    | `incident/incident-response.prompt.md`       |
-| Need documentation       | `11-tech-lead`           | `documentation/readme-update.prompt.md`      |
-| Refactoring needed       | `11-tech-lead`           | `implementation/refactor.prompt.md`          |
-| New dependency request   | `solution-architect`     | `architecture/adr-generation.prompt.md`      |
-| Release preparation      | `program-manager`        | `release/release-notes.prompt.md`            |
-| Audit framework health   | `90-framework-auditor`   | `framework-audit/mode-selection.prompt.md`   |
-| Unknown / unclear        | `00-chief-of-staff`      | (Chief will route)                           |
+| Situation                | Route To               | Prompt to Use                                |
+| ------------------------ | ---------------------- | -------------------------------------------- |
+| New feature request      | `00-chief-of-staff`    | `discovery/repo-scan.prompt.md`              |
+| Bug report               | `00-chief-of-staff`    | `discovery/risk-analysis.prompt.md`          |
+| Low-risk docs/chore work | `11-tech-lead`         | `planning/slice-planning.prompt.md`          |
+| Dependency-only updates  | `11-tech-lead`         | `implementation/refactor.prompt.md`          |
+| Architecture question    | `solution-architect`   | `architecture/system-design.prompt.md`       |
+| Need acceptance criteria | `00-chief-of-staff`    | `planning/acceptance-criteria.prompt.md`     |
+| Implement a feature      | `11-tech-lead`         | `implementation/vertical-slice.prompt.md`    |
+| Review a PR              | `99-quality-director`  | `review/microsoft-grade-pr-review.prompt.md` |
+| Fix failing tests        | `qa-test-engineer`     | `testing/test-gap.prompt.md`                 |
+| Security concern         | `99-quality-director`  | `security/threat-model.prompt.md`            |
+| Performance issue        | `99-quality-director`  | `optimization/performance-audit.prompt.md`   |
+| Deploy to production     | `devops-engineer`      | `operations/deployment-plan.prompt.md`       |
+| Incident in production   | `99-quality-director`  | `incident/incident-response.prompt.md`       |
+| Need documentation       | `11-tech-lead`         | `documentation/readme-update.prompt.md`      |
+| Refactoring needed       | `11-tech-lead`         | `implementation/refactor.prompt.md`          |
+| New dependency request   | `solution-architect`   | `architecture/adr-generation.prompt.md`      |
+| Release preparation      | `program-manager`      | `release/release-notes.prompt.md`            |
+| Audit framework health   | `90-framework-auditor` | `framework-audit/mode-selection.prompt.md`   |
+| Unknown / unclear        | `00-chief-of-staff`    | (Chief will route)                           |
 
 ### Fast-Lane Routing Rule
 
-- Low-risk work defaults to a fast lane (shortened dispatch chain) while preserving mandatory traceability and security checks.
-- High/critical work continues through full assurance routing and Quality Director-led closure.
+- Low-risk work defaults to a fast lane (shortened dispatch chain) while
+  preserving mandatory traceability and security checks.
+- High/critical work continues through full assurance routing and Quality
+  Director-led closure.
 
 ---
 
@@ -204,13 +215,18 @@ Quality Director ──── (can escalate to) ──────────�
 
 ### Autonomous Continuation Rule
 
-When an agent is not in a true stop condition, it MUST continue execution by completing the next modeled step and dispatching the next agent.
+When an agent is not in a true stop condition, it MUST continue execution by
+completing the next modeled step and dispatching the next agent.
 
 - Do NOT ask a human for "what to do next" when the next modeled step is known.
-- Do NOT ask a human whether to apply an optimal in-scope recommendation; execute it by default.
-- Do NOT pause after planning if implementation, validation, or handoff work remains.
-- If blocked, escalate through the defined chain and include blocker evidence + attempted fallback.
-- Human input is allowed only for genuinely missing external decisions/credentials that cannot be inferred.
+- Do NOT ask a human whether to apply an optimal in-scope recommendation;
+  execute it by default.
+- Do NOT pause after planning if implementation, validation, or handoff work
+  remains.
+- If blocked, escalate through the defined chain and include blocker evidence +
+  attempted fallback.
+- Human input is allowed only for genuinely missing external
+  decisions/credentials that cannot be inferred.
 
 ---
 
@@ -221,8 +237,10 @@ When an agent is not in a true stop condition, it MUST continue execution by com
 1. **Max dispatch depth:** 10 agents in a single chain
 2. **No self-dispatch:** An agent cannot call itself
 3. **No A→B→A cycles:** Track dispatch history in context
-4. **Blocked detection:** If an agent receives the same task >2 times, escalate to Chief of Staff
-5. **Timeout:** If no progress after 3 dispatches, Quality Director makes ship/no-ship call
+4. **Blocked detection:** If an agent receives the same task >2 times, escalate
+   to Chief of Staff
+5. **Timeout:** If no progress after 3 dispatches, Quality Director makes
+   ship/no-ship call
 
 ### Dispatch Tracking
 
@@ -237,24 +255,30 @@ Dispatch Depth: 3/10
 
 ## Handoff Protocol: GitHub-Native System
 
-> **Location:** GitHub Issue/PR comments
-> **Protocol:** Post handoff comment → dispatch with `code chat` and `Handoff URL`
+> **Location:** GitHub Issue/PR comments **Protocol:** Post handoff comment →
+> dispatch with `code chat` and `Handoff URL`
 
 ### Why GitHub-Native
 
-GitHub comments keep handoffs in the same audit trail as issues, PRs, checks, and reviews while preserving the existing `code chat -m` dispatch workflow.
+GitHub comments keep handoffs in the same audit trail as issues, PRs, checks,
+and reviews while preserving the existing `code chat -m` dispatch workflow.
 
 ### Dispatch Format (ALL agents MUST use this)
 
-**Step 1:** Post a complete handoff comment to the active Issue/PR using the canonical template in `.github/comment_templates/`.
+**Step 1:** Post a complete handoff comment to the active Issue/PR using the
+canonical template in `.github/comment_templates/`.
 
-**Step 2:** Dispatch via `code chat` and include the handoff comment URL near the top of the prompt.
+**Step 2:** Dispatch via `code chat` and include the handoff comment URL near
+the top of the prompt.
 
 **Dispatch Context Pack (MANDATORY):**
 
 - Always include `--add-file $repo`
-- Always include **at least 2 auxiliary files** relevant to the task (models, plans, contracts, prompts, runbooks, or evidence artifacts)
-- Prefer including the latest `.github/.system-state/ops/context/issue-<id>-agent-context.json` to avoid repeated discovery
+- Always include **at least 2 auxiliary files** relevant to the task (models,
+  plans, contracts, prompts, runbooks, or evidence artifacts)
+- Prefer including the latest
+  `.github/.system-state/ops/context/issue-<id>-agent-context.json` to avoid
+  repeated discovery
 - Prefer explicit artifact paths over relying on repo-level discovery
 
 ```powershell
@@ -267,18 +291,28 @@ code chat -m <target-agent-id> --add-file $repo --add-file $context1 --add-file 
 
 ### Rules
 
-1. **One handoff comment per dispatch** - each dispatch references a specific comment URL
-2. **Always include `Handoff URL` in dispatch prompt** - receiving agent must read it first
-3. **Always include a context pack via `--add-file`** - repo + at least 2 relevant auxiliary artifacts
-4. **Resume before re-discovering** - consume context snapshot and pending checklist items first; run full discovery only when snapshot is stale/missing
-5. **Prefer scripted dispatch for consistency** - use `.github/scripts/dispatch-agent.ps1` to auto-generate context and dedupe repeated dispatches
-6. **Preserve dispatch tracking metadata** - include dispatch chain and depth in handoff body
-7. **Do not create new `.github/.handoffs/*` artifacts** - file-based handoffs are deprecated
-8. **Keep `code chat -m` as the dispatch mechanism** - only the handoff transport changes
+1. **One handoff comment per dispatch** - each dispatch references a specific
+   comment URL
+2. **Always include `Handoff URL` in dispatch prompt** - receiving agent must
+   read it first
+3. **Always include a context pack via `--add-file`** - repo + at least 2
+   relevant auxiliary artifacts
+4. **Resume before re-discovering** - consume context snapshot and pending
+   checklist items first; run full discovery only when snapshot is stale/missing
+5. **Prefer scripted dispatch for consistency** - use
+   `.github/scripts/dispatch-agent.ps1` to auto-generate context and dedupe
+   repeated dispatches
+6. **Preserve dispatch tracking metadata** - include dispatch chain and depth in
+   handoff body
+7. **Do not create new `.github/.handoffs/*` artifacts** - file-based handoffs
+   are deprecated
+8. **Keep `code chat -m` as the dispatch mechanism** - only the handoff
+   transport changes
 
 ### Quality Director Exception
 
-Quality Director (`99-quality-director`) is the ONLY agent authorized to end the chain:
+Quality Director (`99-quality-director`) is the ONLY agent authorized to end the
+chain:
 
 ```
 CHAIN COMPLETE ✅

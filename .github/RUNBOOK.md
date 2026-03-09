@@ -1,7 +1,7 @@
 # Operational Runbook
 
-> **Version:** 1.0.0 | **Updated:** 2026-02-25
-> **Audience:** On-call engineers, SREs, Incident Commanders
+> **Version:** 1.0.0 | **Updated:** 2026-02-25 **Audience:** On-call engineers,
+> SREs, Incident Commanders
 
 ---
 
@@ -19,13 +19,13 @@
 
 ## Service Overview
 
-| Component | Technology              | Hosting          | Health Endpoint    |
-| --------- | ----------------------- | ---------------- | ------------------ |
-| Frontend  | <WEB_FRAMEWORK> 16 (App Router) | <DEPLOYMENT_PLATFORM>           | `/api/health`      |
-| Payments  | <PAYMENT_PROVIDER> Web Payments SDK | <PAYMENT_PROVIDER> (managed) | <PAYMENT_PROVIDER> Status Page |
-| Database  | <PAYMENT_PROVIDER> (managed)        | <PAYMENT_PROVIDER>           | N/A (API-based)    |
-| CDN       | <DEPLOYMENT_PLATFORM> Edge Network     | <DEPLOYMENT_PLATFORM>           | <DEPLOYMENT_PLATFORM> Status Page |
-| Images    | <PAYMENT_PROVIDER> CDN / S3         | AWS              | N/A                |
+| Component | Technology                          | Hosting                      | Health Endpoint                   |
+| --------- | ----------------------------------- | ---------------------------- | --------------------------------- |
+| Frontend  | <WEB_FRAMEWORK> 16 (App Router)     | <DEPLOYMENT_PLATFORM>        | `/api/health`                     |
+| Payments  | <PAYMENT_PROVIDER> Web Payments SDK | <PAYMENT_PROVIDER> (managed) | <PAYMENT_PROVIDER> Status Page    |
+| Database  | <PAYMENT_PROVIDER> (managed)        | <PAYMENT_PROVIDER>           | N/A (API-based)                   |
+| CDN       | <DEPLOYMENT_PLATFORM> Edge Network  | <DEPLOYMENT_PLATFORM>        | <DEPLOYMENT_PLATFORM> Status Page |
+| Images    | <PAYMENT_PROVIDER> CDN / S3         | AWS                          | N/A                               |
 
 ### Key URLs
 
@@ -54,12 +54,12 @@ curl -s https://api.<DEPLOYMENT_PLATFORM>.com/v6/deployments?projectId=$PROJECT_
 
 ### Automated Monitoring
 
-| Monitor     | Tool                 | Frequency  | Alert Channel |
-| ----------- | -------------------- | ---------- | ------------- |
-| Uptime      | <DEPLOYMENT_PLATFORM> / UptimeRobot | 1 min      | PagerDuty     |
-| Error rate  | Sentry               | Real-time  | Slack #alerts |
-| Performance | <OBSERVABILITY_PLATFORM>     | Continuous | Slack #perf   |
-| <PAYMENT_PROVIDER> API  | Custom monitor       | 5 min      | PagerDuty     |
+| Monitor                | Tool                                | Frequency  | Alert Channel |
+| ---------------------- | ----------------------------------- | ---------- | ------------- |
+| Uptime                 | <DEPLOYMENT_PLATFORM> / UptimeRobot | 1 min      | PagerDuty     |
+| Error rate             | Sentry                              | Real-time  | Slack #alerts |
+| Performance            | <OBSERVABILITY_PLATFORM>            | Continuous | Slack #perf   |
+| <PAYMENT_PROVIDER> API | Custom monitor                      | 5 min      | PagerDuty     |
 
 ---
 
@@ -79,8 +79,10 @@ curl -s https://api.<DEPLOYMENT_PLATFORM>.com/v6/deployments?projectId=$PROJECT_
 **Resolution:**
 
 1. If bad deployment: Rollback via <DEPLOYMENT_PLATFORM> dashboard (instant)
-2. If <PAYMENT_PROVIDER> API down: Activate degraded mode banner, wait for <PAYMENT_PROVIDER> resolution
-3. If infrastructure: Check <DEPLOYMENT_PLATFORM> status page, file support ticket
+2. If <PAYMENT_PROVIDER> API down: Activate degraded mode banner, wait for
+   <PAYMENT_PROVIDER> resolution
+3. If infrastructure: Check <DEPLOYMENT_PLATFORM> status page, file support
+   ticket
 
 **Prevention:** E2E tests in CI, canary deployments, health checks
 
@@ -94,17 +96,19 @@ curl -s https://api.<DEPLOYMENT_PLATFORM>.com/v6/deployments?projectId=$PROJECT_
 
 1. Check <PAYMENT_PROVIDER> API status
 2. Check Sentry for specific error codes
-3. Verify <PAYMENT_PROVIDER>_ACCESS_TOKEN is valid
+3. Verify <PAYMENT_PROVIDER>\_ACCESS_TOKEN is valid
 4. Check network connectivity to <PAYMENT_PROVIDER> APIs
 
 **Resolution:**
 
 1. If token expired: Rotate token in <DEPLOYMENT_PLATFORM> env vars, redeploy
-2. If <PAYMENT_PROVIDER> outage: Display maintenance banner, monitor <PAYMENT_PROVIDER> status
+2. If <PAYMENT_PROVIDER> outage: Display maintenance banner, monitor
+   <PAYMENT_PROVIDER> status
 3. If code bug: Hotfix → fast-track PR → deploy
 4. If persistent: DNS rollback to <PAYMENT_PROVIDER> Online (<5 min)
 
-**Prevention:** Token rotation reminders, <PAYMENT_PROVIDER> API health monitoring, fallback mode
+**Prevention:** Token rotation reminders, <PAYMENT_PROVIDER> API health
+monitoring, fallback mode
 
 ---
 
@@ -122,7 +126,8 @@ curl -s https://api.<DEPLOYMENT_PLATFORM>.com/v6/deployments?projectId=$PROJECT_
 **Resolution:**
 
 1. If cold starts: Verify function configuration, check for large bundles
-2. If <PAYMENT_PROVIDER> API slow: Increase cache durations, implement stale-while-revalidate
+2. If <PAYMENT_PROVIDER> API slow: Increase cache durations, implement
+   stale-while-revalidate
 3. If traffic spike: <DEPLOYMENT_PLATFORM> auto-scales, monitor costs
 4. If code regression: Identify commit, rollback or hotfix
 
@@ -169,7 +174,8 @@ curl -s https://api.<DEPLOYMENT_PLATFORM>.com/v6/deployments?projectId=$PROJECT_
 4. Communication to affected parties (if data breach)
 5. Post-incident review within 48 hours
 
-**Prevention:** Secrets scanning, dependency scanning, security reviews, penetration testing
+**Prevention:** Secrets scanning, dependency scanning, security reviews,
+penetration testing
 
 ---
 
@@ -283,54 +289,65 @@ Engage Incident Commander → War Room
 ### From idea → issue → branch → commits → PR → review → merge
 
 1. **Create/select issue first**
-  - Use deterministic templates in `.github/ISSUE_TEMPLATE/deterministic-*.yml`
-  - Include problem statement, goals/non-goals, acceptance criteria, approach, risk, test plan, rollback plan
-  - Add labels: one type (`bug|feature|chore|security|performance|docs|tech-debt`), one priority (`P0-P3`), one component (`component:*`)
+
+- Use deterministic templates in `.github/ISSUE_TEMPLATE/deterministic-*.yml`
+- Include problem statement, goals/non-goals, acceptance criteria, approach,
+  risk, test plan, rollback plan
+- Add labels: one type
+  (`bug|feature|chore|security|performance|docs|tech-debt`), one priority
+  (`P0-P3`), one component (`component:*`)
 
 2. **Create issue branch**
-  - Naming: `feature/<issue-id>-slug` or `bugfix/<issue-id>-slug`
-  - All implementation happens on that branch
+
+- Naming: `feature/<issue-id>-slug` or `bugfix/<issue-id>-slug`
+- All implementation happens on that branch
 
 3. **Review before coding**
-  - Read issue acceptance criteria
-  - Read existing PR context (if any)
-  - Confirm implementation scope and test plan
+
+- Read issue acceptance criteria
+- Read existing PR context (if any)
+- Confirm implementation scope and test plan
 
 4. **Commit early and often**
-  - Commit after each coherent milestone
-  - Use format: `<type>(<scope>): <imperative summary> (#<issue>)`
-  - Keep branch in a buildable state whenever practical
+
+- Commit after each coherent milestone
+- Use format: `<type>(<scope>): <imperative summary> (#<issue>)`
+- Keep branch in a buildable state whenever practical
 
 5. **Open PR when divergence threshold is reached**
-  - PR title format: `<type>(<scope>): <summary> (#<issue>)`
-  - Body must include `Closes #<issue>`
-  - Use `.github/pull_request_template.md`
-  - Include how-to-test steps, risk notes, and checklist completion
+
+- PR title format: `<type>(<scope>): <summary> (#<issue>)`
+- Body must include `Closes #<issue>`
+- Use `.github/pull_request_template.md`
+- Include how-to-test steps, risk notes, and checklist completion
 
 6. **Run review gates before merge**
-  - Author self-review
-  - Independent reviewer-agent review (can block)
-  - Tester-agent verification
-  - Security review when relevant
+
+- Author self-review
+- Independent reviewer-agent review (can block)
+- Tester-agent verification
+- Security review when relevant
 
 7. **Merge only when Definition of Done passes**
-  - Tests updated
-  - Lint/typecheck pass
-  - Docs updated
-  - PR checklist complete
-  - Issue acceptance criteria satisfied
+
+- Tests updated
+- Lint/typecheck pass
+- Docs updated
+- PR checklist complete
+- Issue acceptance criteria satisfied
 
 8. **Emit final traceability summary**
-  - Record: `Issue#`, `Branch`, `PR#`, commit list, time-to-first-commit, time-to-PR, review iterations
+
+- Record: `Issue#`, `Branch`, `PR#`, commit list, time-to-first-commit,
+  time-to-PR, review iterations
 
 ---
 
 ## Contacts
 
-| Role               | Who            | Contact                |
-| ------------------ | -------------- | ---------------------- |
-| On-Call Primary    | Rotated weekly | PagerDuty              |
-| Incident Commander | As escalated   | Slack #incidents       |
-| <PAYMENT_PROVIDER> Support     | <PAYMENT_PROVIDER> Team    | <PAYMENT_PROVIDER> Developer Forum |
-| <DEPLOYMENT_PLATFORM> Support     | <DEPLOYMENT_PLATFORM> Team    | <DEPLOYMENT_PLATFORM> Support Portal  |
-
+| Role                          | Who                        | Contact                              |
+| ----------------------------- | -------------------------- | ------------------------------------ |
+| On-Call Primary               | Rotated weekly             | PagerDuty                            |
+| Incident Commander            | As escalated               | Slack #incidents                     |
+| <PAYMENT_PROVIDER> Support    | <PAYMENT_PROVIDER> Team    | <PAYMENT_PROVIDER> Developer Forum   |
+| <DEPLOYMENT_PLATFORM> Support | <DEPLOYMENT_PLATFORM> Team | <DEPLOYMENT_PLATFORM> Support Portal |

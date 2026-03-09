@@ -9,7 +9,7 @@ import { z } from 'zod';
 export const SparkplugDataType = z.enum([
   'Unknown',
   'Int8',
-  'Int16', 
+  'Int16',
   'Int32',
   'Int64',
   'UInt8',
@@ -52,25 +52,29 @@ export const SparkplugMetricSchema = z.object({
   alias: z.number().optional(),
   timestamp: z.number(), // Unix timestamp in milliseconds
   datatype: SparkplugDataType,
-  value: z.union([
-    z.string(),
-    z.number(),
-    z.boolean(),
-    z.array(z.unknown()),
-    z.record(z.string(), z.unknown()),
-    z.null(),
-  ]).optional(),
-  metadata: z.object({
-    isHistorical: z.boolean().optional(),
-    isTransient: z.boolean().optional(),
-    isNull: z.boolean().optional(),
-    description: z.string().optional(),
-    engUnit: z.string().optional(),
-    min: z.number().optional(),
-    max: z.number().optional(),
-    step: z.number().optional(),
-    precision: z.number().optional(),
-  }).optional(),
+  value: z
+    .union([
+      z.string(),
+      z.number(),
+      z.boolean(),
+      z.array(z.unknown()),
+      z.record(z.string(), z.unknown()),
+      z.null(),
+    ])
+    .optional(),
+  metadata: z
+    .object({
+      isHistorical: z.boolean().optional(),
+      isTransient: z.boolean().optional(),
+      isNull: z.boolean().optional(),
+      description: z.string().optional(),
+      engUnit: z.string().optional(),
+      min: z.number().optional(),
+      max: z.number().optional(),
+      step: z.number().optional(),
+      precision: z.number().optional(),
+    })
+    .optional(),
   properties: z.record(z.string(), z.unknown()).optional(),
 });
 
@@ -93,11 +97,11 @@ export const SparkplugMessageType = z.enum([
   'NDEATH', // Node Death Certificate
   'DBIRTH', // Device Birth Certificate
   'DDEATH', // Device Death Certificate
-  'NDATA',  // Node Data
-  'DDATA',  // Device Data
-  'NCMD',   // Node Command
-  'DCMD',   // Device Command
-  'STATE',  // Primary Application State
+  'NDATA', // Node Data
+  'DDATA', // Device Data
+  'NCMD', // Node Command
+  'DCMD', // Device Command
+  'STATE', // Primary Application State
 ]);
 
 export type SparkplugMessageType = z.infer<typeof SparkplugMessageType>;
@@ -115,24 +119,30 @@ export type SparkplugTopic = z.infer<typeof SparkplugTopicSchema>;
 
 // Node Birth Certificate (NBIRTH)
 export const NodeBirthSchema = SparkplugPayloadSchema.extend({
-  metrics: z.array(SparkplugMetricSchema.extend({
-    name: z.enum([
-      'bdSeq', // Birth/Death Sequence Number
-      'Node Control/Rebirth', // Node rebirth command
-      'Node Control/Reboot', // Node reboot command
-      'Node Control/Next Server', // Next server command
-      'Node Control/Scan Rate', // Scan rate control
-    ]).or(z.string()), // Allow custom metrics
-  })),
+  metrics: z.array(
+    SparkplugMetricSchema.extend({
+      name: z
+        .enum([
+          'bdSeq', // Birth/Death Sequence Number
+          'Node Control/Rebirth', // Node rebirth command
+          'Node Control/Reboot', // Node reboot command
+          'Node Control/Next Server', // Next server command
+          'Node Control/Scan Rate', // Scan rate control
+        ])
+        .or(z.string()), // Allow custom metrics
+    })
+  ),
 });
 
 export type NodeBirth = z.infer<typeof NodeBirthSchema>;
 
 // Device Birth Certificate (DBIRTH)
 export const DeviceBirthSchema = SparkplugPayloadSchema.extend({
-  metrics: z.array(SparkplugMetricSchema.extend({
-    name: z.string().min(1), // Device-specific metric names
-  })),
+  metrics: z.array(
+    SparkplugMetricSchema.extend({
+      name: z.string().min(1), // Device-specific metric names
+    })
+  ),
 });
 
 export type DeviceBirth = z.infer<typeof DeviceBirthSchema>;
@@ -146,9 +156,11 @@ export type DataMessage = z.infer<typeof DataMessageSchema>;
 
 // Command Message (NCMD/DCMD)
 export const CommandMessageSchema = SparkplugPayloadSchema.extend({
-  metrics: z.array(SparkplugMetricSchema.extend({
-    value: z.union([z.string(), z.number(), z.boolean()]).optional(),
-  })),
+  metrics: z.array(
+    SparkplugMetricSchema.extend({
+      value: z.union([z.string(), z.number(), z.boolean()]).optional(),
+    })
+  ),
 });
 
 export type CommandMessage = z.infer<typeof CommandMessageSchema>;
@@ -210,11 +222,14 @@ export type QualityCode = z.infer<typeof QualityCode>;
 // Enhanced Metric with Quality
 export const EnhancedSparkplugMetricSchema = SparkplugMetricSchema.extend({
   quality: QualityCode.optional(),
-  metadata: SparkplugMetricSchema.shape.metadata.unwrap().extend({
-    quality: QualityCode.optional(),
-    sourceTimestamp: z.number().optional(),
-    serverTimestamp: z.number().optional(),
-  }).optional(),
+  metadata: SparkplugMetricSchema.shape.metadata
+    .unwrap()
+    .extend({
+      quality: QualityCode.optional(),
+      sourceTimestamp: z.number().optional(),
+      serverTimestamp: z.number().optional(),
+    })
+    .optional(),
 });
 
 export type EnhancedSparkplugMetric = z.infer<typeof EnhancedSparkplugMetricSchema>;

@@ -1,13 +1,14 @@
 # Repo Health Check
 
-> **Category:** Optimization
-> **File:** `optimization/repo-health.prompt.md`
+> **Category:** Optimization **File:** `optimization/repo-health.prompt.md`
 
 ---
 
 ## Purpose
 
-Assess the overall health of the repository across multiple dimensions: code quality, test coverage, dependency freshness, documentation, security, and developer experience.
+Assess the overall health of the repository across multiple dimensions: code
+quality, test coverage, dependency freshness, documentation, security, and
+developer experience.
 
 ## When to Use
 

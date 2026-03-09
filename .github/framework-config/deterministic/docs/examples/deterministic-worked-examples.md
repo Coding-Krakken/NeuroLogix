@@ -11,19 +11,24 @@
 - Deployment Surface: `prod`
 - Rollout: `ring`
 - Data Sensitivity: `confidential`
-- Acceptance: add inventory reservation API + dual-write migration with rollback.
+- Acceptance: add inventory reservation API + dual-write migration with
+  rollback.
 
 ### Computed policy outputs
 
-- Approvers: `product-owner`, `engineering-lead`, `qa-test-engineer`, `sre-engineer`, `security-engineer`.
-- Tests: `unit`, `integration`, `e2e`, `migration-dry-run`, `data-validation`, `security-scan`, `smoke`.
-- Docs: `migration-plan`, `compatibility-plan`, `runbook-update`, `release-notes`.
+- Approvers: `product-owner`, `engineering-lead`, `qa-test-engineer`,
+  `sre-engineer`, `security-engineer`.
+- Tests: `unit`, `integration`, `e2e`, `migration-dry-run`, `data-validation`,
+  `security-scan`, `smoke`.
+- Docs: `migration-plan`, `compatibility-plan`, `runbook-update`,
+  `release-notes`.
 - Rollout: feature flag + ring rollout + enhanced monitoring.
 
 ### PR (filled summary)
 
 - Linked Issue: `Closes #101`
-- Risk section includes blast radius `customer-visible` and fallback to legacy write path.
+- Risk section includes blast radius `customer-visible` and fallback to legacy
+  write path.
 - Testing evidence includes dry-run hashes and rollback test output.
 
 ### State transitions and agents
@@ -50,7 +55,8 @@
 
 ### Computed policy outputs
 
-- Approvers: `engineering-lead`, `qa-test-engineer`, `sre-engineer`, `99-quality-director`, `executive-sponsor`.
+- Approvers: `engineering-lead`, `qa-test-engineer`, `sre-engineer`,
+  `99-quality-director`, `executive-sponsor`.
 - Tests: `targeted`, `smoke`, `incident-validation`, `security-scan`.
 - Docs: `hotfix-rationale`, `follow-up-issue`, `incident-summary`.
 
@@ -82,9 +88,12 @@
 
 ### Computed policy outputs
 
-- Approvers: `security-engineer`, `legal-counsel`, `privacy-compliance-officer`, `engineering-lead`, `99-quality-director`.
-- Tests: `security-scan`, `regression`, `privacy-review`, `compliance-validation`.
-- Docs: `security-advisory`, `mitigation-notes`, `data-protection-impact-assessment`.
+- Approvers: `security-engineer`, `legal-counsel`, `privacy-compliance-officer`,
+  `engineering-lead`, `99-quality-director`.
+- Tests: `security-scan`, `regression`, `privacy-review`,
+  `compliance-validation`.
+- Docs: `security-advisory`, `mitigation-notes`,
+  `data-protection-impact-assessment`.
 
 ### PR (filled summary)
 

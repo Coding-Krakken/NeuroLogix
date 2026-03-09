@@ -9,7 +9,8 @@
 
 ## Overview
 
-This document defines the core domain entities, relationships, state machines, and invariants for the framework modernization system.
+This document defines the core domain entities, relationships, state machines,
+and invariants for the framework modernization system.
 
 ---
 
@@ -23,22 +24,22 @@ This document defines the core domain entities, relationships, state machines, a
 
 ```typescript
 interface Task {
-  id: string // Unique identifier (UUID)
-  type: TaskType // Feature | Bug | Refactor | Docs | Security | Performance | Incident
-  priority: Priority // P0 | P1 | P2 | P3
-  scope: Scope // Small | Medium | Large | XL
-  title: string // Brief description (max 100 chars)
-  description: string // Full description (supports markdown)
-  acceptanceCriteria: string[] // List of AC statements
-  createdAt: Date // Task creation timestamp
-  startedAt?: Date // When first agent started working
-  completedAt?: Date // When task finished
-  status: TaskStatus // pending | in-progress | blocked | completed | failed | aborted
-  assignedAgent?: AgentId // Current agent working on task
-  dispatchChain: AgentId[] // Sequence of agents that worked on task
-  dispatchDepth: number // Length of dispatch chain (0-10)
-  githubIssue?: number // Reference to GitHub issue
-  metadata?: Record<string, unknown> // Extensible metadata
+  id: string; // Unique identifier (UUID)
+  type: TaskType; // Feature | Bug | Refactor | Docs | Security | Performance | Incident
+  priority: Priority; // P0 | P1 | P2 | P3
+  scope: Scope; // Small | Medium | Large | XL
+  title: string; // Brief description (max 100 chars)
+  description: string; // Full description (supports markdown)
+  acceptanceCriteria: string[]; // List of AC statements
+  createdAt: Date; // Task creation timestamp
+  startedAt?: Date; // When first agent started working
+  completedAt?: Date; // When task finished
+  status: TaskStatus; // pending | in-progress | blocked | completed | failed | aborted
+  assignedAgent?: AgentId; // Current agent working on task
+  dispatchChain: AgentId[]; // Sequence of agents that worked on task
+  dispatchDepth: number; // Length of dispatch chain (0-10)
+  githubIssue?: number; // Reference to GitHub issue
+  metadata?: Record<string, unknown>; // Extensible metadata
 }
 ```
 
@@ -54,31 +55,32 @@ interface Task {
 
 ### 2. Agent
 
-**Description:** An AI agent responsible for a specific role in the development workflow.
+**Description:** An AI agent responsible for a specific role in the development
+workflow.
 
 **Attributes:**
 
 ```typescript
 interface Agent {
-  id: AgentId // Unique agent identifier
-  name: string // Human-readable name
-  role: string // Brief role description
-  tier: AgentTier // Core | Specialist
+  id: AgentId; // Unique agent identifier
+  name: string; // Human-readable name
+  role: string; // Brief role description
+  tier: AgentTier; // Core | Specialist
   capabilities: {
-    handoffV2: boolean // Supports Handoff v2 protocol
-    parallelExecution: boolean // Can work on multiple tasks concurrently
-    expressLane: boolean // Can handle express lane tasks
-  }
-  currentStatus: AgentStatus // idle | working | blocked | error
-  currentTask?: string // Task ID (if working)
-  queuedTasks: string[] // Task IDs waiting for this agent
-  lastActive: Date // Last time agent worked
-  totalTasksCompleted: number // Lifetime task count
-  averageTaskDuration: number // Average time per task (milliseconds)
+    handoffV2: boolean; // Supports Handoff v2 protocol
+    parallelExecution: boolean; // Can work on multiple tasks concurrently
+    expressLane: boolean; // Can handle express lane tasks
+  };
+  currentStatus: AgentStatus; // idle | working | blocked | error
+  currentTask?: string; // Task ID (if working)
+  queuedTasks: string[]; // Task IDs waiting for this agent
+  lastActive: Date; // Last time agent worked
+  totalTasksCompleted: number; // Lifetime task count
+  averageTaskDuration: number; // Average time per task (milliseconds)
 }
 
-type AgentTier = 'Core' | 'Specialist'
-type AgentStatus = 'idle' | 'working' | 'blocked' | 'error'
+type AgentTier = 'Core' | 'Specialist';
+type AgentStatus = 'idle' | 'working' | 'blocked' | 'error';
 ```
 
 **Cardinality:**
@@ -97,7 +99,8 @@ type AgentStatus = 'idle' | 'working' | 'blocked' | 'error'
 
 ### 3. Handoff
 
-**Description:** A message passed from one agent to another, containing task context and instructions.
+**Description:** A message passed from one agent to another, containing task
+context and instructions.
 
 **Variants:**
 
@@ -105,15 +108,15 @@ type AgentStatus = 'idle' | 'working' | 'blocked' | 'error'
 
 ```typescript
 interface HandoffV1 {
-  version: 1
-  from: AgentId
-  to: AgentId
-  task: Task // Full task object (duplication)
-  timestamp: Date
-  filePath: string // Path to handoff file on disk
-  context: string // Full context (markdown, 1,000-5,000 lines)
-  constraints?: string[]
-  nextAgent?: AgentId
+  version: 1;
+  from: AgentId;
+  to: AgentId;
+  task: Task; // Full task object (duplication)
+  timestamp: Date;
+  filePath: string; // Path to handoff file on disk
+  context: string; // Full context (markdown, 1,000-5,000 lines)
+  constraints?: string[];
+  nextAgent?: AgentId;
 }
 ```
 
@@ -121,18 +124,18 @@ interface HandoffV1 {
 
 ```typescript
 interface HandoffV2 {
-  version: 2
-  from: AgentId
-  to: AgentId
-  taskId: string // Reference to Task (not inline)
-  timestamp: Date
+  version: 2;
+  from: AgentId;
+  to: AgentId;
+  taskId: string; // Reference to Task (not inline)
+  timestamp: Date;
   delta: {
-    added?: string[] // New information
-    removed?: string[] // Removed information
-    modified?: Record<string, unknown> // Changed fields
-  }
-  contextRefs: string[] // References to shared context (e.g., 'context://repo-structure')
-  ephemeral: boolean // True = memory-only, false = persist to disk
+    added?: string[]; // New information
+    removed?: string[]; // Removed information
+    modified?: Record<string, unknown>; // Changed fields
+  };
+  contextRefs: string[]; // References to shared context (e.g., 'context://repo-structure')
+  ephemeral: boolean; // True = memory-only, false = persist to disk
 }
 ```
 
@@ -146,20 +149,21 @@ interface HandoffV2 {
 
 ### 4. RoutingDecision
 
-**Description:** The result of routing optimization determining which agent should handle a task.
+**Description:** The result of routing optimization determining which agent
+should handle a task.
 
 **Attributes:**
 
 ```typescript
 interface RoutingDecision {
-  taskId: string // Task being routed
-  targetAgent: AgentId // Agent to dispatch to
-  skipAgents: AgentId[] // Agents bypassed
-  reason: string // Human-readable rationale
-  confidence: number // 0-1 (routing confidence)
-  expressLane: boolean // True = bypass workflow
-  timestamp: Date
-  source: 'rule-based' | 'pattern-based' | 'manual' // How decision was made
+  taskId: string; // Task being routed
+  targetAgent: AgentId; // Agent to dispatch to
+  skipAgents: AgentId[]; // Agents bypassed
+  reason: string; // Human-readable rationale
+  confidence: number; // 0-1 (routing confidence)
+  expressLane: boolean; // True = bypass workflow
+  timestamp: Date;
+  source: 'rule-based' | 'pattern-based' | 'manual'; // How decision was made
 }
 ```
 
@@ -178,11 +182,11 @@ interface RoutingDecision {
 
 ```typescript
 interface QualityGate {
-  id: QualityGateId // G1-G10
-  name: string // Human-readable name
-  blocking: boolean // True = must pass, false = warning only
-  dependencies: QualityGateId[] // Gates that must pass first
-  validator: () => Promise<QualityGateResult> // Validation function
+  id: QualityGateId; // G1-G10
+  name: string; // Human-readable name
+  blocking: boolean; // True = must pass, false = warning only
+  dependencies: QualityGateId[]; // Gates that must pass first
+  validator: () => Promise<QualityGateResult>; // Validation function
 }
 ```
 
@@ -202,14 +206,14 @@ interface QualityGate {
 
 ```typescript
 interface QualityGateResult {
-  taskId: string // Task being validated
-  gate: QualityGateId // Gate identifier
-  passed: boolean // True = passed, false = failed
-  duration: number // Execution time (milliseconds)
-  errors?: string[] // Error messages (if failed)
-  warnings?: string[] // Warning messages
-  metadata?: Record<string, unknown> // Additional data (e.g., coverage %)
-  timestamp: Date
+  taskId: string; // Task being validated
+  gate: QualityGateId; // Gate identifier
+  passed: boolean; // True = passed, false = failed
+  duration: number; // Execution time (milliseconds)
+  errors?: string[]; // Error messages (if failed)
+  warnings?: string[]; // Warning messages
+  metadata?: Record<string, unknown>; // Additional data (e.g., coverage %)
+  timestamp: Date;
 }
 ```
 
@@ -229,13 +233,13 @@ interface QualityGateResult {
 
 ```typescript
 interface TelemetryEvent {
-  id: string // Unique event ID (UUID)
-  timestamp: Date
-  eventType: TelemetryEventType // See ADR-FW005
-  taskId: string // Task reference
-  agentId?: AgentId // Agent involved (if applicable)
-  metadata: Record<string, unknown> // Event-specific data
-  severity: 'debug' | 'info' | 'warn' | 'error' | 'critical'
+  id: string; // Unique event ID (UUID)
+  timestamp: Date;
+  eventType: TelemetryEventType; // See ADR-FW005
+  taskId: string; // Task reference
+  agentId?: AgentId; // Agent involved (if applicable)
+  metadata: Record<string, unknown>; // Event-specific data
+  severity: 'debug' | 'info' | 'warn' | 'error' | 'critical';
 }
 ```
 
@@ -249,21 +253,22 @@ interface TelemetryEvent {
 
 ### 8. TaskPattern
 
-**Description:** A learned pattern representing a recurring task type and optimal routing.
+**Description:** A learned pattern representing a recurring task type and
+optimal routing.
 
 **Attributes:**
 
 ```typescript
 interface TaskPattern {
-  signature: string // Hash of (type, scope, keywords)
-  route: AgentId[] // Optimal agent chain
-  successRate: number // 0-1
-  sampleCount: number // Number of matching tasks
-  confidence: number // Derived from success rate + sample count
-  avgDuration: number // Average task duration (milliseconds)
-  keywords: string[] // Keywords that trigger this pattern
-  createdAt: Date
-  lastUpdated: Date
+  signature: string; // Hash of (type, scope, keywords)
+  route: AgentId[]; // Optimal agent chain
+  successRate: number; // 0-1
+  sampleCount: number; // Number of matching tasks
+  confidence: number; // Derived from success rate + sample count
+  avgDuration: number; // Average task duration (milliseconds)
+  keywords: string[]; // Keywords that trigger this pattern
+  createdAt: Date;
+  lastUpdated: Date;
 }
 ```
 
@@ -282,13 +287,13 @@ interface TaskPattern {
 
 ```typescript
 interface ContextCacheEntry {
-  key: string // Cache key (e.g., 'repo:structure:v1')
-  value: string // Cached content
-  expiresAt: Date // TTL expiration timestamp
-  tags: string[] // For bulk invalidation (e.g., ['model', 'framework'])
-  size: number // Content size in bytes
-  hits: number // Number of cache accesses
-  lastAccessed: Date
+  key: string; // Cache key (e.g., 'repo:structure:v1')
+  value: string; // Cached content
+  expiresAt: Date; // TTL expiration timestamp
+  tags: string[]; // For bulk invalidation (e.g., ['model', 'framework'])
+  size: number; // Content size in bytes
+  hits: number; // Number of cache accesses
+  lastAccessed: Date;
 }
 ```
 
@@ -543,7 +548,8 @@ interface ContextCacheEntry {
 
 ## System Invariants
 
-**Invariants** are constraints that must always hold true. Violations indicate bugs.
+**Invariants** are constraints that must always hold true. Violations indicate
+bugs.
 
 ### Task Invariants
 
@@ -586,7 +592,8 @@ interface ContextCacheEntry {
     - `if task.status === 'completed' then qualityGateResults.length === 10`
 
 12. **INV-G2: Dependency Order Respected**
-    - If gate G5 depends on G1-G4, then `G5.startTime > max(G1.endTime, G2.endTime, G3.endTime, G4.endTime)`
+    - If gate G5 depends on G1-G4, then
+      `G5.startTime > max(G1.endTime, G2.endTime, G3.endTime, G4.endTime)`
 
 13. **INV-G3: Blocking Gate Failure Aborts Task**
     - `if gate.blocking && !gateResult.passed then task.status === 'failed'`
@@ -606,7 +613,8 @@ interface ContextCacheEntry {
     - `if agent.status === 'idle' then agent.currentTask === undefined`
 
 17. **INV-A2: Chief of Staff is Always Idle or Working (Never Error)**
-    - `agent['00-chief-of-staff'].status !== 'error'` (must be handled gracefully)
+    - `agent['00-chief-of-staff'].status !== 'error'` (must be handled
+      gracefully)
 
 ### Telemetry Invariants
 
@@ -667,7 +675,8 @@ interface ContextCacheEntry {
 ### Validation Requirements
 
 1. **Task Description:** Sanitize user input, prevent code injection
-2. **Routing Decisions:** Validate agent IDs exist, prevent bypassing Chief/Quality
+2. **Routing Decisions:** Validate agent IDs exist, prevent bypassing
+   Chief/Quality
 3. **Handoff Deltas:** Validate structure, prevent arbitrary field modification
 4. **Cache Keys:** Validate format, prevent path traversal attacks
 5. **Telemetry Events:** Validate event types, sanitize metadata
@@ -687,12 +696,12 @@ interface ContextCacheEntry {
 ```typescript
 interface Task {
   // Existing fields...
-  tenantId: string // Future: Organization or project ID
+  tenantId: string; // Future: Organization or project ID
 }
 
 interface ContextCacheEntry {
   // Existing fields...
-  tenantId: string // Cache segregation per tenant
+  tenantId: string; // Cache segregation per tenant
 }
 ```
 
@@ -753,4 +762,3 @@ interface ContextCacheEntry {
 **Authored by:** Solution Architect  
 **Reviewed by:** (Pending)  
 **Approved by:** (Pending)
-

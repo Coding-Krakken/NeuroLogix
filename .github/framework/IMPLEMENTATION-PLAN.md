@@ -9,7 +9,9 @@
 
 ## Overview
 
-This document defines the detailed implementation plan for all 3 phases of the framework modernization. Each phase includes concrete implementation steps, milestones, and validation criteria.
+This document defines the detailed implementation plan for all 3 phases of the
+framework modernization. Each phase includes concrete implementation steps,
+milestones, and validation criteria.
 
 **Timeline:**
 
@@ -47,7 +49,8 @@ This document defines the detailed implementation plan for all 3 phases of the f
    - Add unit tests for all routing rules (50+ test cases)
 
 3. **Integrate with Chief of Staff (1 day)**
-   - Modify Chief of Staff agent prompt to call `RoutingOptimizer.determineRoute()`
+   - Modify Chief of Staff agent prompt to call
+     `RoutingOptimizer.determineRoute()`
    - Add manual override capability
    - Add routing decision logging
 
@@ -746,9 +749,11 @@ This document defines the detailed implementation plan for all 3 phases of the f
 
 ### Overall Goal
 
-**Target:** 70% faster task execution, 40% fewer handoffs, 90% framework confidence
+**Target:** 70% faster task execution, 40% fewer handoffs, 90% framework
+confidence
 
-**Measurement:** Run 100 tasks (mix of simple/complex) before and after modernization, compare metrics.
+**Measurement:** Run 100 tasks (mix of simple/complex) before and after
+modernization, compare metrics.
 
 ---
 
@@ -765,4 +770,3 @@ This document defines the detailed implementation plan for all 3 phases of the f
 **Authored by:** Solution Architect  
 **Reviewed by:** (Pending)  
 **Approved by:** (Pending)
-

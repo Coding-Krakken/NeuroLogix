@@ -1,13 +1,13 @@
 # Threat Model
 
-> **Category:** Security
-> **File:** `security/threat-model.prompt.md`
+> **Category:** Security **File:** `security/threat-model.prompt.md`
 
 ---
 
 ## Purpose
 
-Identify threats, attack surfaces, and vulnerabilities using the STRIDE methodology. Produce a threat model with mitigations for all identified threats.
+Identify threats, attack surfaces, and vulnerabilities using the STRIDE
+methodology. Produce a threat model with mitigations for all identified threats.
 
 ## When to Use
 
@@ -43,14 +43,14 @@ Identify threats, attack surfaces, and vulnerabilities using the STRIDE methodol
 
 ### STRIDE Analysis
 
-| #   | Category        | Threat             | Component     | Likelihood | Impact   | Mitigation                      |
-| --- | --------------- | ------------------ | ------------- | ---------- | -------- | ------------------------------- |
-| T1  | Spoofing        | Fake API requests  | /api/\*       | Medium     | High     | Input validation, rate limiting |
-| T2  | Tampering       | Price manipulation | Cart/Checkout | Medium     | Critical | Server-side price verification  |
-| T3  | Repudiation     | Order disputes     | Orders        | Low        | Medium   | Audit logging                   |
-| T4  | Info Disclosure | API key exposure   | Server        | Low        | Critical | Env vars only, gitleaks         |
-| T5  | DoS             | API flooding       | All routes    | Medium     | High     | Rate limiting, <DEPLOYMENT_PLATFORM> WAF       |
-| T6  | Elevation       | Admin access       | Admin routes  | Low        | Critical | Role-based access control       |
+| #   | Category        | Threat             | Component     | Likelihood | Impact   | Mitigation                               |
+| --- | --------------- | ------------------ | ------------- | ---------- | -------- | ---------------------------------------- |
+| T1  | Spoofing        | Fake API requests  | /api/\*       | Medium     | High     | Input validation, rate limiting          |
+| T2  | Tampering       | Price manipulation | Cart/Checkout | Medium     | Critical | Server-side price verification           |
+| T3  | Repudiation     | Order disputes     | Orders        | Low        | Medium   | Audit logging                            |
+| T4  | Info Disclosure | API key exposure   | Server        | Low        | Critical | Env vars only, gitleaks                  |
+| T5  | DoS             | API flooding       | All routes    | Medium     | High     | Rate limiting, <DEPLOYMENT_PLATFORM> WAF |
+| T6  | Elevation       | Admin access       | Admin routes  | Low        | Critical | Role-based access control                |
 
 ### Mitigations Required
 
@@ -73,7 +73,8 @@ Identify threats, attack surfaces, and vulnerabilities using the STRIDE methodol
 ## Failure Cases
 
 - No architecture diagram → Create minimal data flow diagram first
-- Cannot assess <PAYMENT_PROVIDER> integration → Review <PAYMENT_PROVIDER> security docs
+- Cannot assess <PAYMENT_PROVIDER> integration → Review <PAYMENT_PROVIDER>
+  security docs
 
 ## Evidence Expectations
 
@@ -81,4 +82,3 @@ Identify threats, attack surfaces, and vulnerabilities using the STRIDE methodol
 - STRIDE analysis table
 - Mitigation implementations
 - Residual risk documentation
-

@@ -1,13 +1,13 @@
 # Post-Incident Review (Postmortem)
 
-> **Category:** Incident
-> **File:** `incident/postmortem.prompt.md`
+> **Category:** Incident **File:** `incident/postmortem.prompt.md`
 
 ---
 
 ## Purpose
 
-Conduct a blameless post-incident review to understand what happened, why, and how to prevent recurrence. Produce actionable improvement items.
+Conduct a blameless post-incident review to understand what happened, why, and
+how to prevent recurrence. Produce actionable improvement items.
 
 ## When to Use
 
@@ -29,11 +29,8 @@ Conduct a blameless post-incident review to understand what happened, why, and h
 ```markdown
 # Post-Incident Review: [INC-XXXX]
 
-**Date of Incident:** YYYY-MM-DD
-**Duration:** X hours Y minutes
-**Severity:** SEV-X
-**Author:** [name]
-**Reviewed:** YYYY-MM-DD
+**Date of Incident:** YYYY-MM-DD **Duration:** X hours Y minutes **Severity:**
+SEV-X **Author:** [name] **Reviewed:** YYYY-MM-DD
 
 ## Executive Summary
 

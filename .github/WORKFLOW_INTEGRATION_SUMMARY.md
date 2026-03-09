@@ -2,13 +2,16 @@
 
 **Version:** 1.0.0  
 **Date:** 2026-02-25  
-**Purpose:** Quick reference for agents integrating git/GitHub into their workflows
+**Purpose:** Quick reference for agents integrating git/GitHub into their
+workflows
 
 ---
 
 ## 🎯 Overview
 
-This document summarizes the git/GitHub workflow integration for the Core-3 operating model (with specialist escalation). It provides quick-start examples for common scenarios.
+This document summarizes the git/GitHub workflow integration for the Core-3
+operating model (with specialist escalation). It provides quick-start examples
+for common scenarios.
 
 **Full Documentation:** [GIT_WORKFLOW.md](GIT_WORKFLOW.md)
 
@@ -416,7 +419,8 @@ code chat -m 99-quality-director --add-file $repo --add-file .github/QUALITY-GAT
 
 **When:** Final validation & PR creation
 
-**Authority:** Delegated domain approvals are required; Quality Director performs final signoff.
+**Authority:** Delegated domain approvals are required; Quality Director
+performs final signoff.
 
 **Steps:**
 
@@ -676,21 +680,26 @@ gh issue comment 42 --body "S1+S2 complete, dispatching to backend-engineer."
 
 ## 🔗 Related Documentation
 
-- [GIT_WORKFLOW.md](GIT_WORKFLOW.md) — Complete workflows, branch strategy, commit authority
+- [GIT_WORKFLOW.md](GIT_WORKFLOW.md) — Complete workflows, branch strategy,
+  commit authority
 - [AGENTS.md](AGENTS.md) — Agent roster and dispatch protocol
 - [QUALITY-GATES.md](QUALITY-GATES.md) — G1-G10 quality gate definitions
 - [copilot-instructions.md](copilot-instructions.md) — Complete agent governance
 
 ### Prompts
 
-- [git-commit.prompt.md](prompts/operations/git-commit.prompt.md) — Commit workflow
-- [create-pr.prompt.md](prompts/operations/create-pr.prompt.md) — PR creation workflow
-- [manage-issue.prompt.md](prompts/operations/manage-issue.prompt.md) — Issue management
-- [branch-strategy.prompt.md](prompts/operations/branch-strategy.prompt.md) — Branch management
+- [git-commit.prompt.md](prompts/operations/git-commit.prompt.md) — Commit
+  workflow
+- [create-pr.prompt.md](prompts/operations/create-pr.prompt.md) — PR creation
+  workflow
+- [manage-issue.prompt.md](prompts/operations/manage-issue.prompt.md) — Issue
+  management
+- [branch-strategy.prompt.md](prompts/operations/branch-strategy.prompt.md) —
+  Branch management
 
 ---
 
-**🤖 This guide ensures all agents integrate git/GitHub into their workflows systematically.**
+**🤖 This guide ensures all agents integrate git/GitHub into their workflows
+systematically.**
 
 **Version 1.0.0 | Created 2026-02-25 | Owner: All Agents**
-

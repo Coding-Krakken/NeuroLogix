@@ -1,28 +1,13 @@
 {
   "version": "1.0.0",
   "defaults": {
-    "requiredApprovers": [
-      "orchestrator-agent",
-      "assurance-agent"
-    ],
-    "requiredChecks": [
-      "unit",
-      "integration",
-      "lint",
-      "typecheck"
-    ],
-    "requiredDocs": [
-      "issue-complete",
-      "pr-template-complete"
-    ],
-    "rolloutRequirements": [
-      "rollback-plan"
-    ],
+    "requiredApprovers": ["orchestrator-agent", "assurance-agent"],
+    "requiredChecks": ["unit", "integration", "lint", "typecheck"],
+    "requiredDocs": ["issue-complete", "pr-template-complete"],
+    "rolloutRequirements": ["rollback-plan"],
     "mergeStrategy": "squash",
     "commitFormat": "<type>(<scope>): <subject>",
-    "releaseRequirements": [
-      "release-notes"
-    ]
+    "releaseRequirements": ["release-notes"]
   },
   "byType": {
     "feature": {

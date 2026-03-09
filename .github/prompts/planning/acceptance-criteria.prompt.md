@@ -1,13 +1,13 @@
 # Acceptance Criteria
 
-> **Category:** Planning
-> **File:** `planning/acceptance-criteria.prompt.md`
+> **Category:** Planning **File:** `planning/acceptance-criteria.prompt.md`
 
 ---
 
 ## Purpose
 
-Write precise, measurable, testable acceptance criteria for user stories using Given/When/Then format. Each criterion must be independently verifiable.
+Write precise, measurable, testable acceptance criteria for user stories using
+Given/When/Then format. Each criterion must be independently verifiable.
 
 ## When to Use
 
@@ -36,7 +36,8 @@ Write precise, measurable, testable acceptance criteria for user stories using G
 ### Error Paths
 
 - **AC-3:** Given [invalid input], When [action], Then [error message shown]
-- **AC-4:** Given [service unavailable], When [action], Then [graceful degradation]
+- **AC-4:** Given [service unavailable], When [action], Then [graceful
+  degradation]
 
 ### Edge Cases
 

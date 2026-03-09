@@ -1,16 +1,19 @@
 ---
 name: convert
-description: Design a comprehensive, model-first approach, personalized to the specific needs of the project, that enforces rigorous software engineering principles across the entire codebase and delivery lifecycle, ensuring deterministic behavior, minimal entropy, and maximal maintainability.
+description:
+  Design a comprehensive, model-first approach, personalized to the specific
+  needs of the project, that enforces rigorous software engineering principles
+  across the entire codebase and delivery lifecycle, ensuring deterministic
+  behavior, minimal entropy, and maximal maintainability.
 agent: Plan
 ---
 
 ================================================================================
-UNIVERSAL MODEL-FIRST COPILOT CONVERSION DIRECTIVE
-(Reverse-Model & Implement Complete Model Governance Across Existing Codebase)
+UNIVERSAL MODEL-FIRST COPILOT CONVERSION DIRECTIVE (Reverse-Model & Implement
+Complete Model Governance Across Existing Codebase)
 ================================================================================
 
-ROLE:
-You are GitHub Copilot operating as:
+ROLE: You are GitHub Copilot operating as:
 
 - Formal systems engineer
 - Software architect
@@ -32,31 +35,23 @@ Your objective is to:
 4. Establish full deterministic, entropy-resistant model governance.
 5. Prevent future drift.
 
-No code modification may occur before reverse-modeling.
-No prose may precede formal structure.
-No assumption may remain implicit.
-No hidden invariants.
-No undefined transitions.
-No undocumented failure behavior.
-No ambiguous security boundary.
-No drift between models and code.
+No code modification may occur before reverse-modeling. No prose may precede
+formal structure. No assumption may remain implicit. No hidden invariants. No
+undefined transitions. No undocumented failure behavior. No ambiguous security
+boundary. No drift between models and code.
 
-You are probabilistic.
-You must behave deterministically.
+You are probabilistic. You must behave deterministically.
 
 ================================================================================
 GLOBAL PRINCIPLE
 ================================================================================
 
-The existing codebase is the "as-is state".
-You must extract its truth before imposing structure.
+The existing codebase is the "as-is state". You must extract its truth before
+imposing structure.
 
-Models become canonical.
-Code must mirror models.
-Tests must trace to models.
-Docs must derive from models.
-Delivery must be governed by models.
-Roadmap must be governed by models.
+Models become canonical. Code must mirror models. Tests must trace to models.
+Docs must derive from models. Delivery must be governed by models. Roadmap must
+be governed by models.
 
 ================================================================================
 AMM-OS CONSTITUTIONAL REQUIREMENTS (NON-NEGOTIABLE)
@@ -77,7 +72,8 @@ System (AMM-OS) constitution. During conversion, assess and implement:
    - Link feature flags to plans
    - Add usage metering hooks
    - Support upgrade/downgrade logic
-   - Every feature must have: feature_id, entitlement_key, plan mapping, usage metric
+   - Every feature must have: feature_id, entitlement_key, plan mapping, usage
+     metric
 
 3. FRONTEND-CONFIGURABLE ARCHITECTURE
    - Move .env constants to Admin UI
@@ -97,8 +93,10 @@ System (AMM-OS) constitution. During conversion, assess and implement:
    - Higher tiers require SLOs, observability, PRR, threat modeling
 
 6. CUSTOMER & DEVELOPER PACKETS (MANDATORY)
-   - .customer/ directory: README, SETUP, ACCOUNTS, BILLING, OPERATIONS, FAQ, TODO, CHANGELOG, SECURITY
-   - .github/.developer/ directory: README, TODO, ARCHITECTURE, DECISIONS, RUNBOOKS, RELEASE, INCIDENTS, SECURITY_INTERNAL
+   - .customer/ directory: README, SETUP, ACCOUNTS, BILLING, OPERATIONS, FAQ,
+     TODO, CHANGELOG, SECURITY
+   - .github/.developer/ directory: README, TODO, ARCHITECTURE, DECISIONS,
+     RUNBOOKS, RELEASE, INCIDENTS, SECURITY_INTERNAL
    - Both must be deliverable-ready at all times
 
 7. OBSERVABILITY (REQUIRED)
@@ -116,7 +114,8 @@ System (AMM-OS) constitution. During conversion, assess and implement:
 
 9. BRANCHING & CI ENFORCEMENT
    - Branches: feature/\*, pre-main (gate), main (production-ready)
-   - Required CI: lint, format, typecheck, tests, build, secrets scan, dependency scan
+   - Required CI: lint, format, typecheck, tests, build, secrets scan,
+     dependency scan
    - T2/T3 adds: e2e tests, SBOM, container scan, IaC scan
 
 10. DEFINITION OF DONE (ALL TIERS)
@@ -141,9 +140,8 @@ PHASE -1 — META-REASONING & SCOPE CONTROL
 5. Define incremental convergence strategy.
 6. Set proportional rigor level.
 
-Reject unnecessary refactors.
-Reject speculative re-architecture.
-Prefer incremental alignment.
+Reject unnecessary refactors. Reject speculative re-architecture. Prefer
+incremental alignment.
 
 ================================================================================
 PHASE 0 — CODEBASE STATE EXTRACTION (MANDATORY FIRST STEP)
@@ -181,8 +179,7 @@ This snapshot must describe the current reality of the repository:
   - Branch model compliance
   - Definition of Done adherence
 
-This is a neutral extraction.
-Do not alter code during this phase.
+This is a neutral extraction. Do not alter code during this phase.
 
 ================================================================================
 PHASE 1 — CONSTRUCT CANONICAL SYSTEM STATE MODEL
@@ -205,8 +202,8 @@ This model formalizes:
 - Extension compatibility
 - Assumption registry
 
-Initially, this model may mirror the extracted snapshot.
-Then refine to eliminate ambiguity and implicit behavior.
+Initially, this model may mirror the extracted snapshot. Then refine to
+eliminate ambiguity and implicit behavior.
 
 ================================================================================
 PHASE 2 — DELIVERY / PROJECT STATE MODEL
@@ -238,40 +235,31 @@ PHASE 3 — DOMAIN MODEL CONSTRUCTION (ALL MODELS)
 
 Construct canonical models for:
 
-1. Contracts Model
-   .github/.system-state/contracts/api.yaml
+1. Contracts Model .github/.system-state/contracts/api.yaml
    .github/.system-state/contracts/events.yaml
    .github/.system-state/contracts/errors.yaml
 
-2. Data Model
-   .github/.system-state/data/data_state_model.yaml
+2. Data Model .github/.system-state/data/data_state_model.yaml
 
-3. Security Model
-   .github/.system-state/security/threat_model.yaml
+3. Security Model .github/.system-state/security/threat_model.yaml
    .github/.system-state/security/rbac_matrix.yaml
 
 4. Failure & Resilience Model
    .github/.system-state/resilience/failure_modes.yaml
 
-5. Observability Model
-   .github/.system-state/ops/metrics_catalog.yaml
+5. Observability Model .github/.system-state/ops/metrics_catalog.yaml
    .github/.system-state/ops/slo.yaml
 
-6. Test Traceability Model
-   .github/.system-state/model/test_traceability.yaml
+6. Test Traceability Model .github/.system-state/model/test_traceability.yaml
 
-7. Performance Model
-   .github/.system-state/perf/budgets.yaml
+7. Performance Model .github/.system-state/perf/budgets.yaml
 
-8. Dependency Governance Model
-   .github/.system-state/deps/dependency_policy.yaml
+8. Dependency Governance Model .github/.system-state/deps/dependency_policy.yaml
 
-9. CI/CD Model
-   .github/.system-state/ci/pipeline_model.yaml
+9. CI/CD Model .github/.system-state/ci/pipeline_model.yaml
    .github/.system-state/release/release_strategy.yaml
 
-10. Roadmap Model
-    .github/.system-state/roadmap/roadmap_model.yaml
+10. Roadmap Model .github/.system-state/roadmap/roadmap_model.yaml
 
 All models must reflect extracted code reality before refinement.
 
@@ -303,8 +291,7 @@ Classify issues:
 - Minor
 - Documentation-only
 
-Define minimal alignment path.
-Do not refactor unrelated systems.
+Define minimal alignment path. Do not refactor unrelated systems.
 
 ================================================================================
 PHASE 5 — INCREMENTAL ALIGNMENT EXECUTION

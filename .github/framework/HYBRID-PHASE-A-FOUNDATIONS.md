@@ -9,10 +9,14 @@
 
 ## Scope Delivered
 
-- Added `hybrid-orchestrator.ts` skeleton contract with sequential fallback and independent feature toggles.
-- Added `context-hierarchy.ts` contract for L1/L2/L3 composition with token estimates and budget enforcement.
-- Added `dependency-graph.ts` contract for deterministic DAG validation, cycle path reporting, and wave planning.
-- Added foundational hybrid types in `types.ts` (`HybridMode`, flags, context and graph contracts).
+- Added `hybrid-orchestrator.ts` skeleton contract with sequential fallback and
+  independent feature toggles.
+- Added `context-hierarchy.ts` contract for L1/L2/L3 composition with token
+  estimates and budget enforcement.
+- Added `dependency-graph.ts` contract for deterministic DAG validation, cycle
+  path reporting, and wave planning.
+- Added foundational hybrid types in `types.ts` (`HybridMode`, flags, context
+  and graph contracts).
 
 ---
 
@@ -32,7 +36,8 @@
    - Secret/PII patterns are redacted during context composition.
 
 4. **Sequential fallback preserved as source-of-truth mode**
-   - Hybrid mode never forces execution when global hybrid flag or mode is disabled.
+   - Hybrid mode never forces execution when global hybrid flag or mode is
+     disabled.
 
 ---
 
@@ -54,6 +59,7 @@ npm test -- dependency-graph.test.ts
 ```
 
 Evidence:
+
 - Acyclic graph produces deterministic waves (`[['a'], ['b', 'c']]`).
 - Cyclic graph returns explicit cycle path where first and last node match.
 
@@ -64,6 +70,7 @@ npm test -- context-hierarchy.test.ts
 ```
 
 Evidence:
+
 - L1/L2/L3 slices are returned with positive token estimates.
 - Memory hierarchy can be disabled independently (returns empty slices).
 
@@ -74,7 +81,9 @@ npm test -- hybrid-orchestrator.test.ts
 ```
 
 Evidence:
-- `memoryHierarchyEnabled=true` and `parallelGraphEnabled=false` enables context composition without graph waves.
+
+- `memoryHierarchyEnabled=true` and `parallelGraphEnabled=false` enables context
+  composition without graph waves.
 - Cyclic graphs fail only when `parallelGraphEnabled=true`.
 - Global hybrid disable returns sequential fallback.
 
@@ -82,7 +91,8 @@ Evidence:
 
 ## Notes
 
-- Full repository `npm run lint` currently fails due pre-existing baseline lint debt unrelated to Phase A additions.
+- Full repository `npm run lint` currently fails due pre-existing baseline lint
+  debt unrelated to Phase A additions.
 - Focused lint on new Phase A source modules passes:
 
 ```bash

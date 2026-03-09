@@ -23,7 +23,9 @@ export class DigitalTwinService {
 
   async createTwin(data: Omit<TwinAsset, 'id' | 'createdAt' | 'updatedAt'>): Promise<TwinAsset> {
     if (Array.from(this.twins.values()).some(twin => twin.assetId === data.assetId)) {
-      throw new ValidationError('A digital twin already exists for this asset', { assetId: data.assetId });
+      throw new ValidationError('A digital twin already exists for this asset', {
+        assetId: data.assetId,
+      });
     }
 
     const twin = TwinAssetSchema.parse({
@@ -54,7 +56,10 @@ export class DigitalTwinService {
     return twin;
   }
 
-  async updateTwin(id: string, updates: Partial<Omit<TwinAsset, 'id' | 'createdAt'>>): Promise<TwinAsset> {
+  async updateTwin(
+    id: string,
+    updates: Partial<Omit<TwinAsset, 'id' | 'createdAt'>>
+  ): Promise<TwinAsset> {
     const existingTwin = await this.getTwin(id);
 
     const updatedTwin = TwinAssetSchema.parse({
@@ -86,7 +91,9 @@ export class DigitalTwinService {
     );
 
     if (hasActiveSimulation) {
-      throw new ValidationError('Cannot delete digital twin with active simulation', { twinId: id });
+      throw new ValidationError('Cannot delete digital twin with active simulation', {
+        twinId: id,
+      });
     }
 
     this.twins.delete(id);
@@ -100,7 +107,13 @@ export class DigitalTwinService {
     });
   }
 
-  async queryTwins(query: TwinQuery): Promise<{ twins: TwinAsset[]; total: number; page: number; pageSize: number; totalPages: number }> {
+  async queryTwins(query: TwinQuery): Promise<{
+    twins: TwinAsset[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  }> {
     const validatedQuery = TwinQuerySchema.parse(query);
     let twins = Array.from(this.twins.values());
 
@@ -116,7 +129,8 @@ export class DigitalTwinService {
     if (validatedQuery.search) {
       const search = validatedQuery.search.toLowerCase();
       twins = twins.filter(
-        twin => twin.name.toLowerCase().includes(search) || twin.assetId.toLowerCase().includes(search)
+        twin =>
+          twin.name.toLowerCase().includes(search) || twin.assetId.toLowerCase().includes(search)
       );
     }
 
@@ -223,11 +237,15 @@ export class DigitalTwinService {
     return validationResult;
   }
 
-  async runSimulation(twinId: string, config: Partial<SimulationConfig> = {}): Promise<SimulationRun> {
+  async runSimulation(
+    twinId: string,
+    config: Partial<SimulationConfig> = {}
+  ): Promise<SimulationRun> {
     await this.getTwin(twinId);
 
     const existingRunningSimulation = Array.from(this.simulations.values()).find(
-      simulation => simulation.twinId === twinId && ['pending', 'running'].includes(simulation.status)
+      simulation =>
+        simulation.twinId === twinId && ['pending', 'running'].includes(simulation.status)
     );
 
     if (existingRunningSimulation) {
@@ -255,15 +273,19 @@ export class DigitalTwinService {
     try {
       const seed = validatedConfig.seed ?? 1;
       for (let step = 1; step <= validatedConfig.maxSteps; step++) {
-        const previousState = simulation.outputStates[simulation.outputStates.length - 1] ?? initialState;
+        const previousState =
+          simulation.outputStates[simulation.outputStates.length - 1] ?? initialState;
         const previousProperties = (previousState?.properties ?? {}) as Record<string, unknown>;
 
         const simulatedProperties: Record<string, unknown> = {};
         for (const [propertyName, propertyValue] of Object.entries(previousProperties)) {
           if (typeof propertyValue === 'number') {
             const deterministicDelta = (seed + step + propertyName.length) % 3;
-            const stochasticFactor = validatedConfig.includeStochastic ? ((seed + step) % 5) / 100 : 0;
-            simulatedProperties[propertyName] = propertyValue + deterministicDelta * validatedConfig.timeScale + stochasticFactor;
+            const stochasticFactor = validatedConfig.includeStochastic
+              ? ((seed + step) % 5) / 100
+              : 0;
+            simulatedProperties[propertyName] =
+              propertyValue + deterministicDelta * validatedConfig.timeScale + stochasticFactor;
           } else {
             simulatedProperties[propertyName] = propertyValue;
           }
@@ -271,7 +293,9 @@ export class DigitalTwinService {
 
         const nextState = TwinStateSchema.parse({
           twinId,
-          timestamp: new Date((simulation.startedAt?.getTime() ?? Date.now()) + step * validatedConfig.stepIntervalMs),
+          timestamp: new Date(
+            (simulation.startedAt?.getTime() ?? Date.now()) + step * validatedConfig.stepIntervalMs
+          ),
           source: 'simulation',
           properties: simulatedProperties,
           confidence: 0.98,
@@ -308,7 +332,10 @@ export class DigitalTwinService {
   async getSimulation(simulationId: string): Promise<SimulationRun> {
     const simulation = this.simulations.get(simulationId);
     if (!simulation) {
-      throw new AssetNotFoundError('Simulation', { requestedId: simulationId, assetType: 'Simulation' });
+      throw new AssetNotFoundError('Simulation', {
+        requestedId: simulationId,
+        assetType: 'Simulation',
+      });
     }
     return simulation;
   }
@@ -325,8 +352,12 @@ export class DigitalTwinService {
       twinsByStatus[twin.status] = (twinsByStatus[twin.status] ?? 0) + 1;
     }
 
-    const twinsWithState = twins.filter(twin => (this.stateHistory.get(twin.id) ?? []).length > 0).length;
-    const activeSimulations = simulations.filter(simulation => ['pending', 'running'].includes(simulation.status)).length;
+    const twinsWithState = twins.filter(
+      twin => (this.stateHistory.get(twin.id) ?? []).length > 0
+    ).length;
+    const activeSimulations = simulations.filter(simulation =>
+      ['pending', 'running'].includes(simulation.status)
+    ).length;
 
     return TwinStatisticsSchema.parse({
       totalTwins: twins.length,

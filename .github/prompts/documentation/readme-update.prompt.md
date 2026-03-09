@@ -1,13 +1,14 @@
 # README Update
 
-> **Category:** Documentation
-> **File:** `documentation/readme-update.prompt.md`
+> **Category:** Documentation **File:** `documentation/readme-update.prompt.md`
 
 ---
 
 ## Purpose
 
-Update the project README to accurately reflect the current state of the project. Ensure setup instructions, architecture overview, and feature list are current and correct.
+Update the project README to accurately reflect the current state of the
+project. Ensure setup instructions, architecture overview, and feature list are
+current and correct.
 
 ## When to Use
 

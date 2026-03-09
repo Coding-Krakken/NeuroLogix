@@ -36,15 +36,6 @@
       "@neurologix/ui/*": ["./packages/ui/src/*"]
     }
   },
-  "include": [
-    "packages/*/src/**/*",
-    "services/*/src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "build",
-    "dist",
-    ".next",
-    "coverage"
-  ]
+  "include": ["packages/*/src/**/*", "services/*/src/**/*"],
+  "exclude": ["node_modules", "build", "dist", ".next", "coverage"]
 }

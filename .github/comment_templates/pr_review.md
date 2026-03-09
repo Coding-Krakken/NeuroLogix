@@ -1,6 +1,6 @@
 # PR Review Template
 
-<!-- 
+<!--
 Template for agent-generated PR reviews
 -->
 
@@ -9,7 +9,9 @@ Template for agent-generated PR reviews
 **PR:** #{{PR_NUMBER}}  
 **Review Type:** {{REVIEW_TYPE}} <!-- Initial | Follow-up | Final -->  
 **Timestamp:** {{TIMESTAMP}}  
-**Decision:** {{DECISION}} <!-- ✅ Approved | ⚠️ Changes Requested | ❌ Rejected | 💬 Comment Only -->
+**Decision:** {{DECISION}}
+
+<!-- ✅ Approved | ⚠️ Changes Requested | ❌ Rejected | 💬 Comment Only -->
 
 ---
 
@@ -113,7 +115,8 @@ Template for agent-generated PR reviews
 
 ### Security
 
-**Security Review Status:** ✅ No Issues | ⚠️ Concerns | ❌ Critical Issues | N/A
+**Security Review Status:** ✅ No Issues | ⚠️ Concerns | ❌ Critical Issues |
+N/A
 
 **Findings:**
 
@@ -140,7 +143,8 @@ Template for agent-generated PR reviews
 
 ### Performance
 
-**Performance Impact:** ✅ No Impact | ⚠️ Possible Impact | ❌ Degradation Detected
+**Performance Impact:** ✅ No Impact | ⚠️ Possible Impact | ❌ Degradation
+Detected
 
 **Findings:**
 
@@ -149,8 +153,8 @@ Template for agent-generated PR reviews
 
 **Performance Budget:**
 
-| Metric | Before | After | Budget | Status |
-|--------|--------|-------|--------|--------|
+| Metric       | Before       | After       | Budget       | Status       |
+| ------------ | ------------ | ----------- | ------------ | ------------ |
 | {{METRIC_1}} | {{BEFORE_1}} | {{AFTER_1}} | {{BUDGET_1}} | {{STATUS_1}} |
 | {{METRIC_2}} | {{BEFORE_2}} | {{AFTER_2}} | {{BUDGET_2}} | {{STATUS_2}} |
 
@@ -181,10 +185,12 @@ Template for agent-generated PR reviews
 
 **Risks Identified:**
 
-1. **{{RISK_1_TITLE}}** — {{RISK_1_LIKELIHOOD}} Likelihood, {{RISK_1_IMPACT}} Impact
+1. **{{RISK_1_TITLE}}** — {{RISK_1_LIKELIHOOD}} Likelihood, {{RISK_1_IMPACT}}
+   Impact
    - **Mitigation:** {{RISK_1_MITIGATION}}
 
-2. **{{RISK_2_TITLE}}** — {{RISK_2_LIKELIHOOD}} Likelihood, {{RISK_2_IMPACT}} Impact
+2. **{{RISK_2_TITLE}}** — {{RISK_2_LIKELIHOOD}} Likelihood, {{RISK_2_IMPACT}}
+   Impact
    - **Mitigation:** {{RISK_2_MITIGATION}}
 
 **Rollback Plan:**

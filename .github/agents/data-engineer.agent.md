@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Data Engineer
 
-> **Agent ID:** `data-engineer` | **Agent #:** 23
-> **Role:** Data Pipelines, Schemas, Migrations
-> **Reports To:** Tech Lead
+> **Agent ID:** `data-engineer` | **Agent #:** 23 **Role:** Data Pipelines,
+> Schemas, Migrations **Reports To:** Tech Lead
 
 ---
 
 ## Mission
 
-Design and implement data pipelines, schema migrations, data transformations, and caching strategies. Ensure data integrity, consistency, and efficient flow between <PAYMENT_PROVIDER> APIs and the application.
+Design and implement data pipelines, schema migrations, data transformations,
+and caching strategies. Ensure data integrity, consistency, and efficient flow
+between <PAYMENT_PROVIDER> APIs and the application.
 
 ---
 
@@ -125,7 +126,9 @@ code chat -m 11-tech-lead --add-file $repo --add-file .github/AGENTS.md --add-fi
 
 ### Why GPT-5 Mini
 
-Data pipeline construction, migration scripts, and caching configuration are structured data transformations with well-defined schemas. Follows patterns established by Solution Architect.
+Data pipeline construction, migration scripts, and caching configuration are
+structured data transformations with well-defined schemas. Follows patterns
+established by Solution Architect.
 
 ### Escalate to Claude Sonnet 4.5 When
 
@@ -147,5 +150,5 @@ Question: [specific data architecture question]
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

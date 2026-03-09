@@ -2,13 +2,15 @@
 
 ## Objective
 
-Reduce redundant agent workload by making discovery and handoff continuation deterministic, reusable, and machine-readable.
+Reduce redundant agent workload by making discovery and handoff continuation
+deterministic, reusable, and machine-readable.
 
 ## Core Pattern: Discover Once, Resume Many
 
 1. Generate one context packet per work item.
 2. Reuse that packet for each downstream dispatch.
-3. Continue from explicit pending checklist items rather than repeating repo discovery.
+3. Continue from explicit pending checklist items rather than repeating repo
+   discovery.
 
 ## New Automation Scripts
 
@@ -64,22 +66,26 @@ With explicit handoff + extra context files:
 ## Operating Rules for All Agents
 
 - Consume context snapshot before any discovery prompt.
-- Run full repo discovery only when snapshot is stale, missing, or contradictory.
+- Run full repo discovery only when snapshot is stale, missing, or
+  contradictory.
 - Continue from pending checklist items in the latest handoff/context packet.
 - Keep handoff comments concise and action-oriented.
 
 ## Recommended Integration (Next Step)
 
-1. Add pre-dispatch step in Chief of Staff flow to always run `generate-agent-context.ps1`.
+1. Add pre-dispatch step in Chief of Staff flow to always run
+   `generate-agent-context.ps1`.
 2. Replace ad-hoc `code chat` calls with `dispatch-agent.ps1`.
-3. Add a governance check that fails dispatch comments without a context snapshot reference.
+3. Add a governance check that fails dispatch comments without a context
+   snapshot reference.
 
 ## Enforcement Gate
 
 - Workflow: `.github/workflows/handoff-context-gate.yml`
 - Trigger: `issue_comment` created/edited
 - Rule: Handoff/dispatch comments must include a context snapshot reference.
-- Failure behavior: Action run fails, posts a remediation note, and applies `handoff-missing-context` label.
+- Failure behavior: Action run fails, posts a remediation note, and applies
+  `handoff-missing-context` label.
 
 ## Expected Outcomes
 

@@ -1,13 +1,14 @@
 # Framework Scoring Metrics
 
-> **Category:** Framework Audit
-> **File:** `framework-audit/scoring-metrics.prompt.md`
+> **Category:** Framework Audit **File:**
+> `framework-audit/scoring-metrics.prompt.md`
 
 ---
 
 ## Purpose
 
-Calculate 12 performance metrics from audit execution data. Compare against targets from Issue #<WORK_ITEM_ID>. Assign overall grade (A-F) based on rubric.
+Calculate 12 performance metrics from audit execution data. Compare against
+targets from Issue #<WORK_ITEM_ID>. Assign overall grade (A-F) based on rubric.
 
 ## When to Use
 
@@ -26,27 +27,25 @@ Calculate 12 performance metrics from audit execution data. Compare against targ
 ```markdown
 ## Framework Performance Metrics
 
-**Audit Mode:** [FAST|STANDARD|THOROUGH]
-**Date:** [YYYY-MM-DD]
-**Tasks Executed:** [N]
-**Overall Grade:** [A|B|C|D|F]
+**Audit Mode:** [FAST|STANDARD|THOROUGH] **Date:** [YYYY-MM-DD] **Tasks
+Executed:** [N] **Overall Grade:** [A|B|C|D|F]
 
 ### Metric Scorecard
 
-| #   | Metric                  | Formula                           | Current | Target | Status |
-| --- | ----------------------- | --------------------------------- | ------- | ------ | ------ |
-| 1   | Avg Execution Time      | ΣTime / N                         | 18 min  | 15 min | ⚠️     |
-| 2   | Avg Handoff Count       | ΣHandoffs / N                     | 3.8     | 3-4    | ✅     |
-| 3   | Express Lane Usage      | ExpressLane / N × 100%            | 35%     | 40%    | ⚠️     |
-| 4   | Routing Accuracy        | CorrectRoutes / N × 100%          | 96%     | >95%   | ✅     |
-| 5   | Quality Gate Pass Rate  | PassedGates / TotalGates × 100%   | 98%     | >95%   | ✅     |
-| 6   | Quality Gate Exec Time  | ΣGateTime / TotalGates            | 3.2 min | 3 min  | ⚠️     |
-| 7   | Avg Handoff Payload Size| ΣPayloadSize / Handoffs           | 45 KB   | <50 KB | ✅     |
-| 8   | Telemetry Overhead      | TelemetryTime / TotalTime × 100%  | 0.8%    | <1%    | ✅     |
-| 9   | Task Completion Rate    | Completed / N × 100%              | 100%    | >98%   | ✅     |
-| 10  | Deadlock Detection Rate | Deadlocks / N × 100%              | 0%      | 0%     | ✅     |
-| 11  | Error Rate              | Errors / N × 100%                 | 0%      | <1%    | ✅     |
-| 12  | Agent Utilization       | UniqueAgents / TotalAgents × 100% | 74%     | >70%   | ✅     |
+| #   | Metric                   | Formula                           | Current | Target | Status |
+| --- | ------------------------ | --------------------------------- | ------- | ------ | ------ |
+| 1   | Avg Execution Time       | ΣTime / N                         | 18 min  | 15 min | ⚠️     |
+| 2   | Avg Handoff Count        | ΣHandoffs / N                     | 3.8     | 3-4    | ✅     |
+| 3   | Express Lane Usage       | ExpressLane / N × 100%            | 35%     | 40%    | ⚠️     |
+| 4   | Routing Accuracy         | CorrectRoutes / N × 100%          | 96%     | >95%   | ✅     |
+| 5   | Quality Gate Pass Rate   | PassedGates / TotalGates × 100%   | 98%     | >95%   | ✅     |
+| 6   | Quality Gate Exec Time   | ΣGateTime / TotalGates            | 3.2 min | 3 min  | ⚠️     |
+| 7   | Avg Handoff Payload Size | ΣPayloadSize / Handoffs           | 45 KB   | <50 KB | ✅     |
+| 8   | Telemetry Overhead       | TelemetryTime / TotalTime × 100%  | 0.8%    | <1%    | ✅     |
+| 9   | Task Completion Rate     | Completed / N × 100%              | 100%    | >98%   | ✅     |
+| 10  | Deadlock Detection Rate  | Deadlocks / N × 100%              | 0%      | 0%     | ✅     |
+| 11  | Error Rate               | Errors / N × 100%                 | 0%      | <1%    | ✅     |
+| 12  | Agent Utilization        | UniqueAgents / TotalAgents × 100% | 74%     | >70%   | ✅     |
 
 ### Grade Calculation
 
@@ -234,7 +233,8 @@ $avgGateTime = ($gateTimes | Measure-Object -Average).Average
 
 **Formula:** `(Σ handoff comment payload sizes in KB) / (number of handoffs)`
 
-**Data Source:** Handoff comment bodies (`gh issue view --comments` / `gh pr view --comments`)
+**Data Source:** Handoff comment bodies (`gh issue view --comments` /
+`gh pr view --comments`)
 
 **Calculation:**
 
@@ -485,4 +485,3 @@ After metrics calculated, proceed to:
 - **Next Prompt:** `framework-audit/final-report.prompt.md`
 - **Input:** Metrics scorecard, grade, raw data
 - **Task:** Generate comprehensive audit report
-

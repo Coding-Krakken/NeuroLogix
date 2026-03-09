@@ -2,7 +2,8 @@
 
 ## In-flight Work Item Representation
 
-Use `.github/framework-config/deterministic/policies/work_item.schema.json` as canonical object for in-flight state. Required runtime object:
+Use `.github/framework-config/deterministic/policies/work_item.schema.json` as
+canonical object for in-flight state. Required runtime object:
 
 - `id`, `type`, `state`, `priority`, `severity`, `risk`
 - `component_area`, `deployment_surface`, `rollout_method`, `data_sensitivity`
@@ -14,12 +15,15 @@ Handoff is computed from `(state, type, component_area)` and policy output:
 
 1. `triage` -> `product-owner`
 2. `planned` -> `program-manager`
-3. `in-progress` -> domain engineer (`frontend-engineer` / `backend-engineer` / `data-engineer` / `platform-engineer`)
+3. `in-progress` -> domain engineer (`frontend-engineer` / `backend-engineer` /
+   `data-engineer` / `platform-engineer`)
 4. `in-review` -> `qa-test-engineer` + required approvers from policy matrix
 5. `ready-to-release` / `released` -> `devops-engineer` / `sre-engineer`
 6. `verified` -> `99-quality-director`
 
-Handoffs use the GitHub-native protocol described in `.github/AGENTS.md`; file-based handoffs under `.github/.handoffs/<agent-id>/` are deprecated and reserved for emergency fallback only.
+Handoffs use the GitHub-native protocol described in `.github/AGENTS.md`;
+file-based handoffs under `.github/.handoffs/<agent-id>/` are deprecated and
+reserved for emergency fallback only.
 
 ## Done Criteria (Deterministic)
 
@@ -49,7 +53,8 @@ A work item is done only when:
 
 - Label `flake-suspected` if rerun inconsistent.
 - Create follow-up flake issue.
-- Merge only if policy permits controlled override (`risk<=medium`, non-security).
+- Merge only if policy permits controlled override (`risk<=medium`,
+  non-security).
 
 ### Incident Mode
 
@@ -59,6 +64,7 @@ A work item is done only when:
 
 ## Redundancy Minimization
 
-- Single source of truth: `.github/framework-config/deterministic/policies/*.json`.
+- Single source of truth:
+  `.github/framework-config/deterministic/policies/*.json`.
 - Router computes all gate requirements once and publishes report.
 - Reviewers consume one checklist artifact rather than re-deriving requirements.

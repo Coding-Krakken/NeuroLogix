@@ -1,13 +1,13 @@
 # Slice Planning
 
-> **Category:** Planning
-> **File:** `planning/slice-planning.prompt.md`
+> **Category:** Planning **File:** `planning/slice-planning.prompt.md`
 
 ---
 
 ## Purpose
 
-Break a feature or epic into vertical slices — independently deployable, testable increments that deliver user-visible value.
+Break a feature or epic into vertical slices — independently deployable,
+testable increments that deliver user-visible value.
 
 ## When to Use
 

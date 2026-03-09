@@ -1,13 +1,13 @@
 # Runbook Generation
 
-> **Category:** Documentation
-> **File:** `documentation/runbook.prompt.md`
+> **Category:** Documentation **File:** `documentation/runbook.prompt.md`
 
 ---
 
 ## Purpose
 
-Create operational runbooks for common incidents and maintenance procedures. Each runbook must be actionable by an on-call engineer with minimal context.
+Create operational runbooks for common incidents and maintenance procedures.
+Each runbook must be actionable by an on-call engineer with minimal context.
 
 ## When to Use
 

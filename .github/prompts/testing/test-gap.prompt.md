@@ -1,13 +1,13 @@
 # Test Gap Analysis
 
-> **Category:** Testing
-> **File:** `testing/test-gap.prompt.md`
+> **Category:** Testing **File:** `testing/test-gap.prompt.md`
 
 ---
 
 ## Purpose
 
-Identify missing tests across the testing pyramid. Map acceptance criteria to test cases. Find untested code paths, error handlers, and edge cases.
+Identify missing tests across the testing pyramid. Map acceptance criteria to
+test cases. Find untested code paths, error handlers, and edge cases.
 
 ## When to Use
 
@@ -39,10 +39,10 @@ Identify missing tests across the testing pyramid. Map acceptance criteria to te
 
 ### Untested Files
 
-| File                          | Lines | Uncovered | Priority |
-| ----------------------------- | ----- | --------- | -------- |
-| src/lib/<payment-provider>/client.ts      | 45    | 32        | HIGH     |
-| src/app/api/checkout/route.ts | 78    | 45        | HIGH     |
+| File                                 | Lines | Uncovered | Priority |
+| ------------------------------------ | ----- | --------- | -------- |
+| src/lib/<payment-provider>/client.ts | 45    | 32        | HIGH     |
+| src/app/api/checkout/route.ts        | 78    | 45        | HIGH     |
 
 ### Missing Test Types
 

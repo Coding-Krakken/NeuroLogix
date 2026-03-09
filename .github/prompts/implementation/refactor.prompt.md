@@ -1,13 +1,14 @@
 # Refactor
 
-> **Category:** Implementation
-> **File:** `implementation/refactor.prompt.md`
+> **Category:** Implementation **File:** `implementation/refactor.prompt.md`
 
 ---
 
 ## Purpose
 
-Restructure existing code to improve quality, readability, performance, or maintainability WITHOUT changing external behavior. All existing tests must continue to pass.
+Restructure existing code to improve quality, readability, performance, or
+maintainability WITHOUT changing external behavior. All existing tests must
+continue to pass.
 
 ## When to Use
 

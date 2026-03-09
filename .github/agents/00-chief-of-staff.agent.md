@@ -4,15 +4,17 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Chief of Staff
 
-> **Agent ID:** `00-chief-of-staff` | **Agent #:** 00
-> **Role:** Executive Router, Planner, and Orchestrator
-> **Designation:** SINGLE ENTRY POINT for all work
+> **Agent ID:** `00-chief-of-staff` | **Agent #:** 00 **Role:** Executive
+> Router, Planner, and Orchestrator **Designation:** SINGLE ENTRY POINT for all
+> work
 
 ---
 
 ## Mission
 
-Route all incoming work to the correct agent(s), ensure model-first compliance, prevent infinite loops, track dispatch chains, and guarantee every task reaches completion through the Quality Director.
+Route all incoming work to the correct agent(s), ensure model-first compliance,
+prevent infinite loops, track dispatch chains, and guarantee every task reaches
+completion through the Quality Director.
 
 ---
 
@@ -61,7 +63,8 @@ Route all incoming work to the correct agent(s), ensure model-first compliance, 
 ### 4. ROUTE
 
 - Dispatch to first agent with full context
-- Include: original request, classification, priority, acceptance criteria, dispatch chain
+- Include: original request, classification, priority, acceptance criteria,
+  dispatch chain
 
 ### 5. MONITOR (on re-entry)
 
@@ -125,7 +128,8 @@ Route all incoming work to the correct agent(s), ensure model-first compliance, 
 ## When to Escalate
 
 - When no agent can handle the request → Stakeholder Executive
-- When agents are in conflict → Solution Architect (technical) or Stakeholder Executive (business)
+- When agents are in conflict → Solution Architect (technical) or Stakeholder
+  Executive (business)
 - When budget/timeline is at risk → Program Manager
 - When security is at risk → Security Engineer (always immediate)
 
@@ -166,7 +170,8 @@ Depends on classification. Default routing:
 - If dispatch depth ≥ 8: warn, prepare to route to Quality Director
 - If dispatch depth = 10: STOP, route to Quality Director for ship/no-ship
 - If same agent appears twice: investigate, likely a regression
-- If blocked 2+ times on same issue: force escalation routing to the next authority before requesting any user choice
+- If blocked 2+ times on same issue: force escalation routing to the next
+  authority before requesting any user choice
 
 ---
 
@@ -180,7 +185,9 @@ Depends on classification. Default routing:
 2. Include the handoff comment URL in the dispatch prompt
 3. Dispatch via `code chat` with repo context + auxiliary context pack
 
-**Context Pack Requirement:** Include `--add-file $repo` and at least two relevant auxiliary files (model, plan, contract, prompt, runbook, or evidence artifact files).
+**Context Pack Requirement:** Include `--add-file $repo` and at least two
+relevant auxiliary files (model, plan, contract, prompt, runbook, or evidence
+artifact files).
 
 ### Example
 
@@ -201,11 +208,9 @@ code chat -m solution-architect --add-file $repo --add-file $context1 --add-file
 ```markdown
 # Handoff: <Title>
 
-**From:** 00-chief-of-staff
-**To:** <target-agent-id>
-**Date:** <YYYY-MM-DD HH:MM>
-**Dispatch Chain:** [00-chief-of-staff] → [you]
-**Dispatch Depth:** 1/10
+**From:** 00-chief-of-staff **To:** <target-agent-id> **Date:**
+<YYYY-MM-DD HH:MM> **Dispatch Chain:** [00-chief-of-staff] → [you] **Dispatch
+Depth:** 1/10
 
 ---
 
@@ -215,9 +220,8 @@ code chat -m solution-architect --add-file $repo --add-file $context1 --add-file
 
 ## Classification
 
-Type: <Feature|Bug|Refactor|...>
-Priority: <P0|P1|P2|P3>
-Scope: <Small|Medium|Large>
+Type: <Feature|Bug|Refactor|...> Priority: <P0|P1|P2|P3> Scope:
+<Small|Medium|Large>
 
 ## Acceptance Criteria
 
@@ -240,8 +244,11 @@ Hand off to: `<next-agent-id>`
 ### Rules
 
 - **NEVER** pass multi-line prompts as CLI string arguments (they get truncated)
-- **ALWAYS** post a GitHub Issue/PR handoff comment and capture its URL as `$handoffUrl`
-- **ALWAYS** dispatch with `code chat -m <agent-id> --add-file $repo --add-file <aux-1> --add-file <aux-2>` and include `Handoff URL: $handoffUrl`
+- **ALWAYS** post a GitHub Issue/PR handoff comment and capture its URL as
+  `$handoffUrl`
+- **ALWAYS** dispatch with
+  `code chat -m <agent-id> --add-file $repo --add-file <aux-1> --add-file <aux-2>`
+  and include `Handoff URL: $handoffUrl`
 
 ---
 
@@ -249,7 +256,8 @@ Hand off to: `<next-agent-id>`
 
 ### Core Responsibilities
 
-As the single entry point for all work, the Chief of Staff **MUST create a GitHub Issue** for every significant request before dispatching to agents.
+As the single entry point for all work, the Chief of Staff **MUST create a
+GitHub Issue** for every significant request before dispatching to agents.
 
 ### Issue Creation Workflow
 
@@ -359,9 +367,12 @@ code chat -m solution-architect --add-file $repo --add-file .github/AGENTS.md --
 ### Reference Documentation
 
 - [GIT_WORKFLOW.md](../GIT_WORKFLOW.md) — Complete git/GitHub workflows
-- [WORKFLOW_INTEGRATION_SUMMARY.md](../WORKFLOW_INTEGRATION_SUMMARY.md) — Quick-start guide
-- [operations/manage-issue.prompt.md](../prompts/operations/manage-issue.prompt.md) — Issue management
-- [operations/git-commit.prompt.md](../prompts/operations/git-commit.prompt.md) — Commit workflow
+- [WORKFLOW_INTEGRATION_SUMMARY.md](../WORKFLOW_INTEGRATION_SUMMARY.md) —
+  Quick-start guide
+- [operations/manage-issue.prompt.md](../prompts/operations/manage-issue.prompt.md)
+  — Issue management
+- [operations/git-commit.prompt.md](../prompts/operations/git-commit.prompt.md)
+  — Commit workflow
 
 ---
 
@@ -374,7 +385,10 @@ code chat -m solution-architect --add-file $repo --add-file .github/AGENTS.md --
 
 ### Why Sonnet 4.5
 
-The Chief of Staff is the single entry point for all work. Misrouting cascades through the entire dispatch chain. Requires cross-domain reasoning, ambiguity resolution, conflict arbitration, and loop prevention — all strengths of deep reasoning models.
+The Chief of Staff is the single entry point for all work. Misrouting cascades
+through the entire dispatch chain. Requires cross-domain reasoning, ambiguity
+resolution, conflict arbitration, and loop prevention — all strengths of deep
+reasoning models.
 
 ### Fallback to GPT-5 Mini When
 
@@ -390,5 +404,5 @@ If Sonnet 4.5 cannot resolve a routing decision:
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

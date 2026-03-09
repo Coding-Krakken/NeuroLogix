@@ -1,13 +1,13 @@
 # ADR Generation
 
-> **Category:** Architecture
-> **File:** `architecture/adr-generation.prompt.md`
+> **Category:** Architecture **File:** `architecture/adr-generation.prompt.md`
 
 ---
 
 ## Purpose
 
-Generate a complete Architecture Decision Record (ADR) for a significant technical decision, including context, alternatives analysis, and consequences.
+Generate a complete Architecture Decision Record (ADR) for a significant
+technical decision, including context, alternatives analysis, and consequences.
 
 ## When to Use
 
@@ -32,9 +32,7 @@ Complete ADR following the template:
 ```markdown
 # ADR-XXXX: [Title]
 
-**Status:** Proposed
-**Date:** YYYY-MM-DD
-**Deciders:** [list]
+**Status:** Proposed **Date:** YYYY-MM-DD **Deciders:** [list]
 
 ## Context
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { 
+import {
   SparkplugMetricSchema,
   SparkplugPayloadSchema,
   SparkplugTopicSchema,
@@ -7,7 +7,7 @@ import {
   parseSparkplugTopic,
   NodeBirthSchema,
   DeviceBirthSchema,
-  CommandMessageSchema
+  CommandMessageSchema,
 } from '@/sparkplug/index';
 
 describe('Sparkplug B Schemas', () => {

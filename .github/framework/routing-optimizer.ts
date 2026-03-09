@@ -7,13 +7,7 @@
  * @module framework/routing-optimizer
  */
 
-import type {
-  Task,
-  AgentId,
-  RoutingDecision,
-  RoutingRule,
-  TaskType,
-} from "./types";
+import type { Task, AgentId, RoutingDecision, RoutingRule, TaskType } from './types';
 
 // ============================================================================
 // Routing Rules
@@ -21,122 +15,117 @@ import type {
 
 const ROUTING_RULES: Record<TaskType, RoutingRule> = {
   Feature: {
-    taskType: "Feature",
-    scope: "Medium",
+    taskType: 'Feature',
+    scope: 'Medium',
     defaultChain: [
-      "product-owner",
-      "solution-architect",
-      "tech-lead",
-      "frontend-engineer",
-      "qa-test-engineer",
-      "quality-director",
+      'product-owner',
+      'solution-architect',
+      'tech-lead',
+      'frontend-engineer',
+      'qa-test-engineer',
+      'quality-director',
     ],
     bypasses: [
       {
-        condition: "scope === Small && description includes component",
-        skipTo: "frontend-engineer",
-        rationale: "Simple component addition - skip architecture planning",
+        condition: 'scope === Small && description includes component',
+        skipTo: 'frontend-engineer',
+        rationale: 'Simple component addition - skip architecture planning',
       },
     ],
   },
   Bug: {
-    taskType: "Bug",
-    scope: "Medium",
+    taskType: 'Bug',
+    scope: 'Medium',
     defaultChain: [
-      "qa-test-engineer",
-      "tech-lead",
-      "frontend-engineer",
-      "qa-test-engineer",
-      "quality-director",
+      'qa-test-engineer',
+      'tech-lead',
+      'frontend-engineer',
+      'qa-test-engineer',
+      'quality-director',
     ],
     bypasses: [
       {
-        condition: "scope === Small && type === lint",
-        skipTo: "frontend-engineer",
-        rationale: "Lint fix - direct to engineer",
+        condition: 'scope === Small && type === lint',
+        skipTo: 'frontend-engineer',
+        rationale: 'Lint fix - direct to engineer',
       },
       {
-        condition: "scope === Small && type === typecheck",
-        skipTo: "frontend-engineer",
-        rationale: "Type error fix - direct to engineer",
+        condition: 'scope === Small && type === typecheck',
+        skipTo: 'frontend-engineer',
+        rationale: 'Type error fix - direct to engineer',
       },
     ],
   },
   Refactor: {
-    taskType: "Refactor",
-    scope: "Medium",
+    taskType: 'Refactor',
+    scope: 'Medium',
     defaultChain: [
-      "tech-lead",
-      "solution-architect",
-      "frontend-engineer",
-      "qa-test-engineer",
-      "quality-director",
+      'tech-lead',
+      'solution-architect',
+      'frontend-engineer',
+      'qa-test-engineer',
+      'quality-director',
     ],
     bypasses: [
       {
-        condition: "scope === Small",
-        skipTo: "tech-lead",
-        rationale: "Small refactor - skip architecture review",
+        condition: 'scope === Small',
+        skipTo: 'tech-lead',
+        rationale: 'Small refactor - skip architecture review',
       },
     ],
   },
   Docs: {
-    taskType: "Docs",
-    scope: "Small",
-    defaultChain: ["documentation-engineer", "quality-director"],
+    taskType: 'Docs',
+    scope: 'Small',
+    defaultChain: ['documentation-engineer', 'quality-director'],
     bypasses: [
       {
-        condition: "scope === Small",
-        skipTo: "documentation-engineer",
-        rationale: "Docs updates always go direct to docs engineer",
+        condition: 'scope === Small',
+        skipTo: 'documentation-engineer',
+        rationale: 'Docs updates always go direct to docs engineer',
       },
     ],
   },
   Security: {
-    taskType: "Security",
-    scope: "Large",
+    taskType: 'Security',
+    scope: 'Large',
     defaultChain: [
-      "security-engineer",
-      "solution-architect",
-      "tech-lead",
-      "backend-engineer",
-      "qa-test-engineer",
-      "quality-director",
+      'security-engineer',
+      'solution-architect',
+      'tech-lead',
+      'backend-engineer',
+      'qa-test-engineer',
+      'quality-director',
     ],
     bypasses: [
       {
-        condition: "priority === P0",
-        skipTo: "security-engineer",
-        rationale: "Security P0 - immediate escalation",
+        condition: 'priority === P0',
+        skipTo: 'security-engineer',
+        rationale: 'Security P0 - immediate escalation',
       },
     ],
   },
   Performance: {
-    taskType: "Performance",
-    scope: "Medium",
+    taskType: 'Performance',
+    scope: 'Medium',
     defaultChain: [
-      "performance-engineer",
-      "tech-lead",
-      "frontend-engineer",
-      "qa-test-engineer",
-      "quality-director",
+      'performance-engineer',
+      'tech-lead',
+      'frontend-engineer',
+      'qa-test-engineer',
+      'quality-director',
     ],
     bypasses: [],
   },
   Incident: {
-    taskType: "Incident",
-    scope: "Large",
-    defaultChain: [
-      "incident-commander",
-      "sre-engineer",
-      "tech-lead",
-      "quality-director",
-    ],
+    taskType: 'Incident',
+    scope: 'Large',
+    defaultChain: ['incident-commander', 'sre-engineer', 'tech-lead', 'quality-director'],
     bypasses: [
       {
-        condition: "priority === P0",
-        skipTo: "incident-commander",
-        rationale: "P0 incident - immediate war room",
+        condition: 'priority === P0',
+        skipTo: 'incident-commander',
+        rationale: 'P0 incident - immediate war room',
       },
     ],
   },
@@ -159,7 +148,7 @@ export class RoutingOptimizer {
       return {
         targetAgent: this.getExpressLaneAgent(task),
         skipAgents: [],
-        reason: "Express lane: trivial task bypasses full workflow",
+        reason: 'Express lane: trivial task bypasses full workflow',
         confidence: 0.95,
         expressLane: true,
       };
@@ -186,7 +175,7 @@ export class RoutingOptimizer {
     return {
       targetAgent: firstAgent,
       skipAgents: [],
-      reason: "Standard workflow",
+      reason: 'Standard workflow',
       confidence: 1.0,
       expressLane: false,
     };
@@ -197,8 +186,8 @@ export class RoutingOptimizer {
    */ private static isExpressLane(task: Task): boolean {
     // Lint fixes
     if (
-      task.type === "Bug" &&
-      task.scope === "Small" &&
+      task.type === 'Bug' &&
+      task.scope === 'Small' &&
       /lint|eslint|prettier|format/i.test(task.description)
     ) {
       return true;
@@ -206,8 +195,8 @@ export class RoutingOptimizer {
 
     // Docs updates (non-architecture)
     if (
-      task.type === "Docs" &&
-      task.scope === "Small" &&
+      task.type === 'Docs' &&
+      task.scope === 'Small' &&
       !/architecture|adr|system-design/i.test(task.description)
     ) {
       return true;
@@ -215,8 +204,8 @@ export class RoutingOptimizer {
 
     // Simple typo fixes
     if (
-      task.description.toLowerCase().includes("typo") ||
-      task.description.toLowerCase().includes("spelling")
+      task.description.toLowerCase().includes('typo') ||
+      task.description.toLowerCase().includes('spelling')
     ) {
       return true;
     }
@@ -228,19 +217,19 @@ export class RoutingOptimizer {
    * Get the express lane agent for a task
    */
   private static getExpressLaneAgent(task: Task): AgentId {
-    if (task.type === "Docs") {
-      return "documentation-engineer";
+    if (task.type === 'Docs') {
+      return 'documentation-engineer';
     }
     if (/frontend|ui|component|react|next/i.test(task.description)) {
-      return "frontend-engineer";
+      return 'frontend-engineer';
     }
     if (/backend|api|server|route/i.test(task.description)) {
-      return "backend-engineer";
+      return 'backend-engineer';
     }
     if (/infra|ci|cd|deploy|vercel/i.test(task.description)) {
-      return "platform-engineer";
+      return 'platform-engineer';
     }
-    return "tech-lead"; // Fallback
+    return 'tech-lead'; // Fallback
   }
 
   /**
@@ -260,15 +249,15 @@ export class RoutingOptimizer {
       // Replace condition variables with context values
       let evalStr = condition;
       for (const [key, value] of Object.entries(context)) {
-        const regex = new RegExp(`\\b${key}\\b`, "g");
-        const safeValue = typeof value === "string" ? `"${value}"` : value;
+        const regex = new RegExp(`\\b${key}\\b`, 'g');
+        const safeValue = typeof value === 'string' ? `"${value}"` : value;
         evalStr = evalStr.replace(regex, String(safeValue));
       }
 
       // Evaluate (WARNING: In production, use a proper parser/validator)
       // eslint-disable-next-line no-eval
       const evaluationResult: unknown = eval(evalStr);
-      return typeof evaluationResult === "boolean" ? evaluationResult : false;
+      return typeof evaluationResult === 'boolean' ? evaluationResult : false;
     } catch {
       return false;
     }
@@ -277,10 +266,7 @@ export class RoutingOptimizer {
   /**
    * Get list of agents that were skipped
    */
-  private static getSkippedAgents(
-    defaultChain: AgentId[],
-    targetAgent: AgentId,
-  ): AgentId[] {
+  private static getSkippedAgents(defaultChain: AgentId[], targetAgent: AgentId): AgentId[] {
     const targetIndex = defaultChain.indexOf(targetAgent);
     if (targetIndex === -1) return [];
     return defaultChain.slice(0, targetIndex);

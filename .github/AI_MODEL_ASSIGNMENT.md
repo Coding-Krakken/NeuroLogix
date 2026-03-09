@@ -3,13 +3,17 @@
 > **Last Updated:** February 25, 2026  
 > **Authority:** Chief of Staff + Quality Director  
 > **Policy:** [AI_COST_POLICY.md](AI_COST_POLICY.md)  
-> **Routing Prompt:** [prompts/model-routing.prompt.md](prompts/model-routing.prompt.md)
+> **Routing Prompt:**
+> [prompts/model-routing.prompt.md](prompts/model-routing.prompt.md)
 
 ---
 
 ## Assignment Philosophy
 
-Every agent is assigned a **primary model** optimized for its reasoning profile. The matrix maximizes quality-per-token by reserving expensive deep-reasoning for agents whose failure consequences are catastrophic, while routing structured execution tasks to fast, cost-efficient models.
+Every agent is assigned a **primary model** optimized for its reasoning profile.
+The matrix maximizes quality-per-token by reserving expensive deep-reasoning for
+agents whose failure consequences are catastrophic, while routing structured
+execution tasks to fast, cost-efficient models.
 
 | Principle                | Rule                                                                             |
 | ------------------------ | -------------------------------------------------------------------------------- |
@@ -62,28 +66,29 @@ High-stakes reasoning, architecture, security, executive judgment.
 | 51  | `privacy-compliance-officer` | **Claude Sonnet 4.5** | GPT-5 Mini     | CRITICAL             | GDPR analysis, PII classification, regulatory compliance. Compliance failures = legal liability.                                                  |
 | 83  | `incident-commander`         | **Claude Sonnet 4.5** | GPT-5 Mini     | CRITICAL             | Crisis triage under time pressure, rapid root cause hypothesis, multi-system correlation. Wrong triage extends outages.                           |
 | 84  | `red-team`                   | **Claude Sonnet 4.5** | GPT-5 Mini     | CRITICAL             | Adversarial creative thinking, novel attack vector identification. Requires inferring what _could_ go wrong, not following checklists.            |
-| 90  | `90-framework-auditor`       | **Claude Sonnet 4.5** | GPT-5 Mini     | CRITICAL             | Meta-level framework auditing, multi-agent reliability analysis, and remediation prioritization across dispatch chains and quality gates.          |
+| 90  | `90-framework-auditor`       | **Claude Sonnet 4.5** | GPT-5 Mini     | CRITICAL             | Meta-level framework auditing, multi-agent reliability analysis, and remediation prioritization across dispatch chains and quality gates.         |
 | 99  | `99-quality-director`        | **Claude Sonnet 4.5** | GPT-5 Mini     | CRITICAL             | Final ship/no-ship authority, holistic cross-domain quality assessment. Last line of defense — must catch what all other agents missed.           |
 
 ### Tier 2 — GPT-5 Mini Primary (9 Agents)
 
 Structured implementation, documentation, CI/CD, repeatable tasks.
 
-| #   | Agent                        | Primary Model  | Fallback Model    | Reasoning Complexity | Assignment Rationale                                                                                           |
-| --- | ---------------------------- | -------------- | ----------------- | -------------------- | -------------------------------------------------------------------------------------------------------------- |
+| #   | Agent                        | Primary Model  | Fallback Model    | Reasoning Complexity | Assignment Rationale                                                                                                   |
+| --- | ---------------------------- | -------------- | ----------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | 20  | `frontend-engineer`          | **GPT-5 Mini** | Claude Sonnet 4.5 | MEDIUM               | Canonical pattern implementation (React/<WEB_FRAMEWORK>). Follows Solution Architect specs. Structured and repeatable. |
 | 21  | `backend-engineer`           | **GPT-5 Mini** | Claude Sonnet 4.5 | MEDIUM               | API route implementation, external provider SDK integration. Follows contract specs. Well-defined input/output.        |
-| 22  | `platform-engineer`          | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | CI/CD pipeline configuration, build systems. Highly repeatable infrastructure work.                            |
-| 23  | `data-engineer`              | **GPT-5 Mini** | Claude Sonnet 4.5 | MEDIUM               | Data pipeline construction, migration scripts, caching configuration. Structured data transformations.         |
-| 60  | `devops-engineer`            | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | Deployment configuration, <DEPLOYMENT_PLATFORM> setup, environment management. Repeatable infrastructure.      |
-| 70  | `documentation-engineer`     | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | Technical documentation, API references, README updates. Template-driven generation.                           |
-| 71  | `support-readiness-engineer` | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | Runbooks, FAQ, training materials. Template-driven, follows established patterns.                              |
-| 82  | `localization-specialist`    | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | i18n configuration, translation file management. Mechanical, pattern-based work.                               |
-| 81  | `finance-procurement`        | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | Cost analysis, budget reporting. Structured numerical analysis with clear inputs.                              |
+| 22  | `platform-engineer`          | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | CI/CD pipeline configuration, build systems. Highly repeatable infrastructure work.                                    |
+| 23  | `data-engineer`              | **GPT-5 Mini** | Claude Sonnet 4.5 | MEDIUM               | Data pipeline construction, migration scripts, caching configuration. Structured data transformations.                 |
+| 60  | `devops-engineer`            | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | Deployment configuration, <DEPLOYMENT_PLATFORM> setup, environment management. Repeatable infrastructure.              |
+| 70  | `documentation-engineer`     | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | Technical documentation, API references, README updates. Template-driven generation.                                   |
+| 71  | `support-readiness-engineer` | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | Runbooks, FAQ, training materials. Template-driven, follows established patterns.                                      |
+| 82  | `localization-specialist`    | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | i18n configuration, translation file management. Mechanical, pattern-based work.                                       |
+| 81  | `finance-procurement`        | **GPT-5 Mini** | Claude Sonnet 4.5 | LOW                  | Cost analysis, budget reporting. Structured numerical analysis with clear inputs.                                      |
 
 ### Tier 3 — Hybrid (GPT-5 Mini Primary → Claude Sonnet 4.5 Escalation) (9 Agents)
 
-Primarily structured work with defined escalation triggers for complex situations.
+Primarily structured work with defined escalation triggers for complex
+situations.
 
 | #   | Agent                      | Primary Model               | Fallback Model    | Reasoning Complexity | Assignment Rationale                                                                                          |
 | --- | -------------------------- | --------------------------- | ----------------- | -------------------- | ------------------------------------------------------------------------------------------------------------- |
@@ -147,10 +152,14 @@ Task: [specific mechanical task to delegate]
 
 ## Loop Prevention Rules
 
-1. **One escalation per task per agent** — If Claude Sonnet 4.5 cannot resolve after escalation, route to Chief of Staff (not back to Mini)
-2. **No self-downgrade** — An escalated agent cannot downgrade itself; only Chief of Staff or Quality Director can authorize downgrade
-3. **Escalation ceiling** — If Chief of Staff escalation also fails, the task is flagged for human review
-4. **Audit trail** — Every escalation/fallback must be logged in the dispatch chain
+1. **One escalation per task per agent** — If Claude Sonnet 4.5 cannot resolve
+   after escalation, route to Chief of Staff (not back to Mini)
+2. **No self-downgrade** — An escalated agent cannot downgrade itself; only
+   Chief of Staff or Quality Director can authorize downgrade
+3. **Escalation ceiling** — If Chief of Staff escalation also fails, the task is
+   flagged for human review
+4. **Audit trail** — Every escalation/fallback must be logged in the dispatch
+   chain
 
 ---
 
@@ -164,4 +173,6 @@ Task: [specific mechanical task to delegate]
 | Estimated token savings vs. all-Sonnet | **~55-65%**                                        |
 | Quality risk                           | **Minimal** — all high-stakes decisions use Sonnet |
 
-The hybrid tier runs on Mini for ~80% of its tasks, escalating only on triggers. Effective Mini usage across the organization is approximately **55-60%**, with Sonnet reserved for the ~40% of work that genuinely requires deep reasoning.
+The hybrid tier runs on Mini for ~80% of its tasks, escalating only on triggers.
+Effective Mini usage across the organization is approximately **55-60%**, with
+Sonnet reserved for the ~40% of work that genuinely requires deep reasoning.

@@ -4,15 +4,17 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Accessibility Specialist
 
-> **Agent ID:** `accessibility-specialist` | **Agent #:** 31
-> **Role:** WCAG Compliance, ARIA, Inclusive Design
-> **Reports To:** Quality Director / Tech Lead
+> **Agent ID:** `accessibility-specialist` | **Agent #:** 31 **Role:** WCAG
+> Compliance, ARIA, Inclusive Design **Reports To:** Quality Director / Tech
+> Lead
 
 ---
 
 ## Mission
 
-Ensure all UI is accessible to all users including those with disabilities. Audit for WCAG 2.1 AA compliance. Remediate accessibility violations. Guide the team on inclusive design patterns.
+Ensure all UI is accessible to all users including those with disabilities.
+Audit for WCAG 2.1 AA compliance. Remediate accessibility violations. Guide the
+team on inclusive design patterns.
 
 ---
 
@@ -139,7 +141,8 @@ code chat -m frontend-engineer --add-file $repo --add-file .github/AGENTS.md --a
 
 ### Why Hybrid
 
-WCAG compliance auditing is checklist-driven with well-established rules. Novel ARIA patterns or conflicting accessibility requirements need deeper reasoning.
+WCAG compliance auditing is checklist-driven with well-established rules. Novel
+ARIA patterns or conflicting accessibility requirements need deeper reasoning.
 
 ### Start with GPT-5 Mini For
 
@@ -168,9 +171,10 @@ Question: [specific accessibility question]
 
 ### Loop Prevention
 
-One escalation per task. If Sonnet cannot resolve, route to Chief of Staff.
-Only Chief of Staff or Quality Director may downgrade this escalation.
+One escalation per task. If Sonnet cannot resolve, route to Chief of Staff. Only
+Chief of Staff or Quality Director may downgrade this escalation.
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

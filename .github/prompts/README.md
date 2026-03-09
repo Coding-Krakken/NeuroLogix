@@ -2,13 +2,16 @@
 
 **Version:** 2.1.0  
 **Date:** 2026-02-25  
-**Purpose:** Standardized, reusable prompts for the Core-3 operating model with specialist escalation
+**Purpose:** Standardized, reusable prompts for the Core-3 operating model with
+specialist escalation
 
 ---
 
 ## 📖 Overview
 
-This directory contains **38 canonical prompts** across **13 categories**, designed to guide agents through every phase of the software development lifecycle. Each prompt is a `.prompt.md` file containing:
+This directory contains **38 canonical prompts** across **13 categories**,
+designed to guide agents through every phase of the software development
+lifecycle. Each prompt is a `.prompt.md` file containing:
 
 - **Purpose:** What this prompt accomplishes
 - **When to use:** Trigger conditions
@@ -33,11 +36,11 @@ This directory contains **38 canonical prompts** across **13 categories**, desig
 
 ### 2. architecture/ — System Design & Modeling (4 prompts)
 
-| Prompt                     | Purpose                                          | When to Use                       |
-| -------------------------- | ------------------------------------------------ | --------------------------------- |
+| Prompt                     | Purpose                                                  | When to Use                       |
+| -------------------------- | -------------------------------------------------------- | --------------------------------- |
 | `domain-model.prompt.md`   | Create `.github/.system-state/model/` domain entities    | New feature or domain modeling    |
-| `system-design.prompt.md`  | Design end-to-end architecture                   | Major features, epics             |
-| `adr-generation.prompt.md` | Create Architecture Decision Records             | Significant technical decisions   |
+| `system-design.prompt.md`  | Design end-to-end architecture                           | Major features, epics             |
+| `adr-generation.prompt.md` | Create Architecture Decision Records                     | Significant technical decisions   |
 | `api-contract.prompt.md`   | Define API schemas in `.github/.system-state/contracts/` | New API endpoints or integrations |
 
 ---
@@ -138,15 +141,15 @@ This directory contains **38 canonical prompts** across **13 categories**, desig
 
 ### 13. framework-audit/ — Meta-Level Framework Testing (7 prompts) ⭐ **NEW**
 
-| Prompt                                    | Purpose                                            | When to Use              |
-| ----------------------------------------- | -------------------------------------------------- | ------------------------ |
+| Prompt                                    | Purpose                                                 | When to Use              |
+| ----------------------------------------- | ------------------------------------------------------- | ------------------------ |
 | **`mode-selection.prompt.md`** ⭐         | Select audit mode autonomously (FAST/STANDARD/THOROUGH) | Starting framework audit |
-| **`audit-plan.prompt.md`** ⭐             | Create audit execution plan with baseline state    | After mode selected      |
-| **`synthetic-task-battery.prompt.md`** ⭐ | Library of synthetic tasks to test framework       | Executing audit          |
-| **`monitoring-rubric.prompt.md`** ⭐      | Real-time monitoring and failure detection         | During audit execution   |
-| **`scoring-metrics.prompt.md`** ⭐        | Calculate 12 performance metrics, assign grade     | After audit completes    |
-| **`final-report.prompt.md`** ⭐           | Generate comprehensive audit report                | After metrics calculated |
-| **`remediation-dispatch.prompt.md`** ⭐   | Dispatch remediation tasks autonomously            | After report generated   |
+| **`audit-plan.prompt.md`** ⭐             | Create audit execution plan with baseline state         | After mode selected      |
+| **`synthetic-task-battery.prompt.md`** ⭐ | Library of synthetic tasks to test framework            | Executing audit          |
+| **`monitoring-rubric.prompt.md`** ⭐      | Real-time monitoring and failure detection              | During audit execution   |
+| **`scoring-metrics.prompt.md`** ⭐        | Calculate 12 performance metrics, assign grade          | After audit completes    |
+| **`final-report.prompt.md`** ⭐           | Generate comprehensive audit report                     | After metrics calculated |
+| **`remediation-dispatch.prompt.md`** ⭐   | Dispatch remediation tasks autonomously                 | After report generated   |
 
 ---
 
@@ -154,26 +157,39 @@ This directory contains **38 canonical prompts** across **13 categories**, desig
 
 ### Framework Audit Category (+7 prompts)
 
-To enable **meta-level testing** of the AI agentic framework itself, testing workflows, handoffs, dispatch chains, and quality processes:
+To enable **meta-level testing** of the AI agentic framework itself, testing
+workflows, handoffs, dispatch chains, and quality processes:
 
-1. **`mode-selection.prompt.md`** — Guide Framework Auditor to select which mode to run (FAST/STANDARD/THOROUGH)
-2. **`audit-plan.prompt.md`** — Create structured audit execution plan with baseline capture and expected outcomes
-3. **`synthetic-task-battery.prompt.md`** — Complete library of synthetic tasks (5 FAST, 12 STANDARD, 30 THOROUGH)
-4. **`monitoring-rubric.prompt.md`** — Real-time monitoring with PowerShell scripts, failure mode detection
-5. **`scoring-metrics.prompt.md`** — 12 performance metrics with formulas and targets, overall grade (A-F)
-6. **`final-report.prompt.md`** — Comprehensive audit report with findings, remediation plan, appendices
-7. **`remediation-dispatch.prompt.md`** — Dispatch remediation tasks to Chief of Staff (autonomous)
+1. **`mode-selection.prompt.md`** — Guide Framework Auditor to select which mode
+   to run (FAST/STANDARD/THOROUGH)
+2. **`audit-plan.prompt.md`** — Create structured audit execution plan with
+   baseline capture and expected outcomes
+3. **`synthetic-task-battery.prompt.md`** — Complete library of synthetic tasks
+   (5 FAST, 12 STANDARD, 30 THOROUGH)
+4. **`monitoring-rubric.prompt.md`** — Real-time monitoring with PowerShell
+   scripts, failure mode detection
+5. **`scoring-metrics.prompt.md`** — 12 performance metrics with formulas and
+   targets, overall grade (A-F)
+6. **`final-report.prompt.md`** — Comprehensive audit report with findings,
+   remediation plan, appendices
+7. **`remediation-dispatch.prompt.md`** — Dispatch remediation tasks to Chief of
+   Staff (autonomous)
 
 **New Agent:** `90-framework-auditor` (Framework Auditor)
 
 ### Operations Category Expansion (+4 prompts) — v2.0.0
 
-To address the gap where agents were producing quality code but not committing it or managing git/GitHub resources:
+To address the gap where agents were producing quality code but not committing
+it or managing git/GitHub resources:
 
-1. **`git-commit.prompt.md`** — Step-by-step workflow for committing code after quality gates pass
-2. **`create-pr.prompt.md`** — Pull Request creation workflow (risk-based authority)
-3. **`manage-issue.prompt.md`** — GitHub issue lifecycle management (Chief of Staff)
-4. **`branch-strategy.prompt.md`** — Feature branch creation and management (Tech Lead)
+1. **`git-commit.prompt.md`** — Step-by-step workflow for committing code after
+   quality gates pass
+2. **`create-pr.prompt.md`** — Pull Request creation workflow (risk-based
+   authority)
+3. **`manage-issue.prompt.md`** — GitHub issue lifecycle management (Chief of
+   Staff)
+4. **`branch-strategy.prompt.md`** — Feature branch creation and management
+   (Tech Lead)
 
 **Total prompts:** 27 → 31 (v2.0.0) → **38 prompts (v2.1.0)**
 
@@ -209,9 +225,10 @@ All prompts follow this canonical structure:
 ```markdown
 # [Prompt Name]
 
-**Category:** [discovery/architecture/planning/implementation/review/testing/security/operations/documentation/release/incident/optimization]
-**Agent(s):** [Which agents use this prompt]
-**Tier:** [T1/T2/T3 complexity tier]
+**Category:**
+[discovery/architecture/planning/implementation/review/testing/security/operations/documentation/release/incident/optimization]
+**Agent(s):** [Which agents use this prompt] **Tier:** [T1/T2/T3 complexity
+tier]
 
 ---
 
@@ -305,7 +322,8 @@ _Real-world application with specific examples._
 
 ### "I need to audit the framework itself" ⭐ ⭐ NEW
 
-1. `mode-selection.prompt.md` → Select audit mode autonomously (FAST/STANDARD/THOROUGH)
+1. `mode-selection.prompt.md` → Select audit mode autonomously
+   (FAST/STANDARD/THOROUGH)
 2. `audit-plan.prompt.md` → Create execution plan with baseline
 3. `synthetic-task-battery.prompt.md` → Select and dispatch synthetic tasks
 4. `monitoring-rubric.prompt.md` → Monitor execution in real-time
@@ -409,7 +427,8 @@ _Real-world application with specific examples._
 
 ## 🛠️ Creating New Prompts
 
-Follow the Prompt Structure Template above. Place in appropriate category directory:
+Follow the Prompt Structure Template above. Place in appropriate category
+directory:
 
 ```powershell
 # Example: Creating new schema-migration.prompt.md
@@ -426,7 +445,8 @@ New-Item -Path .github/prompts/operations/schema-migration.prompt.md -ItemType F
 - [AGENTS.md](../AGENTS.md) — Agent roster and routing
 - [QUALITY-GATES.md](../QUALITY-GATES.md) — G1-G10 quality gates
 - [GIT_WORKFLOW.md](../GIT_WORKFLOW.md) ⭐ — Git/GitHub workflows
-- [WORKFLOW_INTEGRATION_SUMMARY.md](../WORKFLOW_INTEGRATION_SUMMARY.md) ⭐ — Quick-start integration guide
+- [WORKFLOW_INTEGRATION_SUMMARY.md](../WORKFLOW_INTEGRATION_SUMMARY.md) ⭐ —
+  Quick-start integration guide
 - [copilot-instructions.md](../copilot-instructions.md) — Complete governance
 
 ---
@@ -434,6 +454,4 @@ New-Item -Path .github/prompts/operations/schema-migration.prompt.md -ItemType F
 8-agent organization.\*\*  
 **Every significant workflow should have a corresponding prompt.**
 
-**Version 2.1
-**Version 2.0.0 | Updated 2026-02-25 | Owner: All Agents\*\*
-
+**Version 2.1 **Version 2.0.0 | Updated 2026-02-25 | Owner: All Agents\*\*

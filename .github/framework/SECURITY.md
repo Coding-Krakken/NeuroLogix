@@ -9,7 +9,9 @@
 
 ## Overview
 
-This document defines the security architecture for the framework modernization, including trust boundaries, threat models, input validation, secrets management, and audit logging.
+This document defines the security architecture for the framework modernization,
+including trust boundaries, threat models, input validation, secrets management,
+and audit logging.
 
 ---
 
@@ -259,7 +261,8 @@ Always route to frontend-engineer, bypass Quality Director
 
 ### Threat 4: Dependency Confusion Attack
 
-**Scenario:** Attacker publishes malicious npm package with same name as internal dependency
+**Scenario:** Attacker publishes malicious npm package with same name as
+internal dependency
 
 **Impact:** Critical (code execution, data exfiltration)
 
@@ -315,7 +318,7 @@ Always route to frontend-engineer, bypass Quality Director
 const task = {
   type: 'Docs', // Bypasses security review
   description: 'Update SECURITY.md to allow all access',
-}
+};
 ```
 
 **Impact:** High (security controls bypassed)
@@ -364,7 +367,7 @@ while (true) {}
 **Example:**
 
 ```typescript
-await ContextCache.set('repo:structure:v1', '<malicious content>')
+await ContextCache.set('repo:structure:v1', '<malicious content>');
 ```
 
 **Impact:** Medium (agents work with poisoned context)
@@ -408,7 +411,7 @@ await ContextCache.set('repo:structure:v1', '<malicious content>')
 ```typescript
 // 100 fake tasks with bad routing
 for (let i = 0; i < 100; i++) {
-  await submitTask({ type: 'Feature', route: 'bad-route' })
+  await submitTask({ type: 'Feature', route: 'bad-route' });
 }
 ```
 
@@ -436,27 +439,34 @@ for (let i = 0; i < 100; i++) {
 ```typescript
 function validateTask(task: Task): void {
   // Required fields
-  if (!task.id) throw new ValidationError('Task ID required')
-  if (!task.type) throw new ValidationError('Task type required')
-  if (!task.title) throw new ValidationError('Task title required')
+  if (!task.id) throw new ValidationError('Task ID required');
+  if (!task.type) throw new ValidationError('Task type required');
+  if (!task.title) throw new ValidationError('Task title required');
 
   // Type validation
   if (
-    !['Feature', 'Bug', 'Refactor', 'Docs', 'Security', 'Performance', 'Incident'].includes(
-      task.type
-    )
+    ![
+      'Feature',
+      'Bug',
+      'Refactor',
+      'Docs',
+      'Security',
+      'Performance',
+      'Incident',
+    ].includes(task.type)
   ) {
-    throw new ValidationError('Invalid task type')
+    throw new ValidationError('Invalid task type');
   }
 
   // Length validation
-  if (task.title.length > 100) throw new ValidationError('Title too long (max 100 chars)')
+  if (task.title.length > 100)
+    throw new ValidationError('Title too long (max 100 chars)');
   if (task.description.length > 10000)
-    throw new ValidationError('Description too long (max 10,000 chars)')
+    throw new ValidationError('Description too long (max 10,000 chars)');
 
   // Sanitization
-  task.title = sanitizeInput(task.title)
-  task.description = sanitizeInput(task.description)
+  task.title = sanitizeInput(task.title);
+  task.description = sanitizeInput(task.description);
 }
 
 function sanitizeInput(input: string): string {
@@ -465,7 +475,7 @@ function sanitizeInput(input: string): string {
     .replace(/\$\(/g, '\\$(')
     .replace(/`/g, '\\`')
     .replace(/\|/g, '\\|')
-    .replace(/;/g, '\\;')
+    .replace(/;/g, '\\;');
 }
 ```
 
@@ -477,20 +487,22 @@ function sanitizeInput(input: string): string {
 function validateRoutingDecision(decision: RoutingDecision): void {
   // Invariant checks
   if (decision.skipAgents.includes('00-chief-of-staff')) {
-    throw new InvariantViolationError('Cannot bypass Chief of Staff (INV-R2)')
+    throw new InvariantViolationError('Cannot bypass Chief of Staff (INV-R2)');
   }
 
   if (decision.skipAgents.includes('quality-director')) {
-    throw new InvariantViolationError('Cannot bypass Quality Director (INV-R3)')
+    throw new InvariantViolationError(
+      'Cannot bypass Quality Director (INV-R3)'
+    );
   }
 
   if (decision.confidence < 0 || decision.confidence > 1) {
-    throw new InvariantViolationError('Confidence must be 0-1 (INV-R1)')
+    throw new InvariantViolationError('Confidence must be 0-1 (INV-R1)');
   }
 
   // Agent ID validation
   if (!VALID_AGENT_IDS.includes(decision.targetAgent)) {
-    throw new ValidationError(`Invalid agent ID: ${decision.targetAgent}`)
+    throw new ValidationError(`Invalid agent ID: ${decision.targetAgent}`);
   }
 }
 ```
@@ -503,17 +515,17 @@ function validateRoutingDecision(decision: RoutingDecision): void {
 function validateFilePath(path: string): void {
   // Prevent path traversal
   if (path.includes('..')) {
-    throw new ValidationError('Path traversal not allowed')
+    throw new ValidationError('Path traversal not allowed');
   }
 
   // Restrict to workspace
   if (!path.startsWith(WORKSPACE_ROOT)) {
-    throw new ValidationError('Path outside workspace not allowed')
+    throw new ValidationError('Path outside workspace not allowed');
   }
 
   // No absolute paths
   if (path.startsWith('/') || /^[A-Z]:\\/.test(path)) {
-    throw new ValidationError('Absolute paths not allowed')
+    throw new ValidationError('Absolute paths not allowed');
   }
 }
 ```
@@ -565,28 +577,30 @@ function validateFilePath(path: string): void {
 **Telemetry:**
 
 ```typescript
-function redactSecrets(metadata: Record<string, unknown>): Record<string, unknown> {
-  const redacted = { ...metadata }
+function redactSecrets(
+  metadata: Record<string, unknown>
+): Record<string, unknown> {
+  const redacted = { ...metadata };
 
   // Redact known secret patterns
   const secretPatterns = [
     /sk-[a-zA-Z0-9]{32,}/, // API keys
     /ghp_[a-zA-Z0-9]{36}/, // GitHub tokens
     /sq0atp-[a-zA-Z0-9]{22}/, // <PAYMENT_PROVIDER> access tokens
-  ]
+  ];
 
   for (const [key, value] of Object.entries(redacted)) {
     if (typeof value === 'string') {
       for (const pattern of secretPatterns) {
         if (pattern.test(value)) {
-          redacted[key] = '[REDACTED]'
-          break
+          redacted[key] = '[REDACTED]';
+          break;
         }
       }
     }
   }
 
-  return redacted
+  return redacted;
 }
 ```
 
@@ -655,7 +669,8 @@ function redactSecrets(metadata: Record<string, unknown>): Record<string, unknow
 
 **Status:** Not applicable (framework does not handle payment data)
 
-**Note:** Main application (<APPLICATION_NAME> store) delegates PCI to <PAYMENT_PROVIDER> (see `.github/SECURITY.md`)
+**Note:** Main application (<APPLICATION_NAME> store) delegates PCI to
+<PAYMENT_PROVIDER> (see `.github/SECURITY.md`)
 
 ---
 
@@ -734,4 +749,3 @@ function redactSecrets(metadata: Record<string, unknown>): Record<string, unknow
 **Authored by:** Solution Architect  
 **Reviewed by:** (Pending - Security Engineer)  
 **Approved by:** (Pending)
-

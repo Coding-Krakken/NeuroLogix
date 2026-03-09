@@ -18,7 +18,7 @@ import {
   RecipeExecutionRequestSchema,
   RecipeExecutionSchema,
   RecipeQuerySchema,
-  RecipeExecutionStatsSchema
+  RecipeExecutionStatsSchema,
 } from './index';
 
 describe('Recipe Executor Types', () => {
@@ -41,7 +41,7 @@ describe('Recipe Executor Types', () => {
         rollbackCommand: 'rollback_test_command',
         rollbackTimeout: 3000,
         tags: ['test', 'validation'],
-        metadata: { priority: 'high' }
+        metadata: { priority: 'high' },
       };
 
       const result = RecipeStepSchema.safeParse(validStep);
@@ -51,7 +51,7 @@ describe('Recipe Executor Types', () => {
     it('should reject invalid RecipeStep with missing required fields', () => {
       const invalidStep = {
         // Missing required fields like id, name, type, order
-        description: 'Invalid step'
+        description: 'Invalid step',
       };
 
       const result = RecipeStepSchema.safeParse(invalidStep);
@@ -63,7 +63,7 @@ describe('Recipe Executor Types', () => {
         id: 'not-a-uuid',
         name: 'Test Step',
         type: RecipeStepType.COMMAND,
-        order: 0
+        order: 0,
       };
 
       const result = RecipeStepSchema.safeParse(invalidStep);
@@ -78,12 +78,12 @@ describe('Recipe Executor Types', () => {
         id: '550e8400-e29b-41d4-a716-446655440000',
         name: 'Minimal Step',
         type: RecipeStepType.COMMAND,
-        order: 0
+        order: 0,
       };
 
       const result = RecipeStepSchema.safeParse(minimalStep);
       expect(result.success).toBe(true);
-      
+
       if (result.success) {
         expect(result.data.retryCount).toBe(0);
         expect(result.data.retryDelay).toBe(1000);
@@ -124,8 +124,8 @@ describe('Recipe Executor Types', () => {
             metadata: {},
             retryCount: 0,
             retryDelay: 1000,
-            skipOnFailure: false
-          }
+            skipOnFailure: false,
+          },
         ],
         dependencies: ['dependency-1'],
         requiredResources: ['resource-1'],
@@ -135,7 +135,7 @@ describe('Recipe Executor Types', () => {
         author: 'test-author',
         createdAt: new Date(),
         updatedAt: new Date(),
-        metadata: { testFlag: true }
+        metadata: { testFlag: true },
       };
 
       const result = RecipeSchema.safeParse(validRecipe);
@@ -147,15 +147,17 @@ describe('Recipe Executor Types', () => {
         id: '550e8400-e29b-41d4-a716-446655440001',
         name: 'Invalid Recipe',
         version: '1.0.0',
-        steps: [] // Empty steps array
+        steps: [], // Empty steps array
       };
 
       const result = RecipeSchema.safeParse(invalidRecipe);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues.some(issue => 
-          issue.message.includes('Recipe must have at least one step')
-        )).toBe(true);
+        expect(
+          result.error.issues.some(issue =>
+            issue.message.includes('Recipe must have at least one step')
+          )
+        ).toBe(true);
       }
     });
 
@@ -175,7 +177,7 @@ describe('Recipe Executor Types', () => {
         expiresAt: new Date(Date.now() + 7200000), // 2 hours from now
         reason: 'Scheduled maintenance',
         tags: ['maintenance', 'scheduled'],
-        metadata: { urgency: 'high' }
+        metadata: { urgency: 'high' },
       };
 
       const result = RecipeExecutionRequestSchema.safeParse(validRequest);
@@ -185,12 +187,12 @@ describe('Recipe Executor Types', () => {
     it('should apply default values for RecipeExecutionRequest', () => {
       const minimalRequest = {
         recipeId: '550e8400-e29b-41d4-a716-446655440001',
-        executedBy: 'test-user'
+        executedBy: 'test-user',
       };
 
       const result = RecipeExecutionRequestSchema.safeParse(minimalRequest);
       expect(result.success).toBe(true);
-      
+
       if (result.success) {
         expect(result.data.context).toEqual({});
         expect(result.data.parameters).toEqual({});
@@ -228,8 +230,8 @@ describe('Recipe Executor Types', () => {
             startedAt: new Date(Date.now() - 250000),
             completedAt: new Date(Date.now() - 200000),
             duration: 50000,
-            result: { stepOutput: 'success' }
-          }
+            result: { stepOutput: 'success' },
+          },
         ],
         safetyViolations: [],
         rollbackExecuted: false,
@@ -237,7 +239,7 @@ describe('Recipe Executor Types', () => {
         tags: ['test'],
         metadata: { executionId: 'test-123' },
         createdAt: new Date(Date.now() - 300000),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       const result = RecipeExecutionSchema.safeParse(validExecution);
@@ -259,7 +261,7 @@ describe('Recipe Executor Types', () => {
         page: 2,
         pageSize: 25,
         sortBy: 'name',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       };
 
       const result = RecipeQuerySchema.safeParse(validQuery);
@@ -271,7 +273,7 @@ describe('Recipe Executor Types', () => {
 
       const result = RecipeQuerySchema.safeParse(minimalQuery);
       expect(result.success).toBe(true);
-      
+
       if (result.success) {
         expect(result.data.page).toBe(1);
         expect(result.data.pageSize).toBe(20);
@@ -292,14 +294,14 @@ describe('Recipe Executor Types', () => {
           [RecipeExecutionStatus.FAILED]: 70,
           [RecipeExecutionStatus.PENDING]: 0,
           [RecipeExecutionStatus.EXECUTING]: 0,
-          [RecipeExecutionStatus.CANCELLED]: 0
+          [RecipeExecutionStatus.CANCELLED]: 0,
         },
         executionsByPriority: {
           [RecipePriority.LOW]: 50,
           [RecipePriority.NORMAL]: 800,
           [RecipePriority.HIGH]: 250,
           [RecipePriority.CRITICAL]: 40,
-          [RecipePriority.EMERGENCY]: 10
+          [RecipePriority.EMERGENCY]: 10,
         },
         safetyViolations: 5,
         emergencyStops: 2,
@@ -309,15 +311,15 @@ describe('Recipe Executor Types', () => {
           {
             recipeId: '550e8400-e29b-41d4-a716-446655440001',
             recipeName: 'Standard Startup Sequence',
-            executionCount: 120
+            executionCount: 120,
           },
           {
             recipeId: '550e8400-e29b-41d4-a716-446655440002',
             recipeName: 'Safety Shutdown',
-            executionCount: 85
-          }
+            executionCount: 85,
+          },
         ],
-        recentExecutions: []
+        recentExecutions: [],
       };
 
       const result = RecipeExecutionStatsSchema.safeParse(validStats);
@@ -337,7 +339,7 @@ describe('Recipe Executor Types', () => {
         RecipeExecutionStatus.FAILED,
         RecipeExecutionStatus.CANCELLED,
         RecipeExecutionStatus.ROLLING_BACK,
-        RecipeExecutionStatus.ROLLED_BACK
+        RecipeExecutionStatus.ROLLED_BACK,
       ];
 
       validStatuses.forEach(status => {
@@ -352,7 +354,7 @@ describe('Recipe Executor Types', () => {
         StepExecutionStatus.COMPLETED,
         StepExecutionStatus.FAILED,
         StepExecutionStatus.SKIPPED,
-        StepExecutionStatus.RETRYING
+        StepExecutionStatus.RETRYING,
       ];
 
       validStatuses.forEach(status => {
@@ -366,7 +368,7 @@ describe('Recipe Executor Types', () => {
         RecipePriority.NORMAL,
         RecipePriority.HIGH,
         RecipePriority.CRITICAL,
-        RecipePriority.EMERGENCY
+        RecipePriority.EMERGENCY,
       ];
 
       validPriorities.forEach(priority => {
@@ -381,7 +383,7 @@ describe('Recipe Executor Types', () => {
         SafetyCheckType.ZONE_CLEAR,
         SafetyCheckType.EQUIPMENT_READY,
         SafetyCheckType.RESOURCE_AVAILABLE,
-        SafetyCheckType.POLICY_COMPLIANCE
+        SafetyCheckType.POLICY_COMPLIANCE,
       ];
 
       validSafetyChecks.forEach(check => {
@@ -396,7 +398,7 @@ describe('Recipe Executor Types', () => {
         RecipeStepType.CONDITION,
         RecipeStepType.PARALLEL,
         RecipeStepType.SAFETY_CHECK,
-        RecipeStepType.ROLLBACK
+        RecipeStepType.ROLLBACK,
       ];
 
       validStepTypes.forEach(type => {
@@ -413,32 +415,32 @@ describe('Recipe Executor Types', () => {
           {
             field: 'steps',
             message: 'Duplicate step order found',
-            severity: 'error'
+            severity: 'error',
           },
           {
             field: 'safetyLevel',
             message: 'Consider higher safety level',
-            severity: 'warning'
-          }
+            severity: 'warning',
+          },
         ],
         warnings: [
           {
             field: 'requiresApproval',
-            message: 'High safety recipes should require approval'
-          }
+            message: 'High safety recipes should require approval',
+          },
         ],
         safetyChecks: [
           {
             type: SafetyCheckType.PLC_INTERLOCK,
             status: 'passed',
-            message: 'PLC interlock validation successful'
+            message: 'PLC interlock validation successful',
           },
           {
             type: SafetyCheckType.EMERGENCY_STOP,
             status: 'warning',
-            message: 'Emergency stop system has minor issues'
-          }
-        ]
+            message: 'Emergency stop system has minor issues',
+          },
+        ],
       };
 
       // Test that the structure is correct
@@ -446,12 +448,12 @@ describe('Recipe Executor Types', () => {
       expect(Array.isArray(validationResult.errors)).toBe(true);
       expect(Array.isArray(validationResult.warnings)).toBe(true);
       expect(Array.isArray(validationResult.safetyChecks)).toBe(true);
-      
+
       // Test error structure
       expect(validationResult.errors[0].field).toBeDefined();
       expect(validationResult.errors[0].message).toBeDefined();
       expect(validationResult.errors[0].severity).toBeDefined();
-      
+
       // Test safety check structure
       expect(validationResult.safetyChecks[0].type).toBeDefined();
       expect(validationResult.safetyChecks[0].status).toBeDefined();
@@ -467,7 +469,7 @@ describe('Recipe Executor Types', () => {
         totalSteps: 5,
         progressPercentage: 40,
         estimatedTimeRemaining: 180000, // 3 minutes
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
       };
 
       // Test structure
@@ -489,7 +491,7 @@ describe('Recipe Executor Types', () => {
         order: 1,
         parallelSteps: [
           '550e8400-e29b-41d4-a716-446655440005',
-          '550e8400-e29b-41d4-a716-446655440006'
+          '550e8400-e29b-41d4-a716-446655440006',
         ],
         safetyChecks: [SafetyCheckType.ZONE_CLEAR],
         requiredResources: [],
@@ -497,12 +499,12 @@ describe('Recipe Executor Types', () => {
         metadata: {},
         retryCount: 0,
         retryDelay: 1000,
-        skipOnFailure: false
+        skipOnFailure: false,
       };
 
       const result = RecipeStepSchema.safeParse(parallelStep);
       expect(result.success).toBe(true);
-      
+
       if (result.success) {
         expect(result.data.parallelSteps).toHaveLength(2);
         expect(result.data.type).toBe(RecipeStepType.PARALLEL);
@@ -529,21 +531,21 @@ describe('Recipe Executor Types', () => {
               SafetyCheckType.PLC_INTERLOCK,
               SafetyCheckType.EMERGENCY_STOP,
               SafetyCheckType.ZONE_CLEAR,
-              SafetyCheckType.EQUIPMENT_READY
+              SafetyCheckType.EQUIPMENT_READY,
             ],
             requiredResources: ['safety-system'],
             tags: ['safety', 'critical'],
             metadata: { criticalPath: true },
             retryCount: 0,
             retryDelay: 1000,
-            skipOnFailure: false
-          }
-        ]
+            skipOnFailure: false,
+          },
+        ],
       };
 
       const result = RecipeSchema.safeParse(criticalRecipe);
       expect(result.success).toBe(true);
-      
+
       if (result.success) {
         expect(result.data.safetyLevel).toBe('critical');
         expect(result.data.requiresApproval).toBe(true);
@@ -568,22 +570,22 @@ describe('Recipe Executor Types', () => {
             type: 'plc_interlock',
             message: 'PLC safety interlock triggered during execution',
             severity: 'critical',
-            timestamp: new Date()
+            timestamp: new Date(),
           },
           {
             type: 'zone_not_clear',
             message: 'Personnel detected in safety zone',
             severity: 'high',
-            timestamp: new Date()
-          }
+            timestamp: new Date(),
+          },
         ],
         rollbackExecuted: true,
-        rollbackSteps: ['step-1', 'step-0']
+        rollbackSteps: ['step-1', 'step-0'],
       };
 
       const result = RecipeExecutionSchema.safeParse(executionWithViolations);
       expect(result.success).toBe(true);
-      
+
       if (result.success) {
         expect(result.data.safetyViolations).toHaveLength(2);
         expect(result.data.rollbackExecuted).toBe(true);

@@ -4,15 +4,16 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: SRE Engineer
 
-> **Agent ID:** `sre-engineer` | **Agent #:** 61
-> **Role:** Reliability, SLOs, Incident Response Engineering
-> **Reports To:** Tech Lead / Quality Director
+> **Agent ID:** `sre-engineer` | **Agent #:** 61 **Role:** Reliability, SLOs,
+> Incident Response Engineering **Reports To:** Tech Lead / Quality Director
 
 ---
 
 ## Mission
 
-Ensure the application meets reliability targets. Define and monitor SLOs. Build resilience against failures. Create runbooks and incident response procedures. Implement observability.
+Ensure the application meets reliability targets. Define and monitor SLOs. Build
+resilience against failures. Create runbooks and incident response procedures.
+Implement observability.
 
 ---
 
@@ -134,7 +135,9 @@ code chat -m 99-quality-director --add-file $repo --add-file .github/AGENTS.md -
 
 ### Why Hybrid
 
-SLO definition, alert configuration, and monitoring setup follow operational templates. Capacity planning and novel failure mode analysis require deeper reasoning.
+SLO definition, alert configuration, and monitoring setup follow operational
+templates. Capacity planning and novel failure mode analysis require deeper
+reasoning.
 
 ### Start with GPT-5 Mini For
 
@@ -163,10 +166,10 @@ Question: [specific reliability/capacity question]
 
 ### Loop Prevention
 
-One escalation per task. If Sonnet cannot resolve, route to Chief of Staff.
-Only Chief of Staff or Quality Director may downgrade this escalation.
+One escalation per task. If Sonnet cannot resolve, route to Chief of Staff. Only
+Chief of Staff or Quality Director may downgrade this escalation.
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

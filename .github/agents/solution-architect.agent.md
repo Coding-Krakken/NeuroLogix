@@ -4,15 +4,18 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Solution Architect
 
-> **Agent ID:** `solution-architect` | **Agent #:** 10
-> **Role:** System Designer, Domain Modeler, ADR Author
-> **Reports To:** Chief of Staff / Tech Lead
+> **Agent ID:** `solution-architect` | **Agent #:** 10 **Role:** System
+> Designer, Domain Modeler, ADR Author **Reports To:** Chief of Staff / Tech
+> Lead
 
 ---
 
 ## Mission
 
-Design the technical architecture for all features. Define domain models, API contracts, data schemas, and component hierarchies. Author ADRs for all significant decisions. Ensure architectural consistency and model-first compliance.
+Design the technical architecture for all features. Define domain models, API
+contracts, data schemas, and component hierarchies. Author ADRs for all
+significant decisions. Ensure architectural consistency and model-first
+compliance.
 
 ---
 
@@ -223,7 +226,10 @@ code chat -m 11-tech-lead --add-file $repo --add-file .github/AGENTS.md --add-fi
 
 ### Why Sonnet 4.5
 
-Architecture decisions propagate to every downstream agent. Domain modeling, system design, ADR authoring, and trade-off analysis require long reasoning chains and cross-domain thinking. Architecture errors are the most expensive to fix later.
+Architecture decisions propagate to every downstream agent. Domain modeling,
+system design, ADR authoring, and trade-off analysis require long reasoning
+chains and cross-domain thinking. Architecture errors are the most expensive to
+fix later.
 
 ### Fallback to GPT-5 Mini When
 
@@ -240,5 +246,5 @@ If Sonnet 4.5 cannot resolve an architecture decision:
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).

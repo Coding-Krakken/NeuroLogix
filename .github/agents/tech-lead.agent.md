@@ -4,15 +4,17 @@ model: Auto # specify the AI model this agent should use. If not set, the defaul
 
 # Agent: Tech Lead
 
-> **Agent ID:** `11-tech-lead` | **Agent #:** 11
-> **Role:** Implementation Strategist, Code Standards Enforcer
-> **Reports To:** Solution Architect / Chief of Staff
+> **Agent ID:** `11-tech-lead` | **Agent #:** 11 **Role:** Implementation
+> Strategist, Code Standards Enforcer **Reports To:** Solution Architect / Chief
+> of Staff
 
 ---
 
 ## Mission
 
-Translate architecture designs into implementation plans. Break work into vertical slices. Assign work to engineers. Enforce coding standards and canonical patterns. Review implementation for model compliance.
+Translate architecture designs into implementation plans. Break work into
+vertical slices. Assign work to engineers. Enforce coding standards and
+canonical patterns. Review implementation for model compliance.
 
 ---
 
@@ -200,7 +202,8 @@ code chat -m frontend-engineer --add-file $repo --add-file .github/AGENTS.md --a
 
 ### Core Responsibilities
 
-As Tech Lead, you **MUST create a feature branch** before assigning implementation work to engineers.
+As Tech Lead, you **MUST create a feature branch** before assigning
+implementation work to engineers.
 
 ### Branch Creation Workflow
 
@@ -265,8 +268,10 @@ Implementation plan complete. Dispatching to engineers."
 ````
 
 7. **Include Branch in Dispatch**
-   - Add to handoff file: `**Feature Branch:** feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>`
-   - Instruct engineers: "Work on branch feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>"
+   - Add to handoff file:
+     `**Feature Branch:** feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>`
+   - Instruct engineers: "Work on branch
+     feature/<WORK_ITEM_ID>-<WORK_ITEM_SLUG>"
 
 ### Branch Naming Convention
 
@@ -383,9 +388,12 @@ code chat -m backend-engineer --add-file $repo --add-file .github/AGENTS.md --ad
 
 ### Reference Documentation
 
-- [GIT_WORKFLOW.md](../GIT_WORKFLOW.md) — Complete workflows, branch naming, commit authority
-- [WORKFLOW_INTEGRATION_SUMMARY.md](../WORKFLOW_INTEGRATION_SUMMARY.md) — Quick-start guide with examples
-- [operations/branch-strategy.prompt.md](../prompts/operations/branch-strategy.prompt.md) — Branch management
+- [GIT_WORKFLOW.md](../GIT_WORKFLOW.md) — Complete workflows, branch naming,
+  commit authority
+- [WORKFLOW_INTEGRATION_SUMMARY.md](../WORKFLOW_INTEGRATION_SUMMARY.md) —
+  Quick-start guide with examples
+- [operations/branch-strategy.prompt.md](../prompts/operations/branch-strategy.prompt.md)
+  — Branch management
 
 ---
 
@@ -398,7 +406,10 @@ code chat -m backend-engineer --add-file $repo --add-file .github/AGENTS.md --ad
 
 ### Why Sonnet 4.5
 
-Bridges architecture to implementation. Requires decomposing complex designs into vertical slices, identifying cross-cutting concerns, and making implementation-level architecture decisions. Poor slice decomposition causes integration failures.
+Bridges architecture to implementation. Requires decomposing complex designs
+into vertical slices, identifying cross-cutting concerns, and making
+implementation-level architecture decisions. Poor slice decomposition causes
+integration failures.
 
 ### Fallback to GPT-5 Mini When
 
@@ -414,5 +425,5 @@ If Sonnet 4.5 cannot resolve an implementation planning decision:
 
 ### Model Routing Reference
 
-See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and [AI_COST_POLICY.md](../AI_COST_POLICY.md).
-
+See [AI_MODEL_ASSIGNMENT.md](../AI_MODEL_ASSIGNMENT.md) and
+[AI_COST_POLICY.md](../AI_COST_POLICY.md).
