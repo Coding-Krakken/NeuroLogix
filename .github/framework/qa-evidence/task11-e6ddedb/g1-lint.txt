@@ -1,0 +1,5 @@
+RUN G1 lint SHA=e6ddedb
+
+> @subzero/framework@2.0.0 lint
+> eslint . --ext .ts
+

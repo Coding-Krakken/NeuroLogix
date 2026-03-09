@@ -1,0 +1,94 @@
+name: Deterministic Bug
+description: Defect report with deterministic routing metadata
+title: "bug(<component>): <summary>"
+labels: ["bug", "triage"]
+body:
+  - type: dropdown
+    id: work_item_type
+    attributes:
+      label: Work Item Type
+      options: ["bug", "customer-escalation"]
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options: ["S0", "S1", "S2", "S3", "S4"]
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options: ["P0", "P1", "P2", "P3"]
+    validations:
+      required: true
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk Category
+      options: ["low", "medium", "high", "critical"]
+    validations:
+      required: true
+  - type: dropdown
+    id: blast_radius
+    attributes:
+      label: Blast Radius
+      options: ["single-team", "multi-team", "customer-visible", "global"]
+    validations:
+      required: true
+  - type: dropdown
+    id: component_area
+    attributes:
+      label: Component Area
+      options: ["frontend", "backend", "data", "infra", "security", "platform", "docs"]
+    validations:
+      required: true
+  - type: dropdown
+    id: deployment_surface
+    attributes:
+      label: Deployment Surface
+      options: ["non-prod", "prod"]
+    validations:
+      required: true
+  - type: dropdown
+    id: rollout_method
+    attributes:
+      label: Rollout Method
+      options: ["all-at-once", "flag", "ring", "canary"]
+    validations:
+      required: true
+  - type: dropdown
+    id: data_sensitivity
+    attributes:
+      label: Data Sensitivity
+      options: ["public", "internal", "confidential", "regulated"]
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction Steps
+      placeholder: "1. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      placeholder: "- [ ] Criterion 1"
+    validations:
+      required: true
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Rollout / Rollback Plan
+    validations:
+      required: true

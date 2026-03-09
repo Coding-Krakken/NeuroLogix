@@ -67,6 +67,7 @@ target/
 *.jar
 *.war
 *.nar
+*.tsbuildinfo
 
 # Go
 *.exe

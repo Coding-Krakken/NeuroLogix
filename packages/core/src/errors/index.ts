@@ -174,7 +174,7 @@ export function isOperationalError(error: Error): boolean {
 }
 
 export function createErrorFromHttpStatus(statusCode: number, message?: string): NeuroLogixError {
-  const defaultMessage = message || 'An error occurred';
+  const defaultMessage = message ?? 'An error occurred';
 
   switch (statusCode) {
     case 400:

@@ -1,5 +1,5 @@
 import winston from 'winston';
-import { APP_CONFIG, LOG_LEVELS } from '../constants/index.js';
+import { APP_CONFIG } from '../constants/index.js';
 
 /**
  * Centralized logging configuration for NeuroLogix platform
@@ -15,7 +15,7 @@ const logFormat = winston.format.combine(
       timestamp,
       level,
       message,
-      service: service || APP_CONFIG.NAME,
+      service: service ?? APP_CONFIG.NAME,
       requestId,
       userId,
       environment: APP_CONFIG.ENVIRONMENT,
@@ -29,7 +29,7 @@ const logFormat = winston.format.combine(
 
 // Create logger instance
 const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || (APP_CONFIG.ENVIRONMENT === 'production' ? 'info' : 'debug'),
+  level: process.env.LOG_LEVEL ?? (APP_CONFIG.ENVIRONMENT === 'production' ? 'info' : 'debug'),
   format: logFormat,
   defaultMeta: {
     service: APP_CONFIG.NAME,

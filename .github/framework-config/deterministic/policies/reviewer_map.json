@@ -1,0 +1,13 @@
+{
+  "core3": ["00-chief-of-staff", "tech-lead", "quality-director"],
+  "orchestration": ["00-chief-of-staff", "solution-architect"],
+  "delivery": ["tech-lead", "frontend-engineer", "backend-engineer", "qa-test-engineer", "documentation-engineer"],
+  "assurance": ["quality-director", "security-engineer", "privacy-compliance-officer", "performance-engineer"],
+  "frontend": ["frontend-engineer", "ux-designer", "qa-test-engineer"],
+  "backend": ["backend-engineer", "qa-test-engineer"],
+  "data": ["data-engineer", "qa-test-engineer", "sre-engineer"],
+  "infra": ["devops-engineer", "sre-engineer", "platform-engineer"],
+  "security": ["security-engineer", "privacy-compliance-officer"],
+  "platform": ["platform-engineer", "tech-lead"],
+  "docs": ["documentation-engineer"]
+}

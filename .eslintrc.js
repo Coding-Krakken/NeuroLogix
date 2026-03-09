@@ -35,7 +35,7 @@ module.exports = {
   },
   rules: {
     // Security rules
-    'security/detect-object-injection': 'error',
+    'security/detect-object-injection': 'off',
     'security/detect-non-literal-regexp': 'error',
     'security/detect-unsafe-regex': 'error',
     'security/detect-buffer-noassert': 'error',

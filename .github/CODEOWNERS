@@ -1,0 +1,28 @@
+# Global default
+* @Coding-Krakken
+
+# Framework runtime and governance engine
+.github/framework/** @Coding-Krakken
+.github/workflows/** @Coding-Krakken
+.github/scripts/** @Coding-Krakken
+
+# Agent system and prompts
+.github/agents/** @Coding-Krakken
+.github/prompts/** @Coding-Krakken
+.github/comment_templates/** @Coding-Krakken
+
+# Deterministic operating model configuration and docs
+.github/framework-config/** @Coding-Krakken
+
+# Templates and governance metadata
+.github/ISSUE_TEMPLATE/** @Coding-Krakken
+.github/pull_request_template.md @Coding-Krakken
+.github/issue-bodies/** @Coding-Krakken
+.github/pr-bodies/** @Coding-Krakken
+
+# Governance docs at .github root
+.github/*.md @Coding-Krakken
+.github/docs/** @Coding-Krakken
+
+# Root repo governance changelog
+CHANGELOG.md @Coding-Krakken

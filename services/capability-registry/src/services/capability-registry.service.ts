@@ -1,6 +1,5 @@
 import { 
   Capability, 
-  CapabilityStatus,
   CapabilityInstallRequest,
   CapabilityUpdateRequest,
   CapabilityQuery,
@@ -108,7 +107,7 @@ export class CapabilityRegistryService {
    * Get capability by ID
    */
   async getCapability(id: string): Promise<Capability | null> {
-    return this.capabilities.get(id) || null;
+    return this.capabilities.get(id) ?? null;
   }
 
   /**
@@ -174,7 +173,7 @@ export class CapabilityRegistryService {
     const updatedCapability: Capability = {
       ...capability,
       version: request.version,
-      currentConfig: request.configuration || capability.currentConfig,
+      currentConfig: request.configuration ?? capability.currentConfig,
       lastUpdated: new Date(),
       status: request.restartRequired && capability.status === 'enabled' ? 'updating' : capability.status,
     };
@@ -362,13 +361,13 @@ export class CapabilityRegistryService {
 
     // Calculate stats by type
     capabilities.forEach(cap => {
-      stats.byType[cap.type] = (stats.byType[cap.type] || 0) + 1;
+      stats.byType[cap.type] = (stats.byType[cap.type] ?? 0) + 1;
     });
 
     // Calculate stats by zone
     capabilities.forEach(cap => {
       cap.zones.forEach(zone => {
-        stats.byZone[zone] = (stats.byZone[zone] || 0) + 1;
+        stats.byZone[zone] = (stats.byZone[zone] ?? 0) + 1;
       });
     });
 

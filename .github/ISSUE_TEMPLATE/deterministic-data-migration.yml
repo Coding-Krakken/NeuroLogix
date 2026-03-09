@@ -1,0 +1,51 @@
+name: Deterministic Data Migration
+description: Data/schema migration with compatibility controls
+title: "data-migration(<domain>): <summary>"
+labels: ["data", "triage"]
+body:
+  - type: dropdown
+    id: work_item_type
+    attributes:
+      label: Work Item Type
+      options: ["data-migration", "schema-change"]
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options: ["S0", "S1", "S2", "S3", "S4"]
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options: ["P0", "P1", "P2", "P3"]
+    validations:
+      required: true
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk Category
+      options: ["low", "medium", "high", "critical"]
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Backward Compatibility Plan
+    validations:
+      required: true
+  - type: textarea
+    id: dry_run
+    attributes:
+      label: Dry-Run and Validation Plan
+    validations:
+      required: true
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Rollback Plan
+    validations:
+      required: true

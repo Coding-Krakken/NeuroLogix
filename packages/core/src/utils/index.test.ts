@@ -68,7 +68,7 @@ describe('Utils', () => {
 
   describe('formatDate', () => {
     it('should format date with default format', () => {
-      const date = new Date('2023-12-25T10:30:45Z');
+      const date = new Date('2023-12-25T10:30:45');
       const formatted = formatDate(date);
       expect(formatted).toBe('2023-12-25 10:30:45');
     });
