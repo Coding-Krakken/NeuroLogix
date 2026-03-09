@@ -1,0 +1,6 @@
+
+added 1 package, and audited 3 packages in 645ms
+
+found 0 vulnerabilities
+SMOKE_CONSUMER_STATUS=passed
+{"normalized":"smoke_validated","auditTask":"issue-16-smoke","completed":true}

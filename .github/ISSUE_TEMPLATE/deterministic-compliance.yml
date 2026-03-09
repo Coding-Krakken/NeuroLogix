@@ -1,0 +1,53 @@
+name: Deterministic Compliance
+description: Compliance/legal/privacy request with mandatory controls mapping
+title: 'compliance(<area>): <summary>'
+labels: ['compliance', 'triage']
+body:
+  - type: dropdown
+    id: work_item_type
+    attributes:
+      label: Work Item Type
+      options: ['compliance', 'legal-review', 'privacy-change']
+    validations:
+      required: true
+  - type: input
+    id: regulation
+    attributes:
+      label: Regulatory / Legal Basis
+      placeholder: 'e.g., PCI DSS, GDPR, contract clause'
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options: ['S0', 'S1', 'S2', 'S3', 'S4']
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options: ['P0', 'P1', 'P2', 'P3']
+    validations:
+      required: true
+  - type: dropdown
+    id: data_sensitivity
+    attributes:
+      label: Data Sensitivity
+      options: ['public', 'internal', 'confidential', 'regulated']
+    validations:
+      required: true
+  - type: textarea
+    id: controls
+    attributes:
+      label: Control Mapping and Evidence Plan
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      placeholder: '- [ ] Criterion 1'
+    validations:
+      required: true

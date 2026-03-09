@@ -1,0 +1,44 @@
+name: Deterministic Hotfix
+description: P0/P1 critical production patch
+title: 'hotfix(<component>): <summary>'
+labels: ['hotfix', 'triage']
+body:
+  - type: dropdown
+    id: work_item_type
+    attributes:
+      label: Work Item Type
+      options: ['hotfix']
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options: ['S0', 'S1', 'S2']
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options: ['P0', 'P1']
+    validations:
+      required: true
+  - type: textarea
+    id: prod_symptom
+    attributes:
+      label: Production Symptom
+    validations:
+      required: true
+  - type: textarea
+    id: fix_scope
+    attributes:
+      label: Minimal Fix Scope
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification and Post-Release Audit Plan
+    validations:
+      required: true

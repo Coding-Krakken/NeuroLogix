@@ -1,0 +1,41 @@
+{
+  "name": "@neurologix/digital-twin",
+  "version": "0.1.0",
+  "description": "Digital Twin service for asset modeling, state validation, and simulation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "type-check": "tsc --build --force --pretty false",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "@neurologix/core": "*",
+    "@neurologix/schemas": "*",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "typescript": "^5.7.2",
+    "vitest": "^3.2.4"
+  },
+  "keywords": [
+    "digital-twin",
+    "simulation",
+    "asset-modeling",
+    "industrial-automation",
+    "neurologix"
+  ],
+  "author": "NeuroLogix Team",
+  "license": "MIT"
+}

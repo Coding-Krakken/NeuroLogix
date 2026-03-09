@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "incremental": true,
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@neurologix/core": ["./packages/core/src"],
+      "@neurologix/core/*": ["./packages/core/src/*"],
+      "@neurologix/schemas": ["./packages/schemas/src"],
+      "@neurologix/schemas/*": ["./packages/schemas/src/*"],
+      "@neurologix/security": ["./packages/security/src"],
+      "@neurologix/security/*": ["./packages/security/src/*"],
+      "@neurologix/observability": ["./packages/observability/src"],
+      "@neurologix/observability/*": ["./packages/observability/src/*"],
+      "@neurologix/adapters": ["./packages/adapters/src"],
+      "@neurologix/adapters/*": ["./packages/adapters/src/*"],
+      "@neurologix/ai": ["./packages/ai/src"],
+      "@neurologix/ai/*": ["./packages/ai/src/*"],
+      "@neurologix/ui": ["./packages/ui/src"],
+      "@neurologix/ui/*": ["./packages/ui/src/*"]
+    }
+  },
+  "include": ["packages/*/src/**/*", "services/*/src/**/*"],
+  "exclude": ["node_modules", "build", "dist", ".next", "coverage"]
+}

@@ -1,0 +1,7 @@
+{
+  "orchestratorLogins": ["<ORGANIZATION_NAME>"],
+  "implementerLogins": ["<ORGANIZATION_NAME>"],
+  "assuranceLogins": ["<ORGANIZATION_NAME>"],
+  "qualityDirectorLogins": ["<ORGANIZATION_NAME>"],
+  "engineeringLeadLogins": ["<ORGANIZATION_NAME>"]
+}
