@@ -55,7 +55,7 @@ export class RecipeExecutorService {
       if (!validation.isValid) {
         throw new ValidationError(
           'Recipe validation failed',
-          validation.errors.map(e => e.message)
+          { errors: validation.errors.map(e => e.message) }
         );
       }
 
@@ -95,7 +95,7 @@ export class RecipeExecutorService {
   async getRecipe(id: string): Promise<Recipe> {
     const recipe = this.recipes.get(id);
     if (!recipe) {
-      throw new AssetNotFoundError('Recipe', id);
+      throw new AssetNotFoundError('Recipe', { assetType: 'Recipe', requestedId: id });
     }
     return recipe;
   }
@@ -118,7 +118,7 @@ export class RecipeExecutorService {
     if (!validation.isValid) {
       throw new ValidationError(
         'Recipe validation failed',
-        validation.errors.map(e => e.message)
+        { errors: validation.errors.map(e => e.message) }
       );
     }
 
@@ -150,7 +150,7 @@ export class RecipeExecutorService {
     if (activeExecutions.length > 0) {
       throw new ValidationError(
         'Cannot delete recipe with active executions',
-        [`Recipe has ${activeExecutions.length} active executions`]
+        { errors: [`Recipe has ${activeExecutions.length} active executions`] }
       );
     }
 
@@ -205,11 +205,11 @@ export class RecipeExecutorService {
 
       // Check approval requirements
       if (recipe.requiresApproval && !request.approvedBy) {
-        throw new ValidationError('Recipe requires approval', ['Approver is required']);
+        throw new ValidationError('Recipe requires approval', { errors: ['Approver is required'] });
       }
 
       if (recipe.requiresDualApproval && (!request.approvedBy || !request.secondApprover)) {
-        throw new ValidationError('Recipe requires dual approval', ['Two approvers are required']);
+        throw new ValidationError('Recipe requires dual approval', { errors: ['Two approvers are required'] });
       }
 
       // Perform safety checks if enabled
@@ -221,7 +221,7 @@ export class RecipeExecutorService {
           execution.safetyViolations = safetyResult.violations;
           this.executions.set(execution.id, execution);
           
-          throw new ValidationError('Safety checks failed', safetyResult.violations.map(v => v.message));
+          throw new ValidationError('Safety checks failed', { errors: safetyResult.violations.map(v => v.message) });
         }
       }
 
@@ -268,7 +268,7 @@ export class RecipeExecutorService {
   async getExecution(id: string): Promise<RecipeExecution> {
     const execution = this.executions.get(id);
     if (!execution) {
-      throw new AssetNotFoundError('Recipe Execution', id);
+      throw new AssetNotFoundError(id, { assetType: 'Recipe Execution' });
     }
     return execution;
   }
@@ -280,7 +280,7 @@ export class RecipeExecutorService {
     const execution = await this.getExecution(id);
     
     if (![RecipeExecutionStatus.PENDING, RecipeExecutionStatus.EXECUTING, RecipeExecutionStatus.PAUSED].includes(execution.status)) {
-      throw new ValidationError('Cannot cancel execution', ['Execution is not in a cancellable state']);
+      throw new ValidationError('Cannot cancel execution', { errors: ['Execution is not in a cancellable state'] });
     }
 
     execution.status = RecipeExecutionStatus.CANCELLED;
@@ -433,7 +433,7 @@ export class RecipeExecutorService {
         query,
         error: error instanceof Error ? error.message : String(error)
       });
-      throw new InternalServerError('Failed to query recipes', [error instanceof Error ? error.message : String(error)]);
+      throw new InternalServerError('Failed to query recipes', { errors: [error instanceof Error ? error.message : String(error)] });
     }
   }
 

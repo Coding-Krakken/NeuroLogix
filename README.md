@@ -193,11 +193,11 @@ docker compose logs -f capability-registry
 - [ ] Contract testing framework
 - [ ] Topic ACLs & security
 
-### ⏳ Phase 2 — Core Runtime
-- [ ] Capability Registry service
-- [ ] Policy Engine (OPA/Rego)
-- [ ] Recipe Executor with safety checks
-- [ ] Digital Twin foundation
+### ✅ Phase 2 — Core Runtime
+- [x] Capability Registry service
+- [x] Policy Engine (OPA/Rego)
+- [x] Recipe Executor with safety checks
+- [x] Digital Twin foundation
 
 ### ⏳ Phase 3 — Edge & Adapters
 - [ ] OPC UA/MQTT Sparkplug adapters
