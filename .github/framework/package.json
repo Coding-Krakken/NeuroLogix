@@ -43,13 +43,13 @@
     "handoff:report": "tsc && node dist/src/handoff-workflow-report-cli.js"
   },
   "dependencies": {
-    "@types/node": "^25.3.3"
+    "@types/node": "^25.3.5"
   },
   "devDependencies": {
     "@jest/globals": "^30.2.0",
     "@types/jest": "^30.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.56.1",
-    "@typescript-eslint/parser": "^8.56.1",
+    "@typescript-eslint/eslint-plugin": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.0",
     "eslint": "^10.0.2",
     "jest": "^30.2.0",
     "prettier": "^3.6.2",
