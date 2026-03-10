@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@neurologix/adapters": "*",
+    "@neurologix/site-registry": "*",
     "@neurologix/ui": "*",
     "@neurologix/schemas": "*",
     "fastify": "^5.8.2"

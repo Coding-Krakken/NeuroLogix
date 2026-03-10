@@ -13,7 +13,7 @@
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "test": "echo 'Tests pending - vitest resolution issues being debugged'",
+    "test": "vitest run",
     "test:watch": "vitest",
     "test:ci": "vitest run --coverage",
     "type-check": "tsc --noEmit"

@@ -8,6 +8,10 @@ import {
   MISSION_CONTROL_INITIAL_POLICY_STATE,
   MISSION_CONTROL_SHELL_STYLES,
 } from '@neurologix/ui';
+import {
+  SiteRegistryService,
+  SITE_REGISTRY_ERROR_CODES,
+} from '@neurologix/site-registry';
 import type { MissionControlActorRole } from './state/mission-control-state.js';
 import { MissionControlState } from './state/mission-control-state.js';
 
@@ -548,6 +552,7 @@ export function buildMissionControlServer(
 ): MissionControlServerBundle {
   const app = Fastify({ logger: options.logger ?? false });
   const state = options.state ?? new MissionControlState();
+  const siteRegistry = new SiteRegistryService();
   const tickIntervalMs = options.tickIntervalMs ?? 1000;
   const startTicker = options.startTicker ?? true;
   const subscribers = new Set<ServerResponse>();
@@ -701,130 +706,118 @@ export function buildMissionControlServer(
   });
 
   // ─────────────────────────────────────────────────────────────────────────
-  // Federation API Routes (FEDERATION-API-001 / ISSUE-37)
+  // Federation API Routes (FEDERATION-API-001 / ISSUE-37, wired by ISSUE-74)
   // ─────────────────────────────────────────────────────────────────────────
 
   app.get('/api/sites', async (request, reply) => {
     try {
-      // NOTE: Site registry integration pending (Phase 1 extension)
-      // For now, return empty federation topology
+      const query = request.query as { status?: string; region?: string; tier?: string };
+      const result = await siteRegistry.listSites({
+        status: query.status as Parameters<SiteRegistryService['listSites']>[0] extends { status?: infer S } ? S : undefined,
+        region: query.region,
+        tier: query.tier as Parameters<SiteRegistryService['listSites']>[0] extends { tier?: infer T } ? T : undefined,
+      });
       return {
-        sites: [],
-        total: 0,
-        version: 1,
+        sites: result.sites,
+        total: result.total,
+        version: siteRegistry.getTopologyVersion(),
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to list sites';
       reply.status(500);
-      return {
-        code: 'INTERNAL_ERROR',
-        message,
-        traceId: request.id,
-      };
+      return { code: 'INTERNAL_ERROR', message, traceId: request.id };
     }
   });
 
   app.post('/api/sites', async (request, reply) => {
     try {
-      // NOTE: Site registry integration pending (Phase 1 extension)
-      reply.status(501);
-      return {
-        code: 'NOT_IMPLEMENTED',
-        message: 'Site registry service pending - wireup in progress',
-        traceId: request.id,
-      };
+      const site = await siteRegistry.createSite(request.body as Parameters<SiteRegistryService['createSite']>[0]);
+      reply.status(201);
+      return site;
     } catch (error) {
+      if (error instanceof Error && 'code' in error) {
+        const siteError = error as { code: string; message: string };
+        if (siteError.code === SITE_REGISTRY_ERROR_CODES.DUPLICATE_SLUG) {
+          reply.status(409);
+          return { code: siteError.code, message: siteError.message, traceId: request.id };
+        }
+        if (siteError.code === SITE_REGISTRY_ERROR_CODES.VALIDATION_ERROR) {
+          reply.status(400);
+          return { code: siteError.code, message: siteError.message, traceId: request.id };
+        }
+      }
       const message = error instanceof Error ? error.message : 'Failed to register site';
       reply.status(500);
-      return {
-        code: 'INTERNAL_ERROR',
-        message,
-        traceId: request.id,
-      };
+      return { code: 'INTERNAL_ERROR', message, traceId: request.id };
     }
   });
 
   app.get('/api/sites/:siteId', async (request, reply) => {
     try {
       const { siteId } = request.params as { siteId: string };
-      // NOTE: Site registry integration pending (Phase 1 extension)
-      reply.status(404);
-      return {
-        code: 'SITE_NOT_FOUND',
-        message: `Site '${siteId}' not found (registry not yet wired)`,
-        traceId: request.id,
-      };
+      const site = await siteRegistry.getSite(siteId);
+      if (!site) {
+        reply.status(404);
+        return { code: 'SITE_NOT_FOUND', message: `Site '${siteId}' not found`, traceId: request.id };
+      }
+      return site;
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to get site';
       reply.status(500);
-      return {
-        code: 'INTERNAL_ERROR',
-        message,
-        traceId: request.id,
-      };
+      return { code: 'INTERNAL_ERROR', message, traceId: request.id };
     }
   });
 
   app.patch('/api/sites/:siteId/status', async (request, reply) => {
     try {
-      // NOTE: Site registry integration pending (Phase 1 extension)
-      reply.status(501);
-      return {
-        code: 'NOT_IMPLEMENTED',
-        message: 'Site registry service pending - wireup in progress',
-        traceId: request.id,
-      };
+      const { siteId } = request.params as { siteId: string };
+      const updated = await siteRegistry.updateSiteStatus(
+        siteId,
+        request.body as Parameters<SiteRegistryService['updateSiteStatus']>[1],
+      );
+      return updated;
     } catch (error) {
+      if (error instanceof Error && 'code' in error) {
+        const siteError = error as { code: string; message: string };
+        if (siteError.code === SITE_REGISTRY_ERROR_CODES.SITE_NOT_FOUND) {
+          reply.status(404);
+          return { code: siteError.code, message: siteError.message, traceId: request.id };
+        }
+        if (siteError.code === SITE_REGISTRY_ERROR_CODES.INVALID_TRANSITION) {
+          reply.status(422);
+          return { code: siteError.code, message: siteError.message, traceId: request.id };
+        }
+      }
       const message = error instanceof Error ? error.message : 'Failed to update site status';
       reply.status(500);
-      return {
-        code: 'INTERNAL_ERROR',
-        message,
-        traceId: request.id,
-      };
+      return { code: 'INTERNAL_ERROR', message, traceId: request.id };
     }
   });
 
   app.get('/api/feature-flags', async (request, reply) => {
     try {
       const query = request.query as { siteId?: string };
-      // NOTE: Site registry integration pending (Phase 1 extension)
-      return {
-        flags: [],
-        resolvedFor: query.siteId ? { siteId: query.siteId } : undefined,
-      };
+      if (query.siteId) {
+        const flags = await siteRegistry.resolveFeatureFlags(query.siteId);
+        return { flags, resolvedFor: { siteId: query.siteId } };
+      }
+      const flags = await siteRegistry.listFeatureFlags();
+      return { flags };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to list feature flags';
       reply.status(500);
-      return {
-        code: 'INTERNAL_ERROR',
-        message,
-        traceId: request.id,
-      };
+      return { code: 'INTERNAL_ERROR', message, traceId: request.id };
     }
   });
 
   app.get('/api/federation', async (request, reply) => {
     try {
-      // NOTE: Site registry integration pending (Phase 1 extension)
-      // Return v0.1.0 federation topology structure (empty)
-      return {
-        sites: [],
-        version: 1,
-        platformContracts: {
-          apiVersion: '1.0.0',
-          eventSchemaVersion: '1.0.0',
-          minPlatformVersion: '0.1.0',
-        },
-      };
+      const topology = await siteRegistry.getFederationTopology();
+      return topology;
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to get federation topology';
       reply.status(500);
-      return {
-        code: 'INTERNAL_ERROR',
-        message,
-        traceId: request.id,
-      };
+      return { code: 'INTERNAL_ERROR', message, traceId: request.id };
     }
   });
 
