@@ -1,0 +1,64 @@
+# Validation Evidence — Issue #49
+
+Date: 2026-03-10  
+Branch: `issue-49-standard-lane-model-evidence-policy`  
+PR: `#55`  
+Work Item: `#49`
+
+## Bounded Scope
+
+- `planning/policy-model-evidence-only-lane-rule.md`
+- `planning/model-evidence-only-exemption-evidence.md`
+- `planning/handoff-to-validator-issue-49.md`
+- `planning/handoff-to-planner-issue-49.md`
+- `planning/validation-evidence-issue-49.md`
+
+## Validation Commands
+
+| Command | Result |
+|---|---|
+| `npm run lint` | PASS (warnings-only baseline in existing packages; no new errors) |
+| `npm test` | PASS |
+| `npm run build` | PASS |
+
+## PR Gate Context
+
+- PR: `https://github.com/Coding-Krakken/NeuroLogix/pull/55`
+- `isDraft`: `false`
+- `mergeStateStatus`: `CLEAN`
+- `statusCheckRollup`: `[]` (no required checks configured)
+
+## Guardrail Metrics
+
+- `changedFiles`: `5`
+- `additions`: `235`
+- `deletions`: `0`
+- Preferred guardrail check (`<=25 files`, `<=600 lines changed`): PASS
+
+## Acceptance Criteria Mapping
+
+1. Deterministic lane-selection/exemption rule documented in one canonical artifact — PASS (`planning/policy-model-evidence-only-lane-rule.md`, policy `NLX-LANE-STD-EXEMPT-001`).
+2. Required evidence fields for exemption/override explicit and auditable — PASS (`planning/model-evidence-only-exemption-evidence.md`).
+3. Planner-target and validator-target handoffs reference same policy rule — PASS (`planning/handoff-to-validator-issue-49.md` and `planning/handoff-to-planner-issue-49.md`, both reference `NLX-LANE-STD-EXEMPT-001`).
+4. Changed behavior bounded to planning/policy artifacts and reversible — PASS (Issue #49 scoped files only).
+
+## Decision Evidence
+
+- Canonical rule defines deterministic conditions for targeted standard-lane exemption in model/evidence-only slices.
+- Evidence requirements artifact defines required fields and explicit pass/fail interpretation.
+- Handoff artifacts for validator and planner align to the same canonical policy identifier and file path.
+
+## Risks and Rollback
+
+- Risk: Ambiguous interpretation of model/evidence-only boundary could reintroduce inconsistent lane decisions.
+- Mitigation: Single canonical policy ID and deterministic decision matrix with explicit path constraints.
+- Rollback: Revert the Issue #49 commit to remove policy clarification artifacts and restore prior behavior.
+
+## GitHub Traceability
+
+- Issue #49 implementation-start comment:
+  - https://github.com/Coding-Krakken/NeuroLogix/issues/49#issuecomment-4032745040
+- Issue #49 PR/check-status update comment:
+  - https://github.com/Coding-Krakken/NeuroLogix/issues/49#issuecomment-4032754124
+- PR #55 design tradeoff/risk mitigation comment:
+  - https://github.com/Coding-Krakken/NeuroLogix/pull/55#issuecomment-4032754254
