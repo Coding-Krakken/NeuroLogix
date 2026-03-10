@@ -1,9 +1,4 @@
 /**
- * @fileoverview Asset schemas for industrial equipment
- */
-
-// Placeholder - will be implemented in Phase 2
-/**
  * @fileoverview Canonical asset schemas for NeuroLogix ICS industrial equipment
  *
  * Assets are the physical and logical equipment entities (PLCs, conveyors, cameras,
