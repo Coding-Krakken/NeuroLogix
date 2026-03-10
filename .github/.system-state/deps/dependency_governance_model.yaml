@@ -1,0 +1,186 @@
+schema_version: "1.0"
+model_id: DEP-GOV-001
+issue: "https://github.com/Coding-Krakken/NeuroLogix/issues/46"
+last_updated: "2026-03-10"
+status: active
+phase: "10-12"
+
+# Dependency Governance Model
+
+budget:
+  max_new_dependencies_per_phase: 10
+  max_new_abstractions_per_phase: 5
+  justification_required: true
+  alternatives_review_required: true
+
+# Intake Process
+
+intake:
+  request_template:
+    fields:
+      package_name:
+        type: string
+        required: true
+      version_pinned:
+        type: string
+        required: true
+      scope:
+        type: string
+        allowed: [production, dev, peer]
+        required: true
+      justification:
+        type: string
+        required: true
+        min_length: 50
+      alternatives_considered:
+        type: array
+        items: string
+        min_items: 1
+        required: true
+      license:
+        type: string
+        required: true
+      license_approved:
+        type: boolean
+        required: true
+      security_review_passed:
+        type: boolean
+        required: true
+      maintenance_score:
+        type: string
+        allowed: [active, limited, deprecated]
+        required: true
+      exception_required:
+        type: boolean
+        required: true
+    storage: ".github/dep-requests/"
+    filename_pattern: "dep-request-{package}-{date}.md"
+
+# Review Criteria
+
+review_criteria:
+  license:
+    approved_licenses:
+      - MIT
+      - Apache-2.0
+      - BSD-2-Clause
+      - BSD-3-Clause
+      - ISC
+      - 0BSD
+    restricted_licenses:
+      - GPL-2.0
+      - GPL-3.0
+      - AGPL-3.0
+      note: "Require legal review before any use"
+    prohibited_licenses:
+      - SSPL
+      - BUSL
+      note: "Prohibited without explicit legal clearance"
+    copyleft_check:
+      trigger: any_copyleft_detected
+      action: mandatory_legal_review
+
+  security:
+    vulnerability_check: dependabot_and_audit
+    max_severity_to_merge: moderate
+    critical_or_high:
+      action: block_dependency_add
+      exception: requires_ciso_approval
+    known_malicious: immediate_removal
+
+  maintenance:
+    active:
+      criteria: "last commit within 6 months, issues responded to"
+      allowed: true
+    limited:
+      criteria: "last commit 6-18 months, security patches only"
+      allowed: true
+      note: "Prefer active alternative if available"
+    deprecated:
+      criteria: "last commit >18 months or explicitly deprecated"
+      action: block_unless_waiver_approved
+
+# SBOM Requirements
+
+sbom:
+  format: CycloneDX_1.4
+  generation: on_every_build
+  tool: cyclonedx-npm
+  output_path: "artifacts/sbom/sbom-{timestamp}.json"
+  components_required:
+    - name
+    - version
+    - purl
+    - licenses
+    - hashes
+  vulnerability_scan:
+    tool: "dependabot + npm audit"
+    frequency: on_pr_and_scheduled_weekly
+    fail_on: critical_or_high
+  signing:
+    required: true
+    tool: cosign
+    key_source: github_actions_oidc
+
+# Vulnerability Remediation Cadence
+
+remediation:
+  critical:
+    sla_hours: 24
+    action: hotfix_branch_and_pr
+    requires_approval: false
+  high:
+    sla_days: 7
+    action: scheduled_pr
+    requires_approval: false
+  moderate:
+    sla_days: 30
+    action: next_sprint
+    requires_approval: false
+  low:
+    sla_days: 90
+    action: backlog
+    requires_approval: false
+
+# Exception Process
+
+exception_process:
+  eligibility: "any requirement that falls outside standard criteria"
+  required_approvals:
+    - tech_lead
+    - security_review
+  additional_approvals_for:
+    restricted_license: [legal_counsel]
+    critical_vulnerability: [ciso]
+  documentation:
+    required_fields:
+      - exception_id
+      - package_name
+      - non_compliance_description
+      - business_justification
+      - risk_assessment
+      - compensating_controls
+      - expiry_date
+      - approvals
+    storage_path: "planning/dep-exceptions/"
+    review_cadence: quarterly
+  max_duration_days: 90
+  renewal_required: true
+
+# Automation Integration
+
+automation:
+  dependabot:
+    enabled: true
+    config_path: ".github/dependabot.yml"
+    schedule: weekly
+    groups:
+      security: immediate
+      minor_patch: weekly_batch
+      major: manual_review
+  pr_labeling:
+    security_update: "security"
+    dependency_update: "dependencies"
+  auto_merge:
+    allowed: [patch_security_fixes]
+    requires_green_ci: true
