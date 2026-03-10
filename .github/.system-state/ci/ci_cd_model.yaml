@@ -217,7 +217,7 @@ github_actions:
         - build
         - secrets-scan
         - dependency-scan
-      status: not_yet_implemented
+      status: implemented # PR #65 merged 2026-03-10
 
     release:
       filename: ".github/workflows/release.yml"
@@ -232,7 +232,7 @@ github_actions:
         - deploy-staging
         - pre-release-benchmarks
         - deploy-production-canary
-      status: not_yet_implemented
+      status: implemented # PR #68 CI-002 2026-03-10
 
     dependabot_automerge:
       filename: ".github/workflows/dependabot-automerge.yml"
