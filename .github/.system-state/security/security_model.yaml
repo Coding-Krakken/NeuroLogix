@@ -1,0 +1,275 @@
+security_model:
+  id: neurologix-security-baseline-model
+  version: 1.0.0
+  phase: 5
+  status: proposed
+  last_updated: 2026-03-10
+  source_issue: 44
+  objective: Deterministic security baseline for trust boundaries, policy enforcement, and control verification.
+
+identity_trust_model:
+  users:
+    - id: human-operator
+      identity_provider: azure-ad-oidc
+      authentication_factors:
+        - passwordless-fido2
+        - conditional-mfa
+      trust_zone: operations
+      least_privilege_default_role: operator
+    - id: site-reliability-engineer
+      identity_provider: azure-ad-oidc
+      authentication_factors:
+        - passwordless-fido2
+        - conditional-mfa
+      trust_zone: engineering
+      least_privilege_default_role: sre
+  services:
+    - id: capability-registry
+      service_identity: spiffe://neurologix/prod/capability-registry
+      trust_zone: core_runtime
+      workload_type: kubernetes-service-account
+    - id: policy-engine
+      service_identity: spiffe://neurologix/prod/policy-engine
+      trust_zone: core_runtime
+      workload_type: kubernetes-service-account
+    - id: recipe-executor
+      service_identity: spiffe://neurologix/prod/recipe-executor
+      trust_zone: core_runtime
+      workload_type: kubernetes-service-account
+    - id: digital-twin
+      service_identity: spiffe://neurologix/prod/digital-twin
+      trust_zone: core_runtime
+      workload_type: kubernetes-service-account
+  devices:
+    - id: plc-edge-gateway
+      device_identity_type: x509-device-certificate
+      attestation_required: true
+      trust_zone: edge
+      onboarding_policy: allowlisted-serial-and-hardware-fingerprint
+    - id: vision-sensor-node
+      device_identity_type: x509-device-certificate
+      attestation_required: true
+      trust_zone: edge
+      onboarding_policy: allowlisted-serial-and-hardware-fingerprint
+
+trust_flows:
+  - id: tf-user-to-policy-evaluation
+    from_principal: human-operator
+    to_service: policy-engine
+    path: ui-api-gateway-policy-engine
+    authentication: oidc-id-token-plus-mfa
+    authorization: role-operator-plus-asset-scope-abac
+    transport_security: mtls-required
+    denial_mode: fail-closed
+    verification_controls:
+      - control_id: iso27001-a-5.15
+      - control_id: iec62443-sr-1.2
+  - id: tf-service-to-service-command
+    from_principal: recipe-executor
+    to_service: capability-registry
+    path: service-mesh-east-west
+    authentication: spiffe-workload-identity
+    authorization: opa-allow-service-action-matrix
+    transport_security: mtls-required
+    denial_mode: fail-closed
+    verification_controls:
+      - control_id: iec62443-sr-1.1
+      - control_id: iso27001-a-8.2
+  - id: tf-edge-device-ingest
+    from_principal: plc-edge-gateway
+    to_service: digital-twin
+    path: edge-gateway-ingest-api
+    authentication: mTLS-device-cert-plus-device-attestation
+    authorization: device-asset-binding-policy
+    transport_security: mtls-required
+    denial_mode: quarantine-on-validation-failure
+    verification_controls:
+      - control_id: iec62443-sr-3.1
+      - control_id: iso27001-a-8.20
+
+service_identity_and_mtls:
+  certificate_authority:
+    provider: cert-manager-plus-internal-ca
+    root_ca_storage: hsm-backed-key-vault
+    key_algorithm: ecdsa-p256
+  certificate_lifecycle:
+    service_certificate_ttl_hours: 24
+    device_certificate_ttl_days: 90
+    rotation_before_expiry_percent: 20
+    revocation_propagation_sla_minutes: 5
+    renewal_failure_incident_trigger:
+      threshold: 2 consecutive_failed_renewals
+      action: create-sev2-incident-and-block-new-deployments
+  service_identity_enforcement:
+    mesh_policy: STRICT
+    plaintext_traffic_allowed: false
+    unauthorized_identity_action: deny-and-alert
+
+rbac_abac_boundaries:
+  rbac_roles:
+    - role: operator
+      allowed_actions:
+        - recipes.execute
+        - digital-twin.read
+      denied_actions:
+        - policies.publish
+        - secrets.rotate
+    - role: sre
+      allowed_actions:
+        - capabilities.manage
+        - incidents.respond
+        - rollout.rollback
+      denied_actions:
+        - identity.provider.admin
+    - role: security-admin
+      allowed_actions:
+        - policies.publish
+        - secrets.rotate
+        - identity.revoke
+      denied_actions:
+        - production-recipes.execute
+  abac_policies:
+    - id: abac-asset-scope
+      effect: allow
+      condition: user.site == asset.site and user.clearance >= asset.required_clearance
+    - id: abac-shift-window
+      effect: allow
+      condition: request.time in user.approved_shift_window
+    - id: abac-breakglass
+      effect: allow-with-incident
+      condition: request.breakglass == true and ticket.severity >= sev2
+      required_side_effects:
+        - incident-ticket-created
+        - session-recording-enabled
+  opa_integration_points:
+    policy_bundles:
+      - policy/authz/service_actions.rego
+      - policy/authz/user_scopes.rego
+    decision_endpoints:
+      - /v1/data/authz/allow
+      - /v1/data/authz/device_bindings
+    cache_ttl_seconds: 15
+    decision_timeout_milliseconds: 50
+    fail_mode: deny-on-timeout
+
+secrets_handling:
+  secret_stores:
+    - id: kv-runtime
+      class: dynamic
+      owner: platform-security
+      rotation_interval_days: 30
+    - id: kv-device-bootstrap
+      class: static-bootstrap
+      owner: edge-security
+      rotation_interval_days: 7
+  secret_classes:
+    - class: database-credential
+      rotation_strategy: automatic
+      incident_triggers:
+        - trigger: rotation-failure-rate > 1_percent_over_15m
+          action: sev2-incident
+        - trigger: unauthorized-secret-read-detected
+          action: sev1-incident-and-key-revoke
+    - class: api-signing-key
+      rotation_strategy: dual-key-overlap
+      incident_triggers:
+        - trigger: key-usage-from-untrusted-zone
+          action: sev1-incident-and-emergency-rotation
+
+threat_catalog:
+  - id: threat-credential-compromise
+    category: identity
+    severity: high
+    attack_path: stolen-human-or-service-credential
+    mitigations:
+      - mandatory-mfa-and-phishing-resistant-auth
+      - short-lived-service-certificates
+      - anomaly-detection-on-identity-use
+  - id: threat-lateral-movement
+    category: network
+    severity: high
+    attack_path: compromised-service-to-peer-services
+    mitigations:
+      - mesh-strict-mtls-and-identity-based-authz
+      - default-deny-network-policy
+      - opa-policy-enforced-service-action-boundaries
+  - id: threat-device-spoofing
+    category: edge
+    severity: critical
+    attack_path: rogue-device-injects-telemetry-or-commands
+    mitigations:
+      - hardware-attestation-plus-device-certificates
+      - device-asset-binding-validation
+      - quarantine-on-identity-mismatch
+  - id: threat-secret-exfiltration
+    category: data-protection
+    severity: critical
+    attack_path: leaked-runtime-or-signing-secrets
+    mitigations:
+      - secrets-manager-access-policies-and-just-in-time-grants
+      - automatic-secret-rotation
+      - incident-triggered-key-revocation
+
+control_mapping:
+  framework_mappings:
+    - control_id: iec62443-sr-1.1
+      framework: IEC 62443-3-3
+      control_objective: Human user identification and authentication
+      implemented_by:
+        - identity_trust_model.users
+        - trust_flows.tf-user-to-policy-evaluation
+      verification:
+        mechanism: integration-test-authn-authz-path
+        command: npm run test -- --runInBand
+        cadence: per-pull-request
+        owner: security-architecture
+        evidence_artifact: planning/validation-evidence-issue-44.md
+    - control_id: iec62443-sr-1.2
+      framework: IEC 62443-3-3
+      control_objective: Software process and device identity authentication
+      implemented_by:
+        - identity_trust_model.services
+        - identity_trust_model.devices
+        - service_identity_and_mtls
+      verification:
+        mechanism: structural-policy-check
+        command: py -c <issue-44-structural-check>
+        cadence: per-pull-request
+        owner: platform-security
+        evidence_artifact: planning/validation-evidence-issue-44.md
+    - control_id: iec62443-sr-3.1
+      framework: IEC 62443-3-3
+      control_objective: Use of cryptography for data in transit
+      implemented_by:
+        - trust_flows
+        - service_identity_and_mtls
+      verification:
+        mechanism: mTLS-strict-mode-config-review
+        command: npm run lint
+        cadence: per-pull-request
+        owner: platform-security
+        evidence_artifact: planning/validation-evidence-issue-44.md
+    - control_id: iso27001-a-5.15
+      framework: ISO 27001:2022
+      control_objective: Access control policy and enforcement
+      implemented_by:
+        - rbac_abac_boundaries
+        - rbac_abac_boundaries.opa_integration_points
+      verification:
+        mechanism: policy-evaluation-and-boundary-check
+        command: npm run test
+        cadence: per-pull-request
+        owner: governance-risk-compliance
+        evidence_artifact: planning/validation-evidence-issue-44.md
+    - control_id: iso27001-a-8.20
+      framework: ISO 27001:2022
+      control_objective: Network security and segmentation controls
+      implemented_by:
+        - trust_flows.tf-edge-device-ingest
+        - service_identity_and_mtls.service_identity_enforcement
+      verification:
+        mechanism: network-policy-review-and-integration-check
+        command: npm run test:e2e
+        cadence: release-candidate
+        owner: site-reliability-engineering
+        evidence_artifact: planning/validation-evidence-issue-44.md

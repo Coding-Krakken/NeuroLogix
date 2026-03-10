@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-03-10T14:10:56.1030124Z",
+  "lane": "strict",
+  "labels": [
+    "documentation",
+    "epic",
+    "model-first",
+    "track:security",
+    "phase:model"
+  ],
+  "diffSpec": "origin/main...HEAD",
+  "changedFiles": 8,
+  "changedLines": 896,
+  "docLines": 419,
+  "codeLines": 0,
+  "otherLines": 477,
+  "docToCodeRatio": "Infinity",
+  "maxDocToCodeRatio": 10.0,
+  "requireExecutableDelta": false,
+  "documentationOnlyOverride": true,
+  "limits": {
+    "maxChainStep": 6,
+    "maxHandoffsPerIssue": 2,
+    "noCodeDiffChatLimit": 2,
+    "wipLimitPerLane": 1,
+    "requireExecutableDelta": {
+      "fast": true,
+      "standard": true,
+      "strict": false
+    },
+    "maxDocToCodeRatio": {
+      "fast": 0.4,
+      "standard": 0.4,
+      "strict": 10.0
+    }
+  },
+  "prSizeGuardrails": {
+    "preferred": {
+      "maxFiles": 25,
+      "maxLines": 600
+    },
+    "warning": {
+      "maxFiles": 40,
+      "maxLines": 1000
+    }
+  },
+  "failures": [],
+  "warnings": [
+    "Changed line count (896) exceeds preferred maximum (600)."
+  ],
+  "pass": true
+}

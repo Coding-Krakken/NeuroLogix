@@ -1,0 +1,78 @@
+{
+  "generatedAtUtc": "2026-03-10T14:10:58.0043398Z",
+  "issue": {
+    "id": 44,
+    "lane": "standard"
+  },
+  "artifacts": {
+    "executionBrief": "",
+    "builderHandoff": "C:\\Users\\david\\Desktop\\NeuroLogix\\planning\\builder-handoff-issue-44.md",
+    "validatorDecision": "",
+    "stateSnapshot": "C:\\Users\\david\\Desktop\\NeuroLogix\\planning\\state\\current-cycle.md"
+  },
+  "repository": {
+    "root": "C:/Users/david/Desktop/NeuroLogix",
+    "branch": "issue-44-security-resilience-baseline",
+    "headSha": "d8e200aeca222f27ed70a9f642a23e98084f6e2c"
+  },
+  "diff": {
+    "baseRef": "origin/main",
+    "headRef": "HEAD",
+    "diffSpec": "origin/main...HEAD",
+    "filesChanged": 8,
+    "linesChanged": 896,
+    "docLines": 419,
+    "codeLines": 0,
+    "otherLines": 477,
+    "docToCodeRatio": "Infinity",
+    "paths": [
+      ".github/.system-state/resilience/resilience_model.yaml",
+      ".github/.system-state/security/security_model.yaml",
+      "planning/builder-handoff-issue-44.md",
+      "planning/efficiency-gate-summary-issue-44.json",
+      "planning/evidence-issue-44.json",
+      "planning/handoff-to-validator-issue-44.md",
+      "planning/state/current-cycle.md",
+      "planning/validation-evidence-issue-44.md"
+    ]
+  },
+  "policy": {
+    "version": "2.0.0",
+    "requiredChecks": [
+      "lint",
+      "unit",
+      "integration",
+      "build"
+    ],
+    "limits": {
+      "maxChainStep": 6,
+      "maxHandoffsPerIssue": 2,
+      "noCodeDiffChatLimit": 2,
+      "wipLimitPerLane": 1,
+      "requireExecutableDelta": {
+        "fast": true,
+        "standard": true,
+        "strict": false
+      },
+      "maxDocToCodeRatio": {
+        "fast": 0.4,
+        "standard": 0.4,
+        "strict": 10.0
+      }
+    }
+  },
+  "checks": {
+    "available": true,
+    "pullRequest": {
+      "number": 48,
+      "url": "https://github.com/Coding-Krakken/NeuroLogix/pull/48",
+      "state": "OPEN"
+    },
+    "totals": {
+      "successful": 0,
+      "failed": 0,
+      "pending": 0,
+      "total": 0
+    }
+  }
+}

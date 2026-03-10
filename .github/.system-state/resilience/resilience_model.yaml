@@ -1,0 +1,202 @@
+resilience_model:
+  id: neurologix-resilience-baseline-model
+  version: 1.0.0
+  phase: 6
+  status: proposed
+  last_updated: 2026-03-10
+  source_issue: 44
+  objective: Deterministic failure detection, containment, rollback, and fallback behavior for critical control paths.
+
+critical_paths:
+  - id: policy_evaluation
+    description: Policy decision for operational command authorization
+    service_owner: policy-engine
+  - id: recipe_execution
+    description: Deterministic recipe step orchestration and control action dispatch
+    service_owner: recipe-executor
+  - id: digital_twin_sync
+    description: State synchronization between live telemetry and digital twin state
+    service_owner: digital-twin
+  - id: capability_registry_read
+    description: Capability metadata read path used by runtime orchestrators
+    service_owner: capability-registry
+
+failure_mode_catalog:
+  - id: fm-policy-timeout
+    path: policy_evaluation
+    component: policy-engine
+    severity: high
+    detection:
+      signal: p95_decision_latency_ms
+      threshold: "> 75 for 5m"
+      source: metrics
+    blast_radius: command-authorizations-delayed
+    containment_actions:
+      - open-circuit-for-dependent-callers
+      - route-to-read-only-safe-policy-cache
+    mitigation_actions:
+      - restart-stuck-policy-workers
+      - scale-policy-engine-replicas
+    rollback_trigger_id: rb-policy-regression
+    recovery_owner: sre-oncall
+  - id: fm-recipe-step-failure-burst
+    path: recipe_execution
+    component: recipe-executor
+    severity: critical
+    detection:
+      signal: failed_steps_ratio
+      threshold: "> 0.03 over 10m"
+      source: metrics
+    blast_radius: active-workcell-operations
+    containment_actions:
+      - pause-new-recipe-starts
+      - isolate-affected-workcell-queue
+    mitigation_actions:
+      - trigger-automatic-step-compensation
+      - switch-to-last-known-good-recipe-version
+    rollback_trigger_id: rb-recipe-regression
+    recovery_owner: operations-control-oncall
+  - id: fm-digital-twin-staleness
+    path: digital_twin_sync
+    component: digital-twin
+    severity: medium
+    detection:
+      signal: state_age_seconds
+      threshold: "> 30 for 3m"
+      source: metrics
+    blast_radius: planning-and-optimization-features
+    containment_actions:
+      - suspend-optimization-recommendations
+      - mark-stale-assets-degraded
+    mitigation_actions:
+      - force-backfill-from-telemetry-buffer
+      - restart-sync-consumers
+    rollback_trigger_id: rb-sync-regression
+    recovery_owner: digital-twin-oncall
+  - id: fm-capability-read-errors
+    path: capability_registry_read
+    component: capability-registry
+    severity: high
+    detection:
+      signal: http_5xx_rate
+      threshold: "> 0.02 over 5m"
+      source: metrics
+    blast_radius: control-plane-feature-resolution
+    containment_actions:
+      - enable-read-through-cache-only-mode
+      - deny-nonessential-capability-refresh
+    mitigation_actions:
+      - fail-over-to-secondary-read-replica
+      - recycle-unhealthy-pods
+    rollback_trigger_id: rb-capability-regression
+    recovery_owner: platform-runtime-oncall
+
+retry_timeout_and_circuit_breaker_rules:
+  policy_evaluation:
+    request_timeout_ms: 80
+    retry_budget:
+      max_attempts: 2
+      budget_window_seconds: 60
+      max_retries_per_window: 400
+    circuit_breaker:
+      failure_rate_threshold: 0.08
+      slow_call_rate_threshold: 0.2
+      open_state_duration_seconds: 20
+      half_open_max_requests: 10
+    dead_letter_path: queue://resilience/policy_evaluation_dlq
+  recipe_execution:
+    request_timeout_ms: 250
+    retry_budget:
+      max_attempts: 1
+      budget_window_seconds: 120
+      max_retries_per_window: 120
+    circuit_breaker:
+      failure_rate_threshold: 0.05
+      slow_call_rate_threshold: 0.15
+      open_state_duration_seconds: 30
+      half_open_max_requests: 5
+    dead_letter_path: queue://resilience/recipe_execution_dlq
+  digital_twin_sync:
+    request_timeout_ms: 120
+    retry_budget:
+      max_attempts: 3
+      budget_window_seconds: 60
+      max_retries_per_window: 600
+    circuit_breaker:
+      failure_rate_threshold: 0.1
+      slow_call_rate_threshold: 0.25
+      open_state_duration_seconds: 15
+      half_open_max_requests: 20
+    dead_letter_path: queue://resilience/digital_twin_sync_dlq
+  capability_registry_read:
+    request_timeout_ms: 100
+    retry_budget:
+      max_attempts: 2
+      budget_window_seconds: 60
+      max_retries_per_window: 300
+    circuit_breaker:
+      failure_rate_threshold: 0.06
+      slow_call_rate_threshold: 0.18
+      open_state_duration_seconds: 20
+      half_open_max_requests: 12
+    dead_letter_path: queue://resilience/capability_registry_dlq
+
+rollback_triggers:
+  - id: rb-policy-regression
+    target_path: policy_evaluation
+    measurable_condition: policy_decision_error_rate > 1.5_percent_for_10m after deployment
+    required_action: rollback-policy-engine-to-last-known-good
+    owner: policy-engine-maintainer
+  - id: rb-recipe-regression
+    target_path: recipe_execution
+    measurable_condition: recipe_failure_rate > 3_percent_for_10m after deployment
+    required_action: rollback-recipe-executor-and-disable-new-recipe-version
+    owner: recipe-executor-maintainer
+  - id: rb-sync-regression
+    target_path: digital_twin_sync
+    measurable_condition: state_sync_lag_seconds > 60_for_15m after deployment
+    required_action: rollback-digital-twin-consumer-release
+    owner: digital-twin-maintainer
+  - id: rb-capability-regression
+    target_path: capability_registry_read
+    measurable_condition: capability_lookup_5xx_rate > 2_percent_for_5m after deployment
+    required_action: rollback-capability-registry-release
+    owner: capability-registry-maintainer
+
+recovery_ownership:
+  incident_commander: sre-oncall
+  rollback_approver: validator-merger
+  service_owners:
+    policy_evaluation: policy-engine-maintainer
+    recipe_execution: recipe-executor-maintainer
+    digital_twin_sync: digital-twin-maintainer
+    capability_registry_read: capability-registry-maintainer
+
+fallback_behaviors:
+  policy_evaluation:
+    degradation_mode: read-only-safe-policy-cache
+    allowed_operations:
+      - read-capability-metadata
+      - deny-high-risk-control-actions
+    exit_condition: live-policy-decision-health-restored-for-15m
+  recipe_execution:
+    degradation_mode: manual-approval-required
+    allowed_operations:
+      - pause-or-cancel-existing-executions
+      - start-only-preapproved-safe-recipes
+    exit_condition: step-failure-ratio-below-1-percent-for-30m
+  digital_twin_sync:
+    degradation_mode: stale-state-with-warning
+    allowed_operations:
+      - telemetry-ingest
+      - alarm-evaluation
+    denied_operations:
+      - automated-optimization-actions
+    exit_condition: sync-lag-below-10-seconds-for-20m
+  capability_registry_read:
+    degradation_mode: cached-capability-snapshot
+    allowed_operations:
+      - capability-read-from-cache
+    denied_operations:
+      - capability-write-or-version-promotion
+    exit_condition: primary-read-path-healthy-for-10m
