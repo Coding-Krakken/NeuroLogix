@@ -125,8 +125,6 @@ describe('CertificateManager', () => {
 
     manager.loadCertificate(serviceid, testCert);
     // Check with 400 day warning (cert defaults to 365 days = should be expiring in warning period)
-    const expiring = manager.isExpiringSoon(serviceid, 1); // 1 day warning - likely expiring
-
     // Certificate is issued and expires in 365 days, so with 1-day warning it shouldn't be expiring immediately
     // but with 400-day warning it definitely should be
     expect(manager.isExpiringSoon(serviceid, 400)).toBe(true);

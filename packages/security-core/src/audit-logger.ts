@@ -72,7 +72,7 @@ export class AuditLogger {
       service: caller,
       targetService: target,
       outcome: 'FAILURE',
-      description: `Service ${caller.serviceId} authentication failed: ${reason || 'unknown reason'}`,
+      description: `Service ${caller.serviceId} authentication failed: ${reason ?? 'unknown reason'}`,
       metadata: { reason, timestamp: new Date().toISOString() },
     });
   }
