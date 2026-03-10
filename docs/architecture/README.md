@@ -4,6 +4,10 @@ This directory contains Architectural Decision Records for the NeuroLogix
 platform. ADRs document important architectural decisions, their rationale, and
 consequences.
 
+## Canonical Models
+
+- [System State Model (Phase 1)](../../.github/.system-state/model/system_state_model.yaml)
+
 ## Index
 
 ### Phase 0 - Foundations

@@ -28,6 +28,9 @@ Google-scale architecture and Microsoft enterprise reliability.
 
 ## 🏗️ Architecture Overview
 
+- Canonical system state model:
+  [`.github/.system-state/model/system_state_model.yaml`](./.github/.system-state/model/system_state_model.yaml)
+
 ```mermaid
 flowchart TB
     subgraph "Edge Layer"

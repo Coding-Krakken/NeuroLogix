@@ -1,0 +1,536 @@
+model:
+  id: neurologix-system-state-model
+  version: 1.0.0
+  phase: 1
+  status: accepted
+  last_updated: 2026-03-09
+  source_issue: 17
+  intent: Canonical system-state baseline for model-first delivery and downstream issue unblocking.
+
+bounded_contexts:
+  - id: edge-ingestion
+    purpose: Collect field data from industrial assets and edge protocols.
+    owns:
+      - telemetry_ingest
+      - sparkplug_message
+      - asset_signal
+    zones:
+      - edge
+    primary_artifacts:
+      - packages/schemas/src/telemetry/index.ts
+      - packages/schemas/src/sparkplug/index.ts
+  - id: core-runtime
+    purpose: Execute deterministic control logic and enforce safety/policy gates.
+    owns:
+      - capability
+      - policy_document
+      - approval_request
+      - recipe_execution
+      - digital_twin
+      - audit_event
+    zones:
+      - core_runtime
+    primary_artifacts:
+      - services/capability-registry/src/index.ts
+      - services/policy-engine/src/index.ts
+      - services/recipe-executor/src/index.ts
+      - services/digital-twin/src/index.ts
+  - id: shared-domain
+    purpose: Share canonical core types and primitives across services.
+    owns:
+      - operator_intent
+      - asset
+      - telemetry_record
+      - api_response
+    zones:
+      - core_runtime
+    primary_artifacts:
+      - packages/core/src/index.ts
+      - packages/core/src/types/index.ts
+  - id: integration-zone
+    purpose: Coordinate external system interactions via controlled tasks.
+    owns:
+      - integration_task
+    zones:
+      - integration
+    primary_artifacts:
+      - README.md
+    implementation_state: planned
+  - id: ai-services
+    purpose: Convert machine perception and human intent into bounded recommendations.
+    owns:
+      - ai_inference
+      - operator_intent_enrichment
+    zones:
+      - ai_services
+    primary_artifacts:
+      - README.md
+    implementation_state: planned
+
+entities:
+  capability:
+    description: Deployable platform capability registered and lifecycle-managed by capability-registry.
+    sources:
+      - services/capability-registry/src/types/index.ts
+    keys:
+      - id
+      - name
+      - version
+      - type
+      - status
+  policy_document:
+    description: Versioned policy definition evaluated for safety/security/operational decisions.
+    sources:
+      - services/policy-engine/src/types/index.ts
+    keys:
+      - id
+      - category
+      - priority
+      - status
+      - regoRules
+  approval_request:
+    description: Explicit approval workflow request produced when policy requires human authorization.
+    sources:
+      - services/policy-engine/src/types/index.ts
+    keys:
+      - id
+      - requestId
+      - status
+      - minimumApprovals
+      - expiresAt
+  recipe:
+    description: Automation sequence definition with safety and approval metadata.
+    sources:
+      - services/recipe-executor/src/types/index.ts
+      - packages/core/src/types/index.ts
+    keys:
+      - id
+      - version
+      - priority
+      - safetyLevel
+      - requiresApproval
+      - requiresDualApproval
+  recipe_execution:
+    description: Runtime execution instance for a recipe request.
+    sources:
+      - services/recipe-executor/src/types/index.ts
+    keys:
+      - id
+      - recipeId
+      - status
+      - executedBy
+      - currentStep
+  digital_twin:
+    description: Asset digital representation and simulation state.
+    sources:
+      - services/digital-twin/src/types/index.ts
+    keys:
+      - id
+      - assetId
+      - assetType
+      - status
+      - zone
+  telemetry:
+    description: Timestamped measurement stream from edge assets and Sparkplug payloads.
+    sources:
+      - packages/schemas/src/telemetry/index.ts
+      - packages/schemas/src/sparkplug/index.ts
+      - packages/core/src/types/index.ts
+    keys:
+      - assetId
+      - timestamp
+      - source
+      - quality
+  integration_task:
+    description: Bounded outbound task for WMS/WCS/dispatch coordination.
+    implementation_state: planned
+    keys:
+      - id
+      - externalSystem
+      - taskType
+      - status
+      - correlationId
+  operator_intent:
+    description: Human-originating command intent from voice/UI/automation triggers.
+    sources:
+      - packages/core/src/types/index.ts
+    keys:
+      - id
+      - type
+      - source
+      - confidence
+      - userId
+  audit_event:
+    description: Compliance-grade record of control actions and outcomes.
+    sources:
+      - packages/core/src/types/index.ts
+    keys:
+      - id
+      - timestamp
+      - userId
+      - action
+      - resource
+      - outcome
+
+state_machines:
+  capability_lifecycle:
+    owner: services/capability-registry
+    states:
+      - installed
+      - enabled
+      - disabled
+      - failed
+      - updating
+      - uninstalling
+    transitions:
+      - from: installed
+        to: enabled
+        trigger: enable_capability
+      - from: enabled
+        to: disabled
+        trigger: disable_capability
+      - from: enabled
+        to: failed
+        trigger: runtime_health_failure
+      - from: failed
+        to: disabled
+        trigger: isolate_failed_capability
+      - from: disabled
+        to: updating
+        trigger: start_update
+      - from: updating
+        to: enabled
+        trigger: update_success
+      - from: disabled
+        to: uninstalling
+        trigger: uninstall_capability
+  policy_approval_lifecycle:
+    owner: services/policy-engine
+    states:
+      - pending
+      - approved
+      - rejected
+      - expired
+      - cancelled
+    transitions:
+      - from: pending
+        to: approved
+        trigger: minimum_approvals_reached
+      - from: pending
+        to: rejected
+        trigger: rejection_recorded
+      - from: pending
+        to: expired
+        trigger: ttl_elapsed
+      - from: pending
+        to: cancelled
+        trigger: requester_cancelled
+  recipe_execution_lifecycle:
+    owner: services/recipe-executor
+    states:
+      - pending
+      - validating
+      - approved
+      - executing
+      - paused
+      - completed
+      - failed
+      - cancelled
+      - rolling_back
+      - rolled_back
+    transitions:
+      - from: pending
+        to: validating
+        trigger: execution_requested
+      - from: validating
+        to: approved
+        trigger: safety_and_policy_checks_passed
+      - from: approved
+        to: executing
+        trigger: execution_start
+      - from: executing
+        to: paused
+        trigger: pause_requested
+      - from: paused
+        to: executing
+        trigger: resume_requested
+      - from: executing
+        to: completed
+        trigger: all_steps_succeeded
+      - from: executing
+        to: failed
+        trigger: step_or_safety_failure
+      - from: failed
+        to: rolling_back
+        trigger: rollback_enabled
+      - from: rolling_back
+        to: rolled_back
+        trigger: rollback_completed
+      - from: pending
+        to: cancelled
+        trigger: cancellation_requested
+      - from: approved
+        to: cancelled
+        trigger: cancellation_requested
+      - from: executing
+        to: cancelled
+        trigger: cancellation_requested
+  digital_twin_simulation_lifecycle:
+    owner: services/digital-twin
+    states:
+      - pending
+      - running
+      - completed
+      - failed
+      - cancelled
+    transitions:
+      - from: pending
+        to: running
+        trigger: simulation_started
+      - from: running
+        to: completed
+        trigger: max_steps_reached
+      - from: running
+        to: failed
+        trigger: simulation_error
+      - from: pending
+        to: cancelled
+        trigger: cancel_requested
+      - from: running
+        to: cancelled
+        trigger: cancel_requested
+
+critical_flows:
+  - id: flow-policy-gated-recipe-execution
+    description: Operator intent is gated by policy and approval before recipe execution can begin.
+    sequence:
+      - operator_intent_received
+      - policy_evaluation_requested
+      - approval_request_created_if_required
+      - recipe_execution_validated
+      - recipe_execution_approved
+      - recipe_execution_started
+      - digital_twin_state_updated
+      - audit_event_persisted
+    cross_service_transitions:
+      - from_service: policy-engine
+        output: PolicyEvaluationResult.decision
+        to_service: recipe-executor
+        effect: decision controls transition validating -> approved or validating -> failed
+      - from_service: policy-engine
+        output: ApprovalRequest.status
+        to_service: recipe-executor
+        effect: approved status is prerequisite for execution of approval-required recipes
+      - from_service: recipe-executor
+        output: RecipeExecution.status=executing|completed|failed
+        to_service: digital-twin
+        effect: update twin state and simulation records
+    invariants:
+      - id: inv-flow-01-policy-non-bypass
+        rule: Recipe execution MUST NOT transition to executing unless policy decision is allow or approval_required resolved to approved.
+      - id: inv-flow-02-critical-dual-approval
+        rule: Critical-safety recipes with requiresDualApproval=true MUST have both approvedBy and secondApprover before executing.
+      - id: inv-flow-03-audit-on-state-change
+        rule: Every recipe status transition MUST emit an audit_event with correlation identifiers.
+  - id: flow-telemetry-to-digital-twin
+    description: Edge telemetry updates digital twin state under trust-boundary controls.
+    sequence:
+      - telemetry_batch_ingested
+      - telemetry_points_validated
+      - asset_context_resolved
+      - twin_state_updated
+      - anomalies_published
+      - audit_event_persisted
+    cross_service_transitions:
+      - from_context: edge-ingestion
+        output: AssetTelemetry
+        to_service: digital-twin
+        effect: append/update TwinState with source=telemetry
+    invariants:
+      - id: inv-flow-04-telemetry-provenance
+        rule: TwinState updates from telemetry MUST retain source and timestamp provenance.
+      - id: inv-flow-05-quality-gate
+        rule: Telemetry with quality=bad MUST NOT drive control actions without explicit policy override.
+  - id: flow-capability-change-control
+    description: Capability lifecycle mutations are policy-checked and auditable.
+    sequence:
+      - capability_change_requested
+      - policy_evaluation_for_capability_action
+      - capability_state_transition_applied
+      - health_check_executed
+      - audit_event_persisted
+    cross_service_transitions:
+      - from_service: policy-engine
+        output: allow|deny|approval_required
+        to_service: capability-registry
+        effect: gate install/enable/update/uninstall actions
+    invariants:
+      - id: inv-flow-06-safe-degradation
+        rule: Capabilities in failed state MUST NOT be auto-promoted to enabled without explicit successful health check.
+      - id: inv-flow-07-change-audit
+        rule: Capability lifecycle transitions MUST record actor, previous state, new state, and reason.
+
+trust_boundaries:
+  zones:
+    - id: edge
+      description: PLC/camera/sensor and protocol adapter ingress zone.
+    - id: core_runtime
+      description: Deterministic policy and execution services.
+    - id: ai_services
+      description: Probabilistic recommendation and perception services.
+    - id: integration
+      description: External WMS/WCS/dispatch connectors.
+    - id: mission_control
+      description: Human operator interface and control surface.
+  allowed_interactions:
+    - from: edge
+      to: core_runtime
+      direction: inbound_only
+      data_flows:
+        - telemetry
+        - sparkplug_message
+      protocols:
+        - mqtt
+        - opcua
+      constraints:
+        - no_direct_actuation_commands
+    - from: mission_control
+      to: core_runtime
+      direction: bidirectional
+      data_flows:
+        - operator_intent
+        - status_query
+        - approval_action
+      protocols:
+        - https
+        - websocket
+      constraints:
+        - all_mutating_actions_policy_gated
+    - from: core_runtime
+      to: ai_services
+      direction: outbound_request
+      data_flows:
+        - bounded_context_payloads
+      protocols:
+        - https
+        - grpc
+      constraints:
+        - ai_output_is_advisory_until_policy_approved
+    - from: core_runtime
+      to: integration
+      direction: outbound_only
+      data_flows:
+        - integration_task
+        - execution_outcome
+      protocols:
+        - https
+        - message_bus
+      constraints:
+        - integration_calls_must_include_correlation_id
+    - from: integration
+      to: core_runtime
+      direction: inbound_callbacks
+      data_flows:
+        - task_ack
+        - task_failure
+      protocols:
+        - https
+        - message_bus
+      constraints:
+        - callback_signatures_required
+  denied_interactions:
+    - from: edge
+      to: integration
+      rule: direct_edge_to_external_integration_forbidden
+    - from: ai_services
+      to: edge
+      rule: direct_ai_to_device_control_forbidden
+
+implementation_mapping:
+  packages:
+    - path: packages/core/src/index.ts
+      maps_to:
+        - shared-domain
+        - entities.operator_intent
+        - entities.audit_event
+    - path: packages/core/src/types/index.ts
+      maps_to:
+        - entities.asset
+        - entities.telemetry
+        - entities.recipe
+        - entities.operator_intent
+        - entities.audit_event
+    - path: packages/schemas/src/index.ts
+      maps_to:
+        - edge-ingestion
+    - path: packages/schemas/src/telemetry/index.ts
+      maps_to:
+        - entities.telemetry
+        - flow-telemetry-to-digital-twin
+    - path: packages/schemas/src/sparkplug/index.ts
+      maps_to:
+        - edge-ingestion
+  services:
+    - path: services/capability-registry/src/index.ts
+      maps_to:
+        - entities.capability
+        - state_machines.capability_lifecycle
+        - flow-capability-change-control
+    - path: services/policy-engine/src/index.ts
+      maps_to:
+        - entities.policy_document
+        - entities.approval_request
+        - state_machines.policy_approval_lifecycle
+        - flow-policy-gated-recipe-execution
+        - flow-capability-change-control
+    - path: services/recipe-executor/src/index.ts
+      maps_to:
+        - entities.recipe
+        - entities.recipe_execution
+        - state_machines.recipe_execution_lifecycle
+        - flow-policy-gated-recipe-execution
+    - path: services/digital-twin/src/index.ts
+      maps_to:
+        - entities.digital_twin
+        - state_machines.digital_twin_simulation_lifecycle
+        - flow-telemetry-to-digital-twin
+
+amm_os_extensions:
+  tenant_model:
+    enabled: true
+    tenant_id_field: tenant_id
+    required_on_entities:
+      - capability
+      - policy_document
+      - approval_request
+      - recipe
+      - recipe_execution
+      - digital_twin
+      - telemetry
+      - integration_task
+      - operator_intent
+      - audit_event
+    tenancy_isolation_rules:
+      - cross_tenant_reads_denied_by_default
+      - policy_evaluation_scoped_by_tenant_id
+      - audit_query_scoped_by_tenant_id
+  config_model:
+    scopes:
+      - global
+      - tenant
+      - site
+      - zone
+    required_capabilities:
+      - versioned_config
+      - drift_detection
+      - rollback_to_known_good
+  feature_flags:
+    required: true
+    dimensions:
+      - tenant
+      - site
+      - role
+      - environment
+    safety_rules:
+      - flags_cannot_bypass_policy_gates
+      - flags_cannot_disable_audit_emission
