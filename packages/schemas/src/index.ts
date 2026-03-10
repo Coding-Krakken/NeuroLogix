@@ -9,6 +9,7 @@
 
 export * from './telemetry/index.js';
 export * from './sparkplug/index.js';
+export * from './broker/index.js';
 // Note: Other schema modules will be implemented in subsequent phases
 // export * from './intents/index.js';
 // export * from './recipes/index.js';
