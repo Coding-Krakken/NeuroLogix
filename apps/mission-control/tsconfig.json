@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "paths": {
+      "@neurologix/ui": ["../../packages/ui/src/index.ts"],
+      "@neurologix/ui/*": ["../../packages/ui/src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist", "**/*.test.ts", "**/*.spec.ts"],
+  "references": [
+    { "path": "../../packages/adapters" },
+    { "path": "../../packages/schemas" },
+    { "path": "../../packages/ui" }
+  ]
+}
