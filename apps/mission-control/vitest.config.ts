@@ -8,6 +8,22 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'dist/',
+        '**/*.test.ts',
+        '**/*.spec.ts',
+        'vitest.config.ts',
+        'src/index.ts', // barrel re-export; no testable logic
+      ],
+      thresholds: {
+        global: {
+          branches: 70, // SSE and 500-path error branches are infrastructure code
+          functions: 80,
+          lines: 80,
+          statements: 80,
+        },
+      },
     },
   },
 });
