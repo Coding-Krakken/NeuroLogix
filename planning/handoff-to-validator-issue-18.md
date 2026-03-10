@@ -14,7 +14,7 @@ Objective
 
 - Validate Issue #18 with policy-compliant PR merge-gate context now restored.
 - Confirm bounded PR scope, required-check visibility, and approval readiness
-   for final merge/no-merge decision.
+  for final merge/no-merge decision.
 
 Required Actions
 
@@ -29,7 +29,8 @@ Required Actions
    - Current check status is actionable for gate decision.
    - Approval state is explicit (`none` at handoff capture time).
 4. Execute final validator merge/no-merge decision once checks complete.
-5. Record validator outcome in `planning/validation-evidence-issue-18-validator.md`.
+5. Record validator outcome in
+   `planning/validation-evidence-issue-18-validator.md`.
 
 Forbidden Actions
 

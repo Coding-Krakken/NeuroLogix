@@ -10,11 +10,11 @@ Branch: `issue-18-delivery-model-phase-2` Issue: `#18`
 - Merge state status: `UNSTABLE` (checks in progress at capture time)
 - Review decision: `NONE` (no approvals yet)
 - Required-check snapshot at capture:
-   - `CI/CD Pipeline/🔒 Security Scan` — `IN_PROGRESS`
-   - `CI/CD Pipeline/🧹 Lint & Format` — `IN_PROGRESS`
-   - `CI/CD Pipeline/🧪 Test Suite (20.19.0)` — `IN_PROGRESS`
-   - `CI/CD Pipeline/🧪 Test Suite (22.x)` — `IN_PROGRESS`
-   - `CI/CD Pipeline/🛡️ Security Audit` — `SKIPPED`
+  - `CI/CD Pipeline/🔒 Security Scan` — `IN_PROGRESS`
+  - `CI/CD Pipeline/🧹 Lint & Format` — `IN_PROGRESS`
+  - `CI/CD Pipeline/🧪 Test Suite (20.19.0)` — `IN_PROGRESS`
+  - `CI/CD Pipeline/🧪 Test Suite (22.x)` — `IN_PROGRESS`
+  - `CI/CD Pipeline/🛡️ Security Audit` — `SKIPPED`
 
 Interpretation:
 
