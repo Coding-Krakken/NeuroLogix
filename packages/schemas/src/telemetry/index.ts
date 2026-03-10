@@ -15,14 +15,6 @@ export const ASSET_TYPES = {
   WORKSTATION: 'workstation',
 } as const;
 
-// Asset status enum
-export const ASSET_STATUS = {
-  ONLINE: 'online',
-  OFFLINE: 'offline',
-  MAINTENANCE: 'maintenance',
-  ERROR: 'error',
-} as const;
-
 // Data quality enum
 export const DATA_QUALITY = {
   GOOD: 'good',
