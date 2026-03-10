@@ -1,0 +1,212 @@
+schema_version: "1.0"
+model_id: ROADMAP-001
+issue: "https://github.com/Coding-Krakken/NeuroLogix/issues/46"
+last_updated: "2026-03-10"
+status: active
+phase: "10-12"
+
+# Roadmap and Prioritization Model
+
+# Scoring Dimensions and Weights
+
+scoring_dimensions:
+  business_impact:
+    weight: 0.30
+    scale: 1-5
+    criteria:
+      5: "Critical path to production; blocks revenue or safety compliance"
+      4: "Enables key product capability or removes major blocker"
+      3: "Meaningful improvement to performance, reliability, or UX"
+      2: "Nice-to-have improvement with limited immediate impact"
+      1: "Housekeeping or minor refactor with no user-facing impact"
+
+  risk_reduction:
+    weight: 0.25
+    scale: 1-5
+    criteria:
+      5: "Eliminates safety-critical or compliance risk"
+      4: "Eliminates high severity security or reliability risk"
+      3: "Reduces moderate risk with documented mitigation"
+      2: "Low risk reduction; existing controls adequate"
+      1: "No meaningful risk reduction"
+
+  dependency_unlock:
+    weight: 0.20
+    scale: 1-5
+    criteria:
+      5: "Unlocks 3+ blocked issues or a full delivery phase"
+      4: "Unlocks 2 blocked issues"
+      3: "Unlocks 1 issue or enables parallel work"
+      2: "Minor dependency; can be worked around"
+      1: "No blocking dependencies"
+
+  effort:
+    weight: 0.15
+    scale: 1-5
+    note: "Inverse: lower effort = higher score"
+    criteria:
+      5: "< 1 day (simple config, small model file)"
+      4: "1-3 days (bounded slice, clear scope)"
+      3: "3-7 days (moderate scope, some unknowns)"
+      2: "1-2 weeks (complex integration or multi-service change)"
+      1: "> 2 weeks (large scope or high uncertainty)"
+
+  compliance_urgency:
+    weight: 0.10
+    scale: 1-5
+    criteria:
+      5: "Required for IEC 62443 / ISO 27001 / NIST CSF compliance gate"
+      4: "Required for audit readiness or regulatory obligation"
+      3: "Improves compliance posture without hard deadline"
+      2: "Documentation/governance improvement"
+      1: "No compliance relevance"
+
+scoring_formula: "SUM(dimension_score * dimension_weight)"
+
+# Current Backlog — Scored Items
+
+backlog:
+  - id: ISSUE-36
+    title: "Phase 8 Delivery: End-to-End Validation, Performance, and Chaos"
+    state: open
+    phase: 8
+    track: qa
+    dependencies:
+      - ISSUE-45 # model-first: observability/test/perf (CLOSED ✓)
+      - ISSUE-46 # this issue — model-first: deps/CI/CD/roadmap
+    scores:
+      business_impact: 4
+      risk_reduction: 4
+      dependency_unlock: 3
+      effort: 2
+      compliance_urgency: 3
+    total_score: 3.45
+    sequencing: "after ISSUE-46 closes"
+
+  - id: ISSUE-37
+    title: "Phase 9 Delivery: Multi-Site Federation and Controlled Rollout"
+    state: open
+    phase: 9
+    track: integration
+    dependencies:
+      - ISSUE-36
+      - ISSUE-46
+    scores:
+      business_impact: 4
+      risk_reduction: 3
+      dependency_unlock: 2
+      effort: 1
+      compliance_urgency: 2
+    total_score: 2.7
+    sequencing: "after ISSUE-36 closes"
+
+  - id: CI-001
+    title: "Create GitHub Actions CI workflow (.github/workflows/ci.yml)"
+    state: not_yet_created
+    phase: ci_hardening
+    track: cicd
+    dependencies:
+      - ISSUE-46 # this issue defines the model
+    scores:
+      business_impact: 5
+      risk_reduction: 4
+      dependency_unlock: 5
+      effort: 4
+      compliance_urgency: 4
+    total_score: 4.5
+    sequencing: "immediately after ISSUE-46 closes"
+    note: "Should be first delivery item after this model is merged"
+
+  - id: CI-002
+    title: "Create GitHub Actions release workflow (.github/workflows/release.yml)"
+    state: not_yet_created
+    phase: ci_hardening
+    track: cicd
+    dependencies:
+      - CI-001
+    scores:
+      business_impact: 4
+      risk_reduction: 4
+      dependency_unlock: 3
+      effort: 3
+      compliance_urgency: 4
+    total_score: 3.75
+    sequencing: "after CI-001 closes"
+
+  - id: CI-003
+    title: "Add Dependabot configuration (.github/dependabot.yml)"
+    state: not_yet_created
+    phase: ci_hardening
+    track: cicd
+    dependencies:
+      - ISSUE-46
+    scores:
+      business_impact: 3
+      risk_reduction: 4
+      dependency_unlock: 2
+      effort: 5
+      compliance_urgency: 4
+    total_score: 3.55
+    sequencing: "parallel with CI-001"
+
+# Prioritized Implementation Queue
+
+prioritized_queue:
+  - rank: 1
+    id: CI-001
+    score: 4.5
+    rationale: "Highest dependency unlock value; current repo has zero CI automation"
+  - rank: 2
+    id: CI-003
+    score: 3.55
+    rationale: "Low effort; immediately improves security posture; parallel with CI-001"
+  - rank: 3
+    id: CI-002
+    score: 3.75
+    rationale: "Depends on CI-001; completes automated release pipeline"
+  - rank: 4
+    id: ISSUE-36
+    score: 3.45
+    rationale: "Phase 8 delivery; depends on CI pipeline existing"
+  - rank: 5
+    id: ISSUE-37
+    score: 2.7
+    rationale: "Phase 9 delivery; depends on Phase 8 complete"
+
+# WIP Limits and Sequencing Rules
+
+wip_limits:
+  max_active_prs: 3
+  max_active_branches: 5
+  rule: "Complete or close before opening new PRs beyond WIP limit"
+  exception: "Hotfixes bypass WIP limit"
+
+sequencing_rules:
+  - "Model-first: no delivery code before models are merged"
+  - "CI pipeline must exist before benchmarks are meaningful"
+  - "Phase N must be >80% complete before Phase N+1 delivery starts"
+  - "Security hardening (Phase 7) gates all production deployments"
+  - "SBOM required before any container is published"
+
+# Reprioritization Triggers
+
+reprioritization_triggers:
+  immediate:
+    - "Critical vulnerability (CVSS >= 9.0) discovered"
+    - "Safety interlock bypass event detected"
+    - "Audit log integrity violation"
+    - "Production availability SLO breach"
+  scheduled_quarterly:
+    - "Stakeholder priority review"
+    - "Competitor feature parity gap identified"
+    - "Regulatory deadline approaching"
+  on_delivery:
+    - "Phase completes — re-score newly unblocked items"
+    - "Major dependency update changes ecosystem assumptions"
+
+reprioritization_process:
+  trigger_detection: on_event_or_quarterly
+  scoring_refresh: all_unstarted_backlog_items
+  output: "updated prioritized_queue in this file"
+  approval: tech_lead
+  communication: "GitHub discussion or issue comment"

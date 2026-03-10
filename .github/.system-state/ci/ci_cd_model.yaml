@@ -1,0 +1,245 @@
+schema_version: "1.0"
+model_id: CICD-001
+issue: "https://github.com/Coding-Krakken/NeuroLogix/issues/46"
+last_updated: "2026-03-10"
+status: active
+phase: "10-12"
+
+# CI/CD Environment and Pipeline Model
+
+# Environment Topology
+
+environments:
+  development:
+    description: "Local developer environment"
+    trigger: manual
+    secrets_source: dotenv_local
+    branch_pattern: "feature/* | fix/* | issue-*"
+    checks_required: [lint, typecheck, unit_tests, build]
+    deploy_target: none
+    approval_required: false
+
+  staging:
+    description: "Continuous integration and pre-production validation environment"
+    trigger: "push to main (post-merge)"
+    secrets_source: github_secrets
+    branch_pattern: main
+    checks_required:
+      - lint
+      - typecheck
+      - unit_tests
+      - integration_tests
+      - build
+      - security_scan
+      - sbom_generation
+      - container_scan
+      - e2e_tests
+    deploy_target: "kubernetes staging cluster"
+    approval_required: false
+    smoke_tests: true
+
+  production:
+    description: "Live industrial control system environment"
+    trigger: manual_approval_after_staging
+    secrets_source: "kubernetes secrets + vault"
+    branch_pattern: main
+    checks_required: all_staging_checks_green
+    deploy_target: "kubernetes production cluster"
+    approval_required: true
+    approvers:
+      - tech_lead
+      - operations_lead
+    rollout_strategy: canary
+    canary_stages:
+      - pct: 10
+        monitoring_hours: 24
+      - pct: 25
+        monitoring_hours: 48
+      - pct: 50
+        monitoring_hours: 72
+      - pct: 100
+        monitoring_hours: 168
+
+# Required CI Checks — by Risk Profile
+
+checks_matrix:
+  all_prs:
+    - id: lint
+      tool: eslint
+      fail_action: block_merge
+    - id: typecheck
+      tool: "tsc --noEmit"
+      fail_action: block_merge
+    - id: unit_tests
+      tool: vitest
+      coverage_threshold_pct: 80
+      core_modules_coverage_pct: 90
+      fail_action: block_merge
+    - id: build
+      tool: "turbo build"
+      fail_action: block_merge
+    - id: secrets_scan
+      tool: gitleaks
+      fail_action: block_merge
+    - id: dependency_scan
+      tool: "npm audit + dependabot"
+      fail_on: critical_or_high
+      fail_action: block_merge
+
+  t1_risk_prs:
+    extends: all_prs
+    additional:
+      - id: e2e_tests
+        tool: playwright
+        scope: critical_operator_journeys
+        fail_action: block_merge
+      - id: security_scan
+        tool: "snyk or sonarqube"
+        fail_action: block_merge
+      - id: performance_budget
+        tool: lighthouse_ci
+        score_threshold_performance: 90
+        fail_action: warn
+      - id: container_scan
+        tool: "trivy or grype"
+        fail_on: critical_or_high
+        fail_action: block_merge
+      - id: sbom_generation
+        tool: cyclonedx
+        fail_action: block_merge
+
+  pre_release_gate:
+    extends: t1_risk_prs
+    additional:
+      - id: benchmark_control_loop
+        description: "10k tags/s for 60s under 10 concurrent recipes"
+        p95_target_ms: 50
+        fail_action: block_release
+      - id: benchmark_policy_engine
+        description: "5000 concurrent policy evaluations"
+        p95_target_ms: 10
+        fail_action: block_release
+      - id: benchmark_recipe_executor
+        description: "50 concurrent recipe executions"
+        fail_action: block_release
+
+# Secrets and Environment Variable Boundary Management
+
+secrets_management:
+  local_development:
+    source: ".env.local"
+    gitignore_required: true
+    forbidden: ".env (committed)"
+    secrets_scanning: gitleaks_precommit_hook
+  staging:
+    source: github_actions_secrets
+    naming_convention: "{SERVICE}_{KEY}"
+    rotation_cadence: 90_days
+    access: ci_bot_only
+  production:
+    source: "kubernetes secrets + external vault"
+    naming_convention: "{SERVICE}_{ENV}_{KEY}"
+    rotation_cadence: 30_days
+    access: cluster_service_accounts_only
+    audit_log: required
+
+  forbidden_locations:
+    - hardcoded_in_source
+    - committed_env_files
+    - log_output
+    - pr_comments
+    - issue_bodies
+
+  certificate_management:
+    provider: cert-manager
+    renewal: automated_with_30d_warning
+    storage: kubernetes_secrets
+
+# Deployment Safety Controls
+
+deployment_safety:
+  canary:
+    strategy: percentage_traffic_split
+    auto_rollback_triggers:
+      - control_loop_p99_ms_above: 200
+      - service_error_rate_pct_above: 0.5
+      - recipe_failure_rate_pct_above: 0.1
+      - safety_interlock_bypass: any
+      - audit_write_failure: any
+    auto_rollback_window_minutes: 30
+    manual_rollback: always_available
+
+  blue_green:
+    status: future_phase
+    note: "Planned for Phase 9 multi-site federation rollout"
+
+  rollback:
+    trigger_types: [automated, manual_operator, automated_on_alert]
+    mechanism: "helm rollback to last known good release"
+    time_to_safe_state_seconds: 30
+    data_integrity: "idempotent writes; no audit log loss"
+    plc_safety: "hardware interlocks remain active independent of software rollback"
+    validation_after_rollback:
+      - control_loop_latency_check
+      - audit_integrity_check
+      - service_health_check
+
+# Release Signoff Evidence
+
+release_signoff:
+  required_evidence:
+    - all_pr_checks_green
+    - staging_deploy_successful
+    - smoke_tests_passed
+    - e2e_critical_journeys_passed
+    - benchmark_gates_passed
+    - security_scan_clean
+    - sbom_generated_and_signed
+    - rollback_plan_documented
+    - monitoring_dashboards_ready
+    - alerts_configured_and_tested
+    - runbooks_validated
+  approval:
+    required_approvals: [tech_lead, operations_lead]
+    documented_in: "planning/release-records/"
+
+# GitHub Actions Workflow Requirements
+
+github_actions:
+  required_workflows:
+    ci:
+      filename: ".github/workflows/ci.yml"
+      triggers: [push, pull_request]
+      jobs:
+        - lint
+        - typecheck
+        - test
+        - build
+        - secrets-scan
+        - dependency-scan
+      status: not_yet_implemented
+
+    release:
+      filename: ".github/workflows/release.yml"
+      triggers: [workflow_dispatch]
+      jobs:
+        - all_ci_jobs
+        - e2e
+        - security-scan
+        - lighthouse-ci
+        - container-scan
+        - sbom-generation
+        - deploy-staging
+        - pre-release-benchmarks
+        - deploy-production-canary
+      status: not_yet_implemented
+
+    dependabot_automerge:
+      filename: ".github/workflows/dependabot-automerge.yml"
+      triggers: [pull_request]
+      condition: "dependabot patch + security only"
+      status: not_yet_implemented
+
+  runner: ubuntu-latest
+  node_version: "20.10.0"
+  cache_strategy: turbo_cache
