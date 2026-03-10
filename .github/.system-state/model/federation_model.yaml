@@ -1,0 +1,427 @@
+schema_version: "1.0"
+model_id: FEDERATION-001
+issue: "https://github.com/Coding-Krakken/NeuroLogix/issues/37"
+last_updated: "2026-03-10"
+status: active
+phase: "9"
+model_ref: ROADMAP-001
+
+# Federation and Multi-Site Model
+# Defines the architecture for multi-site federated operations.
+# All code in Phase 9 must be derived from and consistent with this model.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Domain Entities
+# ─────────────────────────────────────────────────────────────────────────────
+
+domain_entities:
+
+  SiteProfile:
+    description: "Canonical definition of a single industrial site. Contains identity,
+      network topology, zone assignments, operational limits, and feature flag overrides."
+    fields:
+      - name: id
+        type: string (UUID)
+        required: true
+        description: "Globally unique site identifier"
+      - name: slug
+        type: string
+        required: true
+        constraints: "pattern: [a-z0-9-]+, unique in federation"
+        description: "URL-safe human-readable identifier for routing"
+      - name: name
+        type: string
+        required: true
+        description: "Display name for UI and logs"
+      - name: region
+        type: string
+        required: true
+        description: "Geographic or logical region (e.g. eu-west-1, us-east)"
+      - name: status
+        type: SiteStatus
+        required: true
+        default: "provisioning"
+      - name: tier
+        type: SiteTier
+        required: true
+        description: "Controls resource allocation and SLO targets"
+      - name: platformVersion
+        type: string
+        required: true
+        description: "Deployed platform version — used for federation compatibility checks"
+      - name: featureFlags
+        type: Record<string, boolean>
+        required: false
+        description: "Site-level feature-flag overrides (take precedence over global defaults)"
+      - name: equipmentTopology
+        type: EquipmentTopology
+        required: false
+        description: "Line layout and equipment zone assignments for this site"
+      - name: config
+        type: SiteConfig
+        required: true
+        description: "Operational configuration (thresholds, capacities, timezone)"
+      - name: createdAt
+        type: ISO8601 datetime
+        required: true
+      - name: updatedAt
+        type: ISO8601 datetime
+        required: true
+
+  SiteStatus:
+    description: "Lifecycle state of a site within the federation"
+    values:
+      - provisioning: "Being set up; not yet accepting traffic"
+      - active: "Fully operational"
+      - maintenance: "Scheduled maintenance; read-only control plane"
+      - suspended: "Operations suspended; emergency or administrative hold"
+      - decommissioned: "Permanently offline; data retained for audit"
+
+  SiteTier:
+    description: "Site operational tier affecting resource and SLO targets"
+    values:
+      - T1: "Mission-critical; 99.99% availability; p95 control loop <50ms"
+      - T2: "Standard production; 99.9% availability"
+      - T3: "Development or staging; best-effort"
+
+  EquipmentTopology:
+    description: "Physical and logical layout of equipment at a site"
+    fields:
+      - name: lines
+        type: ProductionLine[]
+        description: "Production lines with zone assignments"
+      - name: plcAddresses
+        type: Record<string, string>
+        description: "PLC identifier to network address mapping"
+      - name: cameraZones
+        type: CameraZone[]
+        description: "Computer vision monitoring zones"
+
+  ProductionLine:
+    fields:
+      - name: lineId
+        type: string
+      - name: lineName
+        type: string
+      - name: zones
+        type: string[]
+        description: "Ordered list of zone IDs in this line"
+      - name: capacity
+        type: number
+        description: "Units per hour design capacity"
+
+  SiteConfig:
+    description: "Operational configuration parameters for a site"
+    fields:
+      - name: timezone
+        type: string
+        description: "IANA timezone (e.g. Europe/London)"
+      - name: locale
+        type: string
+        description: "BCP 47 locale code (e.g. en-GB)"
+      - name: alertThresholds
+        type: Record<string, number>
+        description: "Named threshold values for monitoring alerts"
+      - name: controlLimits
+        type: ControlLimits
+        description: "Safety control limits: max speed, max temp, etc."
+      - name: retentionDays
+        type: number
+        default: 90
+        description: "Telemetry data retention in days (min 30 for compliance)"
+
+  ControlLimits:
+    fields:
+      - name: maxConveyorSpeedPercent
+        type: number
+        description: "Upper bound on conveyor speed as percent of rated capacity"
+      - name: maxTemperatureCelsius
+        type: number
+        description: "Maximum operating temperature threshold"
+      - name: emergencyStopBudgetMs
+        type: number
+        description: "Maximum time to safe stop after ESTOP event (ms)"
+
+  FederationTopology:
+    description: "Global view of all registered sites and their relationships.
+      Acts as the control plane registry."
+    fields:
+      - name: id
+        type: string (UUID)
+      - name: version
+        type: number
+        description: "Monotonically increasing version for optimistic concurrency"
+      - name: sites
+        type: SiteProfile[]
+        description: "All registered sites"
+      - name: defaultFeatureFlags
+        type: Record<string, boolean>
+        description: "Global feature flag defaults; overridden per-site"
+      - name: platformContracts
+        type: PlatformContracts
+        description: "Shared platform contracts version that all sites must satisfy"
+      - name: updatedAt
+        type: ISO8601 datetime
+
+  PlatformContracts:
+    description: "Versioned API and event contracts that all federation nodes must implement"
+    fields:
+      - name: apiVersion
+        type: string
+        description: "Semver API contract version (e.g. 1.0.0)"
+      - name: eventSchemaVersion
+        type: string
+        description: "Semver event schema version"
+      - name: minPlatformVersion
+        type: string
+        description: "Minimum deployed platform version for federation membership"
+
+  TenantConfig:
+    description: "Multi-tenant configuration. Currently single-tenant (tenantId = 'default'),
+      extended to support white-label / franchise in future phases."
+    fields:
+      - name: tenantId
+        type: string
+        required: true
+        default: "default"
+      - name: name
+        type: string
+        required: true
+      - name: plan
+        type: TenantPlan
+        required: true
+      - name: sites
+        type: string[]
+        description: "List of site IDs assigned to this tenant"
+      - name: featureFlags
+        type: Record<string, boolean>
+        description: "Tenant-level feature-flag overrides (between global and per-site)"
+      - name: ssoConfig
+        type: SSOConfig | null
+        required: false
+
+  TenantPlan:
+    values:
+      - enterprise: "Full feature set, custom SLAs, dedicated support"
+      - standard: "Standard feature set, shared infrastructure"
+      - trial: "Time-limited trial, limited site count"
+
+  SSOConfig:
+    fields:
+      - name: provider
+        type: string
+        description: "Identity provider (e.g. azure-ad, okta, google)"
+      - name: issuerUrl
+        type: string
+      - name: clientId
+        type: string
+        description: "App registration client ID (secret stored in Kubernetes secrets)"
+
+  FeatureFlag:
+    description: "Definition of a named feature flag with default and allowed overrides"
+    fields:
+      - name: key
+        type: string
+        description: "Unique flag key (e.g. ai.autonomous-dispatch)"
+      - name: description
+        type: string
+      - name: defaultValue
+        type: boolean
+      - name: rolloutConfig
+        type: RolloutConfig
+        required: false
+
+  RolloutConfig:
+    description: "Progressive rollout configuration for a feature flag"
+    fields:
+      - name: strategy
+        type: RolloutStrategy
+      - name: percentage
+        type: number
+        description: "Percentage of sites/users to enable (0-100)"
+      - name: siteCohortIds
+        type: string[]
+        required: false
+        description: "Explicit site IDs in the cohort (for cohort-based rollout)"
+      - name: enabledAt
+        type: ISO8601 datetime
+        required: false
+      - name: disabledAt
+        type: ISO8601 datetime
+        required: false
+
+  RolloutStrategy:
+    values:
+      - percentage: "Random percentage of sites/users"
+      - cohort: "Specific named site cohort"
+      - canary: "Single canary site first, then gradual expansion"
+      - all: "All sites simultaneously"
+      - none: "No sites (flag effectively disabled)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# State Machines
+# ─────────────────────────────────────────────────────────────────────────────
+
+state_machines:
+
+  SiteLifecycle:
+    initial_state: provisioning
+    states:
+      - provisioning
+      - active
+      - maintenance
+      - suspended
+      - decommissioned
+    transitions:
+      - from: provisioning
+        to: active
+        guard: "health check passes AND platform contract version matches federation"
+        action: "emit site.activated event; notify federation topology"
+      - from: active
+        to: maintenance
+        guard: "operator_role >= SITE_ADMIN OR automated_schedule"
+        action: "emit site.maintenance_started event; set control-plane read-only"
+      - from: maintenance
+        to: active
+        guard: "operator_role >= SITE_ADMIN AND health check passes"
+        action: "emit site.maintenance_ended event"
+      - from: active
+        to: suspended
+        guard: "operator_role == PLATFORM_ADMIN OR automated_safety_trigger"
+        action: "emit site.suspended event; halt control plane"
+      - from: suspended
+        to: active
+        guard: "operator_role == PLATFORM_ADMIN AND incident resolved"
+        action: "emit site.reactivated event"
+      - from: suspended
+        to: decommissioned
+        guard: "operator_role == PLATFORM_ADMIN AND data archival complete"
+        action: "emit site.decommissioned event; retain audit log"
+    forbidden_transitions:
+      - "decommissioned → any (terminal state)"
+      - "provisioning → suspended (not yet active)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# System Invariants
+# ─────────────────────────────────────────────────────────────────────────────
+
+invariants:
+  FEDERATION-INV-001:
+    statement: "Every site in the federation must have a unique slug"
+    enforcement: "Validated at registration time; rejected if duplicate"
+    test_ref: "e2e/federation/site-registration.spec.ts"
+
+  FEDERATION-INV-002:
+    statement: "No control-plane commands may be dispatched to a suspended or decommissioned site"
+    enforcement: "Policy engine rejects dispatch with SITE_NOT_ACTIVE error"
+    safety_critical: true
+
+  FEDERATION-INV-003:
+    statement: "FederationTopology.version increments monotonically on every mutation"
+    enforcement: "Optimistic concurrency check; reject stale updates"
+
+  FEDERATION-INV-004:
+    statement: "A site's platformVersion must be >= FederationTopology.platformContracts.minPlatformVersion"
+    enforcement: "Validated at activation; rejected if incompatible"
+
+  FEDERATION-INV-005:
+    statement: "FeatureFlag percentage rollout must be a value between 0 and 100 inclusive"
+    enforcement: "Zod schema validation; API rejects out-of-range values"
+
+  FEDERATION-INV-006:
+    statement: "All audit events (site activation, suspension, decommission) are written immutably"
+    enforcement: "Audit log writer is append-only; integrity check on read"
+    compliance: "IEC 62443 / ISO 27001"
+
+  FEDERATION-INV-007:
+    statement: "TenantConfig.tenantId is required and non-empty for all site profiles"
+    enforcement: "Zod schema required field; defaults to 'default' for single-tenant installations"
+
+  FEDERATION-INV-008:
+    statement: "Site-level feature-flag overrides take precedence over tenant overrides, which take precedence over global defaults"
+    enforcement: "FeatureFlagResolver merges in order: global → tenant → site"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Security Boundaries
+# ─────────────────────────────────────────────────────────────────────────────
+
+security_boundaries:
+  trust_zones:
+    platform_admin:
+      description: "Full federation control: site registration, suspension, decommission"
+      principals: ["platform_admin role"]
+    site_admin:
+      description: "Site-level management: topology, config, maintenance window"
+      scope: "own site only"
+      principals: ["site_admin role with site_id claim"]
+    site_operator:
+      description: "Operational access: dispatch, monitoring, readonly config"
+      scope: "own site only"
+      principals: ["operator role with site_id claim"]
+    readonly:
+      description: "Observability only: metrics, dashboards"
+      scope: "own site only"
+  rbac_rules:
+    - "site_id claim in JWT must match requested site_id in all per-site API calls"
+    - "PLATFORM_ADMIN role can act on any site"
+    - "Feature flag writes require SITE_ADMIN or higher"
+    - "FederationTopology reads require PLATFORM_ADMIN"
+    - "All mutations are validated by OPA policy (security/federation.rego)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AMM-OS Extensions (Multi-Tenancy + Config UI)
+# ─────────────────────────────────────────────────────────────────────────────
+
+amm_os_extensions:
+  multi_tenancy:
+    status: "single-tenant with multi-site ready architecture"
+    tenant_id_field: "tenantId present on all SiteProfile and TenantConfig entities"
+    future: "Phase 10 adds multi-tenant white-label support"
+  config_ui:
+    required_screens:
+      - "Site registration wizard (name, region, tier, topology)"
+      - "Site status management (activate, suspend, maintenance)"
+      - "Feature flag editor (global + per-site overrides)"
+      - "Federation topology viewer (all sites, versions, status)"
+  feature_flags:
+    required:
+      - key: "federation.multi-site-enabled"
+        default: false
+        description: "Master switch for multi-site federation features"
+      - key: "federation.autonomous-dispatch"
+        default: false
+        description: "Allow AI-initiated dispatch across all configured sites"
+      - key: "federation.cross-site-telemetry"
+        default: false
+        description: "Enable cross-site telemetry aggregation"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Contracts Reference
+# ─────────────────────────────────────────────────────────────────────────────
+
+contracts_ref:
+  api: ".github/.system-state/contracts/federation-api.yaml"
+  schemas: "packages/schemas/src/federation/index.ts"
+  feature_flags_schema: "packages/schemas/src/feature-flags/index.ts"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Implementation Artifacts
+# ─────────────────────────────────────────────────────────────────────────────
+
+implementation_artifacts:
+  - path: "packages/schemas/src/federation/index.ts"
+    description: "Zod schemas + TypeScript types for all federation domain entities"
+  - path: "packages/schemas/src/feature-flags/index.ts"
+    description: "Zod schemas + TypeScript types for feature flags and rollout config"
+  - path: "services/site-registry/src/"
+    description: "Site registry service: CRUD, state machine, federation topology management"
+  - path: "apps/mission-control/src/app/api/sites/"
+    description: "REST API routes for site management (GET, POST, PATCH site lifecycle)"
+  - path: "apps/mission-control/src/app/api/feature-flags/"
+    description: "REST API routes for feature flag management"
+  - path: "apps/mission-control/src/app/api/federation/"
+    description: "REST API route for federation topology read"
+  - path: ".developer/RUNBOOKS/federation-runbook.md"
+    description: "Federation incident response and rollback runbook"
+  - path: "docs/architecture/federation.md"
+    description: "Federation architecture documentation"

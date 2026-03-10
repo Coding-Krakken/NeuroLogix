@@ -1,0 +1,345 @@
+schema_version: "1.0"
+model_id: FEDERATION-API-001
+model_ref: FEDERATION-001
+issue: "https://github.com/Coding-Krakken/NeuroLogix/issues/37"
+last_updated: "2026-03-10"
+status: active
+
+# Federation API Contracts
+# All API routes in Phase 9 must implement these contracts exactly.
+
+base_path: "/api"
+api_version: "1.0.0"
+
+endpoints:
+
+  # ─── Sites ────────────────────────────────────────────────────────────────
+
+  - id: SITE-001
+    path: "/api/sites"
+    method: GET
+    description: "List all registered sites in the federation"
+    auth: "Bearer JWT; requires PLATFORM_ADMIN or any SITE_ADMIN (filtered to own sites)"
+    query_params:
+      - name: status
+        type: SiteStatus
+        required: false
+        description: "Filter by site status"
+      - name: tier
+        type: SiteTier
+        required: false
+        description: "Filter by site tier"
+      - name: region
+        type: string
+        required: false
+    response:
+      status: 200
+      schema:
+        type: object
+        properties:
+          sites:
+            type: SiteProfile[]
+          total:
+            type: number
+          version:
+            type: number
+            description: "FederationTopology version at time of read"
+    errors:
+      - status: 401
+        code: UNAUTHORIZED
+      - status: 403
+        code: FORBIDDEN
+
+  - id: SITE-002
+    path: "/api/sites"
+    method: POST
+    description: "Register a new site in the federation"
+    auth: "Bearer JWT; requires PLATFORM_ADMIN"
+    request_body:
+      schema:
+        type: object
+        required: [slug, name, region, tier, config]
+        properties:
+          slug:
+            type: string
+            pattern: "^[a-z0-9-]+$"
+          name:
+            type: string
+          region:
+            type: string
+          tier:
+            type: SiteTier
+          platformVersion:
+            type: string
+          config:
+            type: SiteConfig
+          featureFlags:
+            type: Record<string, boolean>
+          equipmentTopology:
+            type: EquipmentTopology
+    response:
+      status: 201
+      schema:
+        type: SiteProfile
+    errors:
+      - status: 400
+        code: VALIDATION_ERROR
+        description: "Schema validation failure"
+      - status: 409
+        code: DUPLICATE_SLUG
+        description: "Site slug already exists in federation (FEDERATION-INV-001)"
+      - status: 401
+        code: UNAUTHORIZED
+      - status: 403
+        code: FORBIDDEN
+
+  - id: SITE-003
+    path: "/api/sites/:siteId"
+    method: GET
+    description: "Get a specific site profile"
+    auth: "Bearer JWT; PLATFORM_ADMIN or SITE_ADMIN/OPERATOR for own site"
+    path_params:
+      - name: siteId
+        type: string (UUID)
+    response:
+      status: 200
+      schema:
+        type: SiteProfile
+    errors:
+      - status: 404
+        code: SITE_NOT_FOUND
+      - status: 401
+        code: UNAUTHORIZED
+      - status: 403
+        code: FORBIDDEN
+
+  - id: SITE-004
+    path: "/api/sites/:siteId/status"
+    method: PATCH
+    description: "Transition a site's operational status (activate/maintain/suspend/decommission)"
+    auth: "Bearer JWT; PLATFORM_ADMIN for all; SITE_ADMIN for maintenance only"
+    path_params:
+      - name: siteId
+        type: string (UUID)
+    request_body:
+      schema:
+        type: object
+        required: [status, reason]
+        properties:
+          status:
+            type: SiteStatus
+          reason:
+            type: string
+            description: "Human-readable reason for status change (audit trail)"
+    response:
+      status: 200
+      schema:
+        type: SiteProfile
+    errors:
+      - status: 400
+        code: INVALID_TRANSITION
+        description: "Forbidden state-machine transition"
+      - status: 404
+        code: SITE_NOT_FOUND
+      - status: 409
+        code: STALE_VERSION
+        description: "Concurrent modification detected (FEDERATION-INV-003)"
+      - status: 401
+        code: UNAUTHORIZED
+      - status: 403
+        code: FORBIDDEN
+
+  - id: SITE-005
+    path: "/api/sites/:siteId/config"
+    method: PUT
+    description: "Replace the operational configuration for a site"
+    auth: "Bearer JWT; SITE_ADMIN or higher"
+    path_params:
+      - name: siteId
+        type: string (UUID)
+    request_body:
+      schema:
+        type: SiteConfig
+    response:
+      status: 200
+      schema:
+        type: SiteProfile
+    errors:
+      - status: 400
+        code: VALIDATION_ERROR
+      - status: 404
+        code: SITE_NOT_FOUND
+      - status: 401
+        code: UNAUTHORIZED
+      - status: 403
+        code: FORBIDDEN
+
+  # ─── Feature Flags ────────────────────────────────────────────────────────
+
+  - id: FF-001
+    path: "/api/feature-flags"
+    method: GET
+    description: "List all feature flag definitions with resolved values"
+    auth: "Bearer JWT; any authenticated user (values filtered by site_id claim)"
+    query_params:
+      - name: siteId
+        type: string (UUID)
+        required: false
+        description: "If provided, returns flag values resolved for this site"
+    response:
+      status: 200
+      schema:
+        type: object
+        properties:
+          flags:
+            type: ResolvedFeatureFlag[]
+          resolvedFor:
+            type: object
+            properties:
+              tenantId:
+                type: string
+              siteId:
+                type: string | null
+    errors:
+      - status: 401
+        code: UNAUTHORIZED
+
+  - id: FF-002
+    path: "/api/feature-flags/:key"
+    method: PUT
+    description: "Create or update a feature flag definition"
+    auth: "Bearer JWT; PLATFORM_ADMIN"
+    path_params:
+      - name: key
+        type: string
+    request_body:
+      schema:
+        type: FeatureFlag
+    response:
+      status: 200
+      schema:
+        type: FeatureFlag
+    errors:
+      - status: 400
+        code: VALIDATION_ERROR
+      - status: 401
+        code: UNAUTHORIZED
+      - status: 403
+        code: FORBIDDEN
+
+  - id: FF-003
+    path: "/api/sites/:siteId/feature-flags"
+    method: PATCH
+    description: "Override specific feature flags at site level"
+    auth: "Bearer JWT; SITE_ADMIN or higher for own site"
+    path_params:
+      - name: siteId
+        type: string (UUID)
+    request_body:
+      schema:
+        type: Record<string, boolean>
+        description: "Key-value map of flag overrides (partial update)"
+    response:
+      status: 200
+      schema:
+        type: object
+        properties:
+          siteId:
+            type: string
+          featureFlags:
+            type: Record<string, boolean>
+    errors:
+      - status: 400
+        code: VALIDATION_ERROR
+      - status: 404
+        code: SITE_NOT_FOUND
+      - status: 401
+        code: UNAUTHORIZED
+      - status: 403
+        code: FORBIDDEN
+
+  # ─── Federation Topology ──────────────────────────────────────────────────
+
+  - id: FED-001
+    path: "/api/federation"
+    method: GET
+    description: "Get the full federation topology (all sites, platform contracts, global flags)"
+    auth: "Bearer JWT; PLATFORM_ADMIN only"
+    response:
+      status: 200
+      schema:
+        type: FederationTopology
+    errors:
+      - status: 401
+        code: UNAUTHORIZED
+      - status: 403
+        code: FORBIDDEN
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Shared Error Response Schema
+# ─────────────────────────────────────────────────────────────────────────────
+
+error_schema:
+  type: object
+  required: [code, message, traceId]
+  properties:
+    code:
+      type: string
+      description: "Machine-readable error code"
+    message:
+      type: string
+      description: "Human-readable error description"
+    traceId:
+      type: string
+      description: "OpenTelemetry trace ID for correlation"
+    details:
+      type: unknown
+      description: "Optional structured context for validation errors"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Event Contracts (for MQTT / Kafka)
+# ─────────────────────────────────────────────────────────────────────────────
+
+event_contracts:
+
+  - id: EVT-SITE-001
+    topic: "neurologix/federation/site/activated"
+    description: "Published when a site transitions to active status"
+    schema:
+      type: object
+      required: [siteId, slug, name, timestamp, traceId]
+      properties:
+        siteId: { type: string }
+        slug: { type: string }
+        name: { type: string }
+        tier: { type: SiteTier }
+        timestamp: { type: ISO8601 }
+        traceId: { type: string }
+
+  - id: EVT-SITE-002
+    topic: "neurologix/federation/site/suspended"
+    description: "Published when a site is suspended"
+    schema:
+      type: object
+      required: [siteId, slug, reason, suspendedBy, timestamp, traceId]
+      properties:
+        siteId: { type: string }
+        slug: { type: string }
+        reason: { type: string }
+        suspendedBy: { type: string }
+        timestamp: { type: ISO8601 }
+        traceId: { type: string }
+
+  - id: EVT-FF-001
+    topic: "neurologix/federation/feature-flag/updated"
+    description: "Published when a feature flag value changes"
+    schema:
+      type: object
+      required: [key, newValue, updatedBy, timestamp, traceId]
+      properties:
+        key: { type: string }
+        newValue: { type: boolean }
+        siteId: { type: string | null }
+        updatedBy: { type: string }
+        timestamp: { type: ISO8601 }
+        traceId: { type: string }

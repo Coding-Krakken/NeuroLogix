@@ -700,5 +700,133 @@ export function buildMissionControlServer(
     }
   });
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Federation API Routes (FEDERATION-API-001 / ISSUE-37)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  app.get('/api/sites', async (request, reply) => {
+    try {
+      // NOTE: Site registry integration pending (Phase 1 extension)
+      // For now, return empty federation topology
+      return {
+        sites: [],
+        total: 0,
+        version: 1,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to list sites';
+      reply.status(500);
+      return {
+        code: 'INTERNAL_ERROR',
+        message,
+        traceId: request.id,
+      };
+    }
+  });
+
+  app.post('/api/sites', async (request, reply) => {
+    try {
+      // NOTE: Site registry integration pending (Phase 1 extension)
+      reply.status(501);
+      return {
+        code: 'NOT_IMPLEMENTED',
+        message: 'Site registry service pending - wireup in progress',
+        traceId: request.id,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to register site';
+      reply.status(500);
+      return {
+        code: 'INTERNAL_ERROR',
+        message,
+        traceId: request.id,
+      };
+    }
+  });
+
+  app.get('/api/sites/:siteId', async (request, reply) => {
+    try {
+      const { siteId } = request.params as { siteId: string };
+      // NOTE: Site registry integration pending (Phase 1 extension)
+      reply.status(404);
+      return {
+        code: 'SITE_NOT_FOUND',
+        message: `Site '${siteId}' not found (registry not yet wired)`,
+        traceId: request.id,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to get site';
+      reply.status(500);
+      return {
+        code: 'INTERNAL_ERROR',
+        message,
+        traceId: request.id,
+      };
+    }
+  });
+
+  app.patch('/api/sites/:siteId/status', async (request, reply) => {
+    try {
+      // NOTE: Site registry integration pending (Phase 1 extension)
+      reply.status(501);
+      return {
+        code: 'NOT_IMPLEMENTED',
+        message: 'Site registry service pending - wireup in progress',
+        traceId: request.id,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to update site status';
+      reply.status(500);
+      return {
+        code: 'INTERNAL_ERROR',
+        message,
+        traceId: request.id,
+      };
+    }
+  });
+
+  app.get('/api/feature-flags', async (request, reply) => {
+    try {
+      const query = request.query as { siteId?: string };
+      // NOTE: Site registry integration pending (Phase 1 extension)
+      return {
+        flags: [],
+        resolvedFor: query.siteId ? { siteId: query.siteId } : undefined,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to list feature flags';
+      reply.status(500);
+      return {
+        code: 'INTERNAL_ERROR',
+        message,
+        traceId: request.id,
+      };
+    }
+  });
+
+  app.get('/api/federation', async (request, reply) => {
+    try {
+      // NOTE: Site registry integration pending (Phase 1 extension)
+      // Return v0.1.0 federation topology structure (empty)
+      return {
+        sites: [],
+        version: 1,
+        platformContracts: {
+          apiVersion: '1.0.0',
+          eventSchemaVersion: '1.0.0',
+          minPlatformVersion: '0.1.0',
+        },
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to get federation topology';
+      reply.status(500);
+      return {
+        code: 'INTERNAL_ERROR',
+        message,
+        traceId: request.id,
+      };
+    }
+  });
+
   return { app, state };
 }

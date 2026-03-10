@@ -8,6 +8,8 @@
  */
 
 export * from './telemetry/index.js';
+export * from './federation/index.js';
+export * from './feature-flags/index.js';
 export * from './sparkplug/index.js';
 export * from './broker/index.js';
 export * from './intents/index.js';
