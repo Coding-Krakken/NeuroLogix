@@ -1,64 +1,31 @@
-# Governance Index
+# Autonomous Three-Agent Development Framework
 
-Status: Active canonical index for project management, workflow, and governance
-artifacts.
+This repository contains a portable, repository-local, plug-and-play autonomous development framework.
 
-## Canonical Workflow Documents
+## Purpose
 
-- [AGENTS.md](AGENTS.md)
-- [GIT_WORKFLOW.md](GIT_WORKFLOW.md)
-- [QUALITY-GATES.md](QUALITY-GATES.md)
-- [WORKFLOW_INTEGRATION_SUMMARY.md](WORKFLOW_INTEGRATION_SUMMARY.md)
+- Enable continuous autonomous execution from human-created GitHub issues.
+- Enforce Microsoft-grade quality, traceability, review discipline, and merge safety.
+- Keep framework internals stable during normal execution.
 
-## Governance Precedence (Canonical Order)
+## Core Loop
 
-When governance artifacts disagree, apply this precedence order:
+1. Planner-Architect Agent selects the next issue and creates an implementation brief.
+2. Builder Agent implements the smallest safe slice, tests it, and prepares a PR.
+3. Validator-Merger Agent reviews, validates, merges safely, performs post-merge validation, and dispatches the next cycle.
 
-1. `.github/framework-config/deterministic/policies/*.json` (machine-enforced
-   policy contracts)
-2. `.github/workflows/*.yml` (automated gate enforcement)
-3. `AGENTS.md`, `GIT_WORKFLOW.md`, `QUALITY-GATES.md` (human operational
-   procedures)
-4. Supporting guides and examples
+## Framework Scope
 
-Core operating model default is Core-3 with specialist escalation by policy
-trigger.
+- Framework files live inside `.github/`.
+- Product changes must occur outside `.github/`.
+- Framework maintenance requires a dedicated framework-maintenance issue and separate execution path.
 
-## Deterministic Policy Contracts
+## Start Here
 
-- [framework-config/deterministic/policies/policy_matrix.json](framework-config/deterministic/policies/policy_matrix.json)
-- [framework-config/deterministic/policies/state_machines.json](framework-config/deterministic/policies/state_machines.json)
-- [framework-config/deterministic/policies/work_item.schema.json](framework-config/deterministic/policies/work_item.schema.json)
-- [framework-config/deterministic/policies/reviewer_map.json](framework-config/deterministic/policies/reviewer_map.json)
-
-## Canonical Intake Templates
-
-- [ISSUE_TEMPLATE/deterministic-feature.yml](ISSUE_TEMPLATE/deterministic-feature.yml)
-- [ISSUE_TEMPLATE/deterministic-bug.yml](ISSUE_TEMPLATE/deterministic-bug.yml)
-- [ISSUE_TEMPLATE/deterministic-security.yml](ISSUE_TEMPLATE/deterministic-security.yml)
-- [ISSUE_TEMPLATE/deterministic-performance.yml](ISSUE_TEMPLATE/deterministic-performance.yml)
-- [ISSUE_TEMPLATE/deterministic-refactor.yml](ISSUE_TEMPLATE/deterministic-refactor.yml)
-- [ISSUE_TEMPLATE/deterministic-ci-cd.yml](ISSUE_TEMPLATE/deterministic-ci-cd.yml)
-- [ISSUE_TEMPLATE/deterministic-compliance.yml](ISSUE_TEMPLATE/deterministic-compliance.yml)
-- [ISSUE_TEMPLATE/deterministic-hotfix.yml](ISSUE_TEMPLATE/deterministic-hotfix.yml)
-- [ISSUE_TEMPLATE/deterministic-incident.yml](ISSUE_TEMPLATE/deterministic-incident.yml)
-- [ISSUE_TEMPLATE/deterministic-data-migration.yml](ISSUE_TEMPLATE/deterministic-data-migration.yml)
-- [pull_request_template.md](pull_request_template.md)
-
-## Operational Notes
-
-- `.github/.handoffs/` is historical only; active handoffs must be posted in
-  GitHub Issue/PR comments.
-- When adding governance docs, link them from this index to preserve a single
-  source of truth.
-
-## Agent Efficiency Automation
-
-- [docs/AGENT_EFFICIENCY_RUNBOOK.md](docs/AGENT_EFFICIENCY_RUNBOOK.md)
-- [scripts/generate-agent-context.ps1](scripts/generate-agent-context.ps1)
-- [scripts/dispatch-agent.ps1](scripts/dispatch-agent.ps1)
-
-## Branch Protection
-
-- [docs/BRANCH_PROTECTION_RULESET.md](docs/BRANCH_PROTECTION_RULESET.md)
-- [scripts/apply-branch-protection.ps1](scripts/apply-branch-protection.ps1)
+- `docs/framework-overview.md`
+- `docs/installation.md`
+- `docs/operating-guide.md`
+- `standards/operating-standard.md`
+- `agents/planner-architect.agent.md`
+- `agents/builder.agent.md`
+- `agents/validator-merger.agent.md`

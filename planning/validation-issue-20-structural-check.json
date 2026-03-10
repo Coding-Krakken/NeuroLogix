@@ -1,0 +1,22 @@
+{
+  "timestamp_utc": "2026-03-10T11:56:27.756771+00:00",
+  "model_file": ".github\\.system-state\\data\\data_model.yaml",
+  "yaml_parse": {
+    "data_model": true
+  },
+  "required_field_checks": {
+    "top_level_sections_present": true,
+    "missing_top_level_sections": [],
+    "canonical_entities_implemented_present": true,
+    "canonical_entities_planned_present": true,
+    "implemented_schema_domains_present": true,
+    "missing_implemented_schema_domains": [],
+    "planned_schema_domains_present": true,
+    "missing_planned_schema_domains": [],
+    "implemented_schema_refs_present": true,
+    "planned_schema_refs_present": true,
+    "tenancy_partitioning_policy_present": true,
+    "retention_class_policy_present": true
+  },
+  "overall_pass": true
+}

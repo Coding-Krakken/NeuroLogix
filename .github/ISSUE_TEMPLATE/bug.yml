@@ -1,0 +1,91 @@
+name: Bug
+description: Report a defect with reproducible evidence and expected behavior.
+title: "[Bug]: "
+labels:
+  - type:bug
+body:
+  - type: input
+    id: proposed_title
+    attributes:
+      label: Title
+      description: Exact defect title. Align issue title with this value.
+      placeholder: Fix timezone rollover in next-run calculation
+    validations:
+      required: true
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: Problem Statement
+      description: What is broken and in what context?
+    validations:
+      required: true
+  - type: textarea
+    id: desired_outcome
+    attributes:
+      label: Desired Outcome
+      description: What correct behavior must be restored?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Include at least one regression-focused criterion.
+      placeholder: |
+        - [ ] Regression test fails before fix and passes after fix
+        - [ ] ...
+    validations:
+      required: true
+  - type: dropdown
+    id: business_value
+    attributes:
+      label: Business Value
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+  - type: dropdown
+    id: severity_or_priority
+    attributes:
+      label: Severity or Priority
+      options:
+        - P0
+        - P1
+        - P2
+        - P3
+    validations:
+      required: true
+  - type: input
+    id: scope
+    attributes:
+      label: Scope
+      description: Smallest safe corrective slice.
+      placeholder: Fix normalization logic and add regression test
+    validations:
+      required: true
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: Non-Goals
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+  - type: textarea
+    id: screenshots_or_logs
+    attributes:
+      label: Screenshots or Logs
+      description: Include reproduction steps and error logs.
+    validations:
+      required: true
+  - type: textarea
+    id: risk_notes
+    attributes:
+      label: Risk Notes

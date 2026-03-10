@@ -1,0 +1,507 @@
+{
+  "generatedAt": "2026-03-10T11:47:36.9386231Z",
+  "sourceFile": "planning/open-issues-live-2026-03-10.json",
+  "repository": "Coding-Krakken/NeuroLogix",
+  "eligibleIssues": [
+    20
+  ],
+  "ineligibleIssues": [
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+  ],
+  "issues": [
+    {
+      "issueNumber": 20,
+      "title": "Model-First: Create Data Model (Phase 4)",
+      "dependencies": [
+        19
+      ],
+      "dependencyStates": [
+        {
+          "number": 19,
+          "state": "CLOSED"
+        }
+      ],
+      "unresolvedDependencies": [],
+      "blocked": false,
+      "eligibility": "eligible"
+    },
+    {
+      "issueNumber": 21,
+      "title": "Model-First: Create Security Model (Phase 5)",
+      "dependencies": [
+        17,
+        19,
+        20
+      ],
+      "dependencyStates": [
+        {
+          "number": 17,
+          "state": "CLOSED"
+        },
+        {
+          "number": 19,
+          "state": "CLOSED"
+        },
+        {
+          "number": 20,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        20
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 22,
+      "title": "Model-First: Create Resilience Model (Phase 6)",
+      "dependencies": [
+        21
+      ],
+      "dependencyStates": [
+        {
+          "number": 21,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        21
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 23,
+      "title": "Model-First: Create Observability Model (Phase 7)",
+      "dependencies": [
+        20,
+        22
+      ],
+      "dependencyStates": [
+        {
+          "number": 20,
+          "state": "OPEN"
+        },
+        {
+          "number": 22,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        20,
+        22
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 24,
+      "title": "Model-First: Create Test Traceability Model (Phase 8)",
+      "dependencies": [
+        19,
+        22,
+        23
+      ],
+      "dependencyStates": [
+        {
+          "number": 19,
+          "state": "CLOSED"
+        },
+        {
+          "number": 22,
+          "state": "OPEN"
+        },
+        {
+          "number": 23,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        22,
+        23
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 25,
+      "title": "Model-First: Create Performance Budget Model (Phase 9)",
+      "dependencies": [
+        23,
+        24
+      ],
+      "dependencyStates": [
+        {
+          "number": 23,
+          "state": "OPEN"
+        },
+        {
+          "number": 24,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        23,
+        24
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 26,
+      "title": "Model-First: Create Dependency Governance Model (Phase 10)",
+      "dependencies": [
+        21,
+        25
+      ],
+      "dependencyStates": [
+        {
+          "number": 21,
+          "state": "OPEN"
+        },
+        {
+          "number": 25,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        21,
+        25
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 27,
+      "title": "Model-First: Create CI/CD and Environment Model (Phase 11)",
+      "dependencies": [
+        18,
+        22,
+        25,
+        26
+      ],
+      "dependencyStates": [
+        {
+          "number": 18,
+          "state": "CLOSED"
+        },
+        {
+          "number": 22,
+          "state": "OPEN"
+        },
+        {
+          "number": 25,
+          "state": "OPEN"
+        },
+        {
+          "number": 26,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        22,
+        25,
+        26
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 28,
+      "title": "Model-First: Create Roadmap Prioritization Model (Phase 12)",
+      "dependencies": [
+        17,
+        27
+      ],
+      "dependencyStates": [
+        {
+          "number": 17,
+          "state": "CLOSED"
+        },
+        {
+          "number": 27,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        27
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 29,
+      "title": "Phase 0 Completion: Foundations Hardening and Gap Closure",
+      "dependencies": [
+        27,
+        28
+      ],
+      "dependencyStates": [
+        {
+          "number": 27,
+          "state": "OPEN"
+        },
+        {
+          "number": 28,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        27,
+        28
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 30,
+      "title": "Phase 1 Delivery: Data Spine and Contract Enforcement",
+      "dependencies": [
+        19,
+        20,
+        29
+      ],
+      "dependencyStates": [
+        {
+          "number": 19,
+          "state": "CLOSED"
+        },
+        {
+          "number": 20,
+          "state": "OPEN"
+        },
+        {
+          "number": 29,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        20,
+        29
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 31,
+      "title": "Phase 3 Delivery: Edge Adapters and Demo Line Simulator",
+      "dependencies": [
+        30
+      ],
+      "dependencyStates": [
+        {
+          "number": 30,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        30
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 32,
+      "title": "Phase 4 Delivery: AI Services (ASR/NLU, CV, Optimization)",
+      "dependencies": [
+        30,
+        31,
+        21
+      ],
+      "dependencyStates": [
+        {
+          "number": 30,
+          "state": "OPEN"
+        },
+        {
+          "number": 31,
+          "state": "OPEN"
+        },
+        {
+          "number": 21,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        30,
+        31,
+        21
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 33,
+      "title": "Phase 5 Delivery: WMS/WCS Connectors and Dispatch Service",
+      "dependencies": [
+        30,
+        31,
+        32
+      ],
+      "dependencyStates": [
+        {
+          "number": 30,
+          "state": "OPEN"
+        },
+        {
+          "number": 31,
+          "state": "OPEN"
+        },
+        {
+          "number": 32,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        30,
+        31,
+        32
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 34,
+      "title": "Phase 6 Delivery: Mission Control UI and Real-Time Operations UX",
+      "dependencies": [
+        30,
+        33,
+        25
+      ],
+      "dependencyStates": [
+        {
+          "number": 30,
+          "state": "OPEN"
+        },
+        {
+          "number": 33,
+          "state": "OPEN"
+        },
+        {
+          "number": 25,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        30,
+        33,
+        25
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 35,
+      "title": "Phase 7 Delivery: Security and Compliance Hardening",
+      "dependencies": [
+        21,
+        33,
+        34
+      ],
+      "dependencyStates": [
+        {
+          "number": 21,
+          "state": "OPEN"
+        },
+        {
+          "number": 33,
+          "state": "OPEN"
+        },
+        {
+          "number": 34,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        21,
+        33,
+        34
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 36,
+      "title": "Phase 8 Delivery: End-to-End Validation, Performance, and Chaos",
+      "dependencies": [
+        31,
+        33,
+        34,
+        35
+      ],
+      "dependencyStates": [
+        {
+          "number": 31,
+          "state": "OPEN"
+        },
+        {
+          "number": 33,
+          "state": "OPEN"
+        },
+        {
+          "number": 34,
+          "state": "OPEN"
+        },
+        {
+          "number": 35,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        31,
+        33,
+        34,
+        35
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 37,
+      "title": "Phase 9 Delivery: Multi-Site Federation and Controlled Rollout",
+      "dependencies": [
+        35,
+        36,
+        28
+      ],
+      "dependencyStates": [
+        {
+          "number": 35,
+          "state": "OPEN"
+        },
+        {
+          "number": 36,
+          "state": "OPEN"
+        },
+        {
+          "number": 28,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        35,
+        36,
+        28
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    }
+  ]
+}

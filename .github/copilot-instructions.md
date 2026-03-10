@@ -1,275 +1,148 @@
-# Copilot Instructions - <APPLICATION_NAME>
+# Repository Copilot Instructions
 
-> **Auto-generated from:** `.github/.system-state/copilot/*.{yaml,md}`  
-> **Last Updated:** <YYYY-MM-DD>  
-> **Status:** Phase 0 - Copilot Model (IN PROGRESS)
+## Framework Contract
 
----
+This repository uses a strict three-agent autonomous delivery loop:
 
-## 🎯 Project Overview
+1. Planner-Architect Agent
+2. Builder Agent
+3. Validator-Merger Agent
 
-**Project:** <APPLICATION_NAME> Modernization  
-**Risk Tier:** <RISK_TIER>  
-**Business Domain:** <BUSINESS_DOMAIN>
+The loop is continuous and deterministic. Human participation is limited to authoring and curating GitHub issues.
 
-### Current State
+## Primary Priorities
 
-- **Platform:** <CURRENT_PLATFORM>
-- **Products/Scope:** <CURRENT_SCOPE>
-- **Baseline KPI:** <BASELINE_METRIC>
-- **Primary Region:** <DEPLOYMENT_REGION>
+At least 80% of execution emphasis must be on code quality, correctness, maintainability, safety, testing rigor, review quality, and traceability.
 
-### Target State
+1. Correctness
+2. Safety
+3. Maintainability
+4. Test quality and coverage for changed behavior
+5. Traceability and auditability
+6. Scope discipline
+7. Delivery speed
 
-- **Architecture:** Headless/Modular (<WEB_FRAMEWORK> + <PAYMENT_PROVIDER> APIs)
-- **Performance:** Core Web Vitals targets defined in
-  `.github/.system-state/perf/budgets.yaml`
-- **Conversion/Outcome Goal:** <TARGET_OUTCOME>
-- **Business Goal:** <TARGET_BUSINESS_METRIC>
+## Non-Negotiable Constraints
 
----
+1. Never ask the human questions during normal execution.
+2. Never wait for human approval for routine planning, implementation, review, or merge decisions.
+3. Never push directly to `main`.
+4. Never merge without a pull request.
+5. Never merge with failing required checks.
+6. Never bypass branch protection.
+7. Never silently widen scope.
+8. Never perform unrelated refactors in feature work.
+9. Never modify framework internals during normal issue execution.
+10. During normal issue execution, edit only repository files outside `.github/`.
+11. Every meaningful code change must map to a human-created issue or explicit follow-up issue.
+12. Every run must end with the final executed command as `code chat` dispatching to the next agent.
+13. Every handoff must use `-m` with target agent name and `--add-file` with context files.
+14. All work must be logged in GitHub-native artifacts.
 
-## 🚨 Critical Constraints (Non-Negotiable)
+## Deterministic Backlog Selection
 
-1. **PRESERVE ALL CRITICAL INTEGRATIONS** — Payments, inventory, fulfillment,
-   and customer operations must remain functional
-2. **ZERO-DOWNTIME MIGRATION** — Gradual rollout with rollback <5 minutes
-3. **COMPLIANCE BOUNDARY ENFORCEMENT** — Sensitive payment data remains
-   delegated to `<PAYMENT_PROVIDER>`
-4. **MODEL-FIRST WORKFLOW** — NO implementation before required models exist and
-   validate
+Planner-Architect Agent must score eligible issues using normalized weighted scoring:
 
----
+- business_value: 0.30
+- urgency: 0.15
+- risk_reduction_or_opportunity_enablement: 0.15
+- dependency_unlocking_power: 0.10
+- strategic_alignment: 0.10
+- implementation_confidence: 0.10
+- size_efficiency: 0.05
+- testability: 0.03
+- observability_readiness: 0.02
 
-## 📋 Development Model: STRICT MODEL-FIRST
+Tie-breakers:
 
-### Phase Sequence
+1. Higher risk reduction
+2. Higher dependency unlocking power
+3. Smaller reviewable slice
+4. Higher implementation confidence
+5. Older issue age
 
+## Eligibility Gates
+
+An issue is eligible only when all are true:
+
+- Not marked blocked.
+- Dependencies resolved or safely implementable first.
+- Acceptance criteria implementable with sufficient confidence.
+- Fits PR size guardrails or can be split safely.
+- Safety and compliance constraints are satisfiable.
+
+If safe implementation is not possible, create a clarification-needed issue or blocked record with explicit rationale.
+
+## Branch and PR Model
+
+- Use short-lived branches from latest `main` unless release policy explicitly requires otherwise.
+- One primary issue per branch.
+- Include issue ID and concise slug in branch name.
+- Every change goes through PR with required checks and policy gates.
+- Keep PRs small, reviewable, testable, reversible.
+
+PR guardrails:
+
+- Preferred: up to 25 files and up to 600 lines changed.
+- Warning threshold: up to 40 files and up to 1000 lines changed.
+- Above threshold: split and keep highest-value safe slice.
+
+## GitHub-Native Traceability Requirements
+
+Use GitHub artifacts as system of record:
+
+- Issue comments: selection rationale, dependencies, assumptions, blocked reasons.
+- PR body: implementation summary, scope, testing evidence, risk notes.
+- PR comments and reviews: findings, decisions, resolutions.
+- Merge summary: why merge was safe and compliant.
+- Issue closure comment: post-merge validation and follow-up linkage.
+
+## Handoff Protocol
+
+Every handoff message must include this exact header:
+
+```text
+[Context]
+Work Item: Issue#<id>
+Chain Step: <n>
+Target Agent: <Planner-Architect|Builder|Validator-Merger>
+Source: <Issue#id|PR#id>
+Status: <state>
 ```
-✅ Phase -1: Meta-Reasoning
-🔄 Phase 0:  Copilot Model
-⏳ Phase 1:  System State Model
-⏳ Phase 2:  Delivery Model
-⏳ Phase 3:  Contracts Model
-⏳ Phase 4:  Data Model
-⏳ Phase 5:  Security Model
-⏳ Phase 6:  Resilience Model
-⏳ Phase 7:  Observability Model
-⏳ Phase 8:  Test Traceability Model
-⏳ Phase 9:  Performance Budgets
-⏳ Phase 10: Dependency Governance
-⏳ Phase 11: CI/CD Pipeline Model
-⏳ Phase 12: Roadmap Model
-⏳ Phase 13: IMPLEMENTATION
+
+Required sections:
+
+- Objective
+- Required Actions
+- Forbidden Actions
+- Files to Inspect
+- Acceptance Criteria
+- Required GitHub Updates
+- Validation Expectations
+- Final Command Requirement
+
+Final command requirement for every run:
+
+```bash
+.\.utils\dispatch-code-chat.ps1 -Mode ask -TargetAgent "<target-agent>" -PromptFile "planning/handoff-to-<target-agent>-issue-<id>.md" -AddFile "<context-file-1>,<context-file-2>"
 ```
 
-### Transition Gate: Model → Implementation
+Prefer `-PromptFile` transport through `.utils/dispatch-code-chat.ps1`; avoid passing multiline handoff content as a direct positional argument to `code chat`.
 
-**Required before ANY code:**
+## Framework Self-Protection
 
-- ✅ All models created and validated
-- ✅ Architecture and security reviews complete
-- ✅ Contracts, invariants, and failure modes defined
-- ✅ Test strategy and traceability approved
+- `.github/` is read-only during normal issue execution.
+- Framework modifications require a dedicated issue labeled for framework maintenance.
+- Framework changes must run on a dedicated branch and PR, separate from product work.
 
----
+## Definition of Done
 
-## 🎨 Canonical Patterns (SINGLE PATTERN ONLY)
+Done means all of the following:
 
-### Technology Stack
-
-- **Framework:** <WEB_FRAMEWORK>
-- **UI Components:** <UI_COMPONENT_LIBRARY>
-- **Client State:** <CLIENT_STATE_LIBRARY>
-- **Server State:** <SERVER_STATE_LIBRARY>
-- **Forms:** <FORM_LIBRARY> + <VALIDATION_LIBRARY>
-- **Styling:** <STYLING_SYSTEM>
-- **Backend:** <BACKEND_PLATFORM>
-- **Deployment:** <DEPLOYMENT_PLATFORM>
-- **Monitoring:** <OBSERVABILITY_PLATFORM>
-
-### Single Canonical Patterns
-
-- One component pattern
-- One API route pattern
-- One state management pattern
-- One form handling pattern
-- One failure/error handling pattern
-
----
-
-## 📊 Complexity Budget
-
-- Track complexity points by work item and phase
-- Alert at 10% over budget
-- Require remediation if test coverage or build-time constraints regress
-
----
-
-## 🔒 Entropy Limits (Determinism Enforcement)
-
-### Dependency Additions
-
-- Max 10 new dependencies per phase
-- Require justification, alternatives, license review
-
-### Abstraction Additions
-
-- Max 5 new abstractions per phase
-- Reuse before create; delete before add
-
-### Pattern Variations
-
-- Allowed component patterns: 1
-- Allowed API patterns: 1
-- Allowed state patterns: 1
-
-### File Organization
-
-- Follow framework conventions
-- Colocate related files
-- Separate concerns
-- Max file length: 300 lines
-
----
-
-## 🧩 AMM-OS Compliance
-
-- Single-tenant now, multi-tenant ready
-- Data layer includes `tenant_id`
-- Config UI and feature flags required
-- Observability includes logs, errors, SLO dashboards, alerting, runbooks
-
----
-
-## 📦 Documentation Requirements
-
-### `.customer/` Packet
-
-- `README.md`, `SETUP.md`, `ACCOUNTS.md`, `BILLING.md`, `OPERATIONS.md`,
-  `FAQ.md`, `TODO.md`, `CHANGELOG.md`, `SECURITY.md`
-
-### `.github/.developer/` Packet
-
-- `README.md`, `TODO.md`, `ARCHITECTURE.md`, `DECISIONS/`, `RUNBOOKS/`,
-  `RELEASE.md`, `INCIDENTS.md`, `SECURITY_INTERNAL.md`
-
-### `.github/.system-state/` Canonical Models
-
-- `meta/`, `copilot/`, `model/`, `delivery/`, `contracts/`, `data/`,
-  `security/`, `resilience/`, `ops/`, `perf/`, `deps/`, `ci/`, `roadmap/`
-
----
-
-## 🎯 Model Rendering Rules
-
-- Models are source-of-truth
-- Code drift means code is wrong
-- Update model first if decision changes
-
----
-
-## ✅ Validation Checklist
-
-### Before Code
-
-- Domain entities defined
-- State machine complete
-- Invariants specified
-- Failure/security boundaries defined
-- Contracts, tests, budgets, and SLOs documented
-
-### During Implementation
-
-- Lint, format, typecheck, build pass
-- Coverage meets threshold
-- Security and dependency scans pass
-- No secrets, no PII logging, no model drift
-
-### Before Merge / Deploy
-
-- CI green
-- Docs updated
-- Rollback plan validated
-- Staged rollout and alerting configured
-
----
-
-## 🔄 Rollback Strategy
-
-- Rollback target: `<ROLLBACK_TARGET_PLATFORM>`
-- Trigger: elevated error rate, checkout failure, latency SLO breach, critical
-  incidents
-- Time-to-rollback target: <5 minutes
-
----
-
-## 📈 Success Metrics & SLOs
-
-- Define Core Web Vitals, business conversion, and technical SLO targets in
-  model files
-- Enforce performance and accessibility budgets in CI
-
----
-
-## 🔐 Security Constraints
-
-- Payment card handling delegated to `<PAYMENT_PROVIDER>`
-- Secrets via environment variables only
-- No credentials in source control
-- Security scanning required in CI
-
----
-
-## 🧪 CI/CD Requirements
-
-- Required checks: lint, format, typecheck, tests, build, secrets scan,
-  dependency scan
-- Optional gates by risk tier: e2e, performance budgets, security deep scan
-
----
-
-## 🚀 Next Action
-
-**Current Phase:** Phase 0 - Copilot Model  
-**Next Phase:** Phase 1 - System State Model
-
-Create `.github/.system-state/model/system_state_model.yaml` with domain
-entities, state machine, invariants, security boundaries, and
-tenant/config/feature-flag extensions.
-
----
-
-## 🏢 Engineering Organization (Copilot Agents)
-
-Use the Core-3 operating model by default:
-
-- `00-chief-of-staff` (entry + router)
-- `11-tech-lead` (implementation)
-- `99-quality-director` (independent assurance; only chain closer)
-
-Specialists are invoked by policy triggers (security, compliance, incident,
-data, legal, performance).
-
-### Dispatch Format
-
-Use GitHub-native handoffs (Issue/PR comment URL + context pack) with
-`code chat -m <agent-id>` and at least two relevant auxiliary artifacts.
-
-### Quality Gates
-
-Use `.github/QUALITY-GATES.md` for gate definitions and pass criteria.
-
----
-
-## Governance
-
-- `.github/GIT_WORKFLOW.md` — Git/GitHub project workflows
-- `.github/SECURITY.md` — security policy
-- `.github/RUNBOOK.md` — operational runbooks
-- `.github/DECISIONS.md` — ADR index
-
----
-
-**When in doubt prioritize:** model-first, determinism, rollback safety, and
-traceability.
+1. Acceptance criteria satisfied.
+2. Tests for changed behavior added or updated.
+3. Required checks pass.
+4. Review and merge policies satisfied.
+5. Safely merged through PR.
+6. Post-merge validation completed.
+7. Traceability records completed.
