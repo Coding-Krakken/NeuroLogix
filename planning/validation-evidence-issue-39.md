@@ -146,6 +146,27 @@ Interpretation:
 
 - Snapshot reflects state before remediation commit/push and CI rerun.
 
+### D) Required-check status after remediation push (final)
+
+Command:
+
+`gh pr checks 40` (polled to completion)
+
+Observed final status:
+
+- `0 cancelled, 0 failing, 6 successful, 5 skipped, 0 pending`
+- Key successful checks include:
+  - `CI/CD Pipeline/🧹 Lint & Format` = `pass`
+  - `CI/CD Pipeline/🧪 Test Suite (20.19.0)` = `pass`
+  - `CI/CD Pipeline/🧪 Test Suite (22.x)` = `pass`
+  - `CI/CD Pipeline/🔒 Security Scan` = `pass`
+  - `CI/CD Pipeline/🔨 Build` = `pass`
+
+Interpretation:
+
+- PR #40 remediation updates cleared the previous lint/format blocker and
+  restored all required checks to green.
+
 ## Environment Notes
 
 - Initial local workspace state had the model file absent; it was restored
