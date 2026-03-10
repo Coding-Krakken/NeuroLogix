@@ -11,9 +11,10 @@ Source: PR#40
 Status: Implemented and ready for validation
 
 Objective
-Validate and merge Issue #39 remediation that restores deterministic
-`validate:model:system-state` behavior via explicit missing-file guard while
-preserving bounded scope.
+
+- Validate and merge Issue #39 remediation that restores deterministic
+  `validate:model:system-state` behavior via explicit missing-file guard while
+  preserving bounded scope.
 
 Required Actions
 
