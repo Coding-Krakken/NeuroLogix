@@ -230,9 +230,10 @@ docker compose logs -f capability-registry
 
 ### ⏳ Phase 6 — Mission Control UI
 
-- [ ] React-based operator interface
-- [ ] Real-time data visualization
-- [ ] Accessibility compliance
+- [x] Mission Control app foundation (`apps/mission-control`) with deterministic command-center/line-view/event APIs
+- [x] React-based operator interface shell for command center, line view, events, and dispatch submission
+- [x] Real-time data updates via Server-Sent Events (`/api/stream`) powering live command-center/line-view/event refresh
+- [x] Accessibility compliance (skip navigation, semantic landmarks, focus visibility, and screen-reader status/error announcements)
 
 ### ⏳ Phase 7 — Security & Compliance
 

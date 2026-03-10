@@ -32,6 +32,10 @@ consequences.
 
 - [Phase 3 Edge Adapter + Demo Simulator (Bounded Slice)](./phase-3-edge-adapter-simulator-slice.md)
 
+### Phase 6 - Mission Control UI
+
+- [Phase 6 Mission Control Foundation (Bounded Slice)](./phase-6-mission-control-foundation-slice.md)
+
 ## Template
 
 All ADRs should follow this template:
