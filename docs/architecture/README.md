@@ -28,6 +28,10 @@ consequences.
 - [ADR-007: Capability Registry Design](./ADR-007-capability-registry-design.md)
 - [ADR-008: Policy Engine with OPA](./ADR-008-policy-engine-opa.md)
 
+### Phase 3 - Edge Adapters and Simulator
+
+- [Phase 3 Edge Adapter + Demo Simulator (Bounded Slice)](./phase-3-edge-adapter-simulator-slice.md)
+
 ## Template
 
 All ADRs should follow this template:
