@@ -1,19 +1,11 @@
 {
-  "generatedAt": "2026-03-10T11:47:36.9386231Z",
+  "generatedAt": "2026-03-10T12:25:09.2856725Z",
   "sourceFile": "planning/open-issues-live-2026-03-10.json",
   "repository": "Coding-Krakken/NeuroLogix",
   "eligibleIssues": [
-    20
+    44
   ],
   "ineligibleIssues": [
-    21,
-    22,
-    23,
-    24,
-    25,
-    26,
-    27,
-    28,
     29,
     30,
     31,
@@ -22,250 +14,25 @@
     34,
     35,
     36,
-    37
+    37,
+    45,
+    46
   ],
   "issues": [
-    {
-      "issueNumber": 20,
-      "title": "Model-First: Create Data Model (Phase 4)",
-      "dependencies": [
-        19
-      ],
-      "dependencyStates": [
-        {
-          "number": 19,
-          "state": "CLOSED"
-        }
-      ],
-      "unresolvedDependencies": [],
-      "blocked": false,
-      "eligibility": "eligible"
-    },
-    {
-      "issueNumber": 21,
-      "title": "Model-First: Create Security Model (Phase 5)",
-      "dependencies": [
-        17,
-        19,
-        20
-      ],
-      "dependencyStates": [
-        {
-          "number": 17,
-          "state": "CLOSED"
-        },
-        {
-          "number": 19,
-          "state": "CLOSED"
-        },
-        {
-          "number": 20,
-          "state": "OPEN"
-        }
-      ],
-      "unresolvedDependencies": [
-        20
-      ],
-      "blocked": false,
-      "eligibility": "ineligible"
-    },
-    {
-      "issueNumber": 22,
-      "title": "Model-First: Create Resilience Model (Phase 6)",
-      "dependencies": [
-        21
-      ],
-      "dependencyStates": [
-        {
-          "number": 21,
-          "state": "OPEN"
-        }
-      ],
-      "unresolvedDependencies": [
-        21
-      ],
-      "blocked": false,
-      "eligibility": "ineligible"
-    },
-    {
-      "issueNumber": 23,
-      "title": "Model-First: Create Observability Model (Phase 7)",
-      "dependencies": [
-        20,
-        22
-      ],
-      "dependencyStates": [
-        {
-          "number": 20,
-          "state": "OPEN"
-        },
-        {
-          "number": 22,
-          "state": "OPEN"
-        }
-      ],
-      "unresolvedDependencies": [
-        20,
-        22
-      ],
-      "blocked": false,
-      "eligibility": "ineligible"
-    },
-    {
-      "issueNumber": 24,
-      "title": "Model-First: Create Test Traceability Model (Phase 8)",
-      "dependencies": [
-        19,
-        22,
-        23
-      ],
-      "dependencyStates": [
-        {
-          "number": 19,
-          "state": "CLOSED"
-        },
-        {
-          "number": 22,
-          "state": "OPEN"
-        },
-        {
-          "number": 23,
-          "state": "OPEN"
-        }
-      ],
-      "unresolvedDependencies": [
-        22,
-        23
-      ],
-      "blocked": false,
-      "eligibility": "ineligible"
-    },
-    {
-      "issueNumber": 25,
-      "title": "Model-First: Create Performance Budget Model (Phase 9)",
-      "dependencies": [
-        23,
-        24
-      ],
-      "dependencyStates": [
-        {
-          "number": 23,
-          "state": "OPEN"
-        },
-        {
-          "number": 24,
-          "state": "OPEN"
-        }
-      ],
-      "unresolvedDependencies": [
-        23,
-        24
-      ],
-      "blocked": false,
-      "eligibility": "ineligible"
-    },
-    {
-      "issueNumber": 26,
-      "title": "Model-First: Create Dependency Governance Model (Phase 10)",
-      "dependencies": [
-        21,
-        25
-      ],
-      "dependencyStates": [
-        {
-          "number": 21,
-          "state": "OPEN"
-        },
-        {
-          "number": 25,
-          "state": "OPEN"
-        }
-      ],
-      "unresolvedDependencies": [
-        21,
-        25
-      ],
-      "blocked": false,
-      "eligibility": "ineligible"
-    },
-    {
-      "issueNumber": 27,
-      "title": "Model-First: Create CI/CD and Environment Model (Phase 11)",
-      "dependencies": [
-        18,
-        22,
-        25,
-        26
-      ],
-      "dependencyStates": [
-        {
-          "number": 18,
-          "state": "CLOSED"
-        },
-        {
-          "number": 22,
-          "state": "OPEN"
-        },
-        {
-          "number": 25,
-          "state": "OPEN"
-        },
-        {
-          "number": 26,
-          "state": "OPEN"
-        }
-      ],
-      "unresolvedDependencies": [
-        22,
-        25,
-        26
-      ],
-      "blocked": false,
-      "eligibility": "ineligible"
-    },
-    {
-      "issueNumber": 28,
-      "title": "Model-First: Create Roadmap Prioritization Model (Phase 12)",
-      "dependencies": [
-        17,
-        27
-      ],
-      "dependencyStates": [
-        {
-          "number": 17,
-          "state": "CLOSED"
-        },
-        {
-          "number": 27,
-          "state": "OPEN"
-        }
-      ],
-      "unresolvedDependencies": [
-        27
-      ],
-      "blocked": false,
-      "eligibility": "ineligible"
-    },
     {
       "issueNumber": 29,
       "title": "Phase 0 Completion: Foundations Hardening and Gap Closure",
       "dependencies": [
-        27,
-        28
+        46
       ],
       "dependencyStates": [
         {
-          "number": 27,
-          "state": "OPEN"
-        },
-        {
-          "number": 28,
+          "number": 46,
           "state": "OPEN"
         }
       ],
       "unresolvedDependencies": [
-        27,
-        28
+        46
       ],
       "blocked": false,
       "eligibility": "ineligible"
@@ -285,7 +52,7 @@
         },
         {
           "number": 20,
-          "state": "OPEN"
+          "state": "CLOSED"
         },
         {
           "number": 29,
@@ -293,7 +60,6 @@
         }
       ],
       "unresolvedDependencies": [
-        20,
         29
       ],
       "blocked": false,
@@ -323,7 +89,7 @@
       "dependencies": [
         30,
         31,
-        21
+        44
       ],
       "dependencyStates": [
         {
@@ -335,14 +101,14 @@
           "state": "OPEN"
         },
         {
-          "number": 21,
+          "number": 44,
           "state": "OPEN"
         }
       ],
       "unresolvedDependencies": [
         30,
         31,
-        21
+        44
       ],
       "blocked": false,
       "eligibility": "ineligible"
@@ -383,7 +149,7 @@
       "dependencies": [
         30,
         33,
-        25
+        45
       ],
       "dependencyStates": [
         {
@@ -395,14 +161,14 @@
           "state": "OPEN"
         },
         {
-          "number": 25,
+          "number": 45,
           "state": "OPEN"
         }
       ],
       "unresolvedDependencies": [
         30,
         33,
-        25
+        45
       ],
       "blocked": false,
       "eligibility": "ineligible"
@@ -411,15 +177,11 @@
       "issueNumber": 35,
       "title": "Phase 7 Delivery: Security and Compliance Hardening",
       "dependencies": [
-        21,
         33,
-        34
+        34,
+        44
       ],
       "dependencyStates": [
-        {
-          "number": 21,
-          "state": "OPEN"
-        },
         {
           "number": 33,
           "state": "OPEN"
@@ -427,12 +189,16 @@
         {
           "number": 34,
           "state": "OPEN"
+        },
+        {
+          "number": 44,
+          "state": "OPEN"
         }
       ],
       "unresolvedDependencies": [
-        21,
         33,
-        34
+        34,
+        44
       ],
       "blocked": false,
       "eligibility": "ineligible"
@@ -479,7 +245,7 @@
       "dependencies": [
         35,
         36,
-        28
+        46
       ],
       "dependencyStates": [
         {
@@ -491,14 +257,102 @@
           "state": "OPEN"
         },
         {
-          "number": 28,
+          "number": 46,
           "state": "OPEN"
         }
       ],
       "unresolvedDependencies": [
         35,
         36,
-        28
+        46
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 44,
+      "title": "Model-First: Security and Resilience Baseline (Phases 5-6)",
+      "dependencies": [
+        17,
+        19,
+        20
+      ],
+      "dependencyStates": [
+        {
+          "number": 17,
+          "state": "CLOSED"
+        },
+        {
+          "number": 19,
+          "state": "CLOSED"
+        },
+        {
+          "number": 20,
+          "state": "CLOSED"
+        }
+      ],
+      "unresolvedDependencies": [],
+      "blocked": false,
+      "eligibility": "eligible"
+    },
+    {
+      "issueNumber": 45,
+      "title": "Model-First: Observability, Test Traceability, and Performance Budgets (Phases 7-9)",
+      "dependencies": [
+        19,
+        20,
+        44
+      ],
+      "dependencyStates": [
+        {
+          "number": 19,
+          "state": "CLOSED"
+        },
+        {
+          "number": 20,
+          "state": "CLOSED"
+        },
+        {
+          "number": 44,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        44
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 46,
+      "title": "Model-First: Dependency Governance, CI/CD Environment Model, and Roadmap Prioritization (Phases 10-12)",
+      "dependencies": [
+        17,
+        18,
+        44,
+        45
+      ],
+      "dependencyStates": [
+        {
+          "number": 17,
+          "state": "CLOSED"
+        },
+        {
+          "number": 18,
+          "state": "CLOSED"
+        },
+        {
+          "number": 44,
+          "state": "OPEN"
+        },
+        {
+          "number": 45,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        44,
+        45
       ],
       "blocked": false,
       "eligibility": "ineligible"
