@@ -21,6 +21,20 @@ Work Item: `#49`
 | `npm test` | PASS |
 | `npm run build` | PASS |
 
+## PR Gate Context
+
+- PR: `https://github.com/Coding-Krakken/NeuroLogix/pull/55`
+- `isDraft`: `false`
+- `mergeStateStatus`: `CLEAN`
+- `statusCheckRollup`: `[]` (no required checks configured)
+
+## Guardrail Metrics
+
+- `changedFiles`: `5`
+- `additions`: `235`
+- `deletions`: `0`
+- Preferred guardrail check (`<=25 files`, `<=600 lines changed`): PASS
+
 ## Acceptance Criteria Mapping
 
 1. Deterministic lane-selection/exemption rule documented in one canonical artifact — PASS (`planning/policy-model-evidence-only-lane-rule.md`, policy `NLX-LANE-STD-EXEMPT-001`).
