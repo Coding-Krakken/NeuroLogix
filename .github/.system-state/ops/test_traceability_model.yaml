@@ -1,0 +1,229 @@
+schema_version: "1.0"
+model_id: TEST-TRACE-001
+issue: "https://github.com/Coding-Krakken/NeuroLogix/issues/45"
+last_updated: "2026-03-10"
+status: active
+phase: "7-9"
+
+# Invariant-to-Test Trace Matrix
+# Maps system invariants to test IDs ensuring every critical constraint has coverage.
+
+invariants:
+  INV-001:
+    description: "AI never bypasses PLC interlocks; all control flows through validated recipes"
+    priority: critical
+    test_ids:
+      - recipe-executor.unit.interlock-check
+      - recipe-executor.integration.plc-safety-gate
+      - e2e.safety.plc-interlock-cannot-be-bypassed
+    coverage_required: 100%
+    waiver_allowed: false
+
+  INV-002:
+    description: "Every control action, recipe execution, and policy decision is immutably logged"
+    priority: critical
+    test_ids:
+      - security-core.unit.audit-chain-integrity
+      - policy-engine.unit.audit-emit-on-evaluation
+      - policy-engine.unit.audit-emit-on-denial
+      - recipe-executor.unit.audit-emit-on-start-complete-abort
+    coverage_required: 100%
+    waiver_allowed: false
+
+  INV-003:
+    description: "Privileged policy mutations emit audit entries"
+    priority: critical
+    test_ids:
+      - policy-engine.unit.privileged-mutation-audit
+    coverage_required: 100%
+    waiver_allowed: false
+
+  INV-004:
+    description: "Audit chain integrity is verifiable and tamper-evident"
+    priority: critical
+    test_ids:
+      - security-core.unit.audit-chain-verify
+      - security-core.unit.audit-chain-tamper-detection
+    coverage_required: 100%
+    waiver_allowed: false
+
+  INV-005:
+    description: "Policy decisions are deterministic for identical inputs"
+    priority: high
+    test_ids:
+      - policy-engine.unit.deterministic-evaluation
+      - policy-engine.contract.opa-policy-stability
+    coverage_required: 100%
+    waiver_allowed: false
+
+  INV-006:
+    description: "Capability registry returns consistent results under concurrent load"
+    priority: high
+    test_ids:
+      - capability-registry.unit.concurrent-lookup
+      - capability-registry.integration.registry-consistency
+    coverage_required: 80%
+    waiver_allowed: true
+
+  INV-007:
+    description: "Digital twin state converges to physical tag state within SLO"
+    priority: high
+    test_ids:
+      - digital-twin.unit.state-convergence
+      - digital-twin.integration.sync-lag-within-200ms
+    coverage_required: 90%
+    waiver_allowed: false
+
+  INV-008:
+    description: "Mission Control SSE stream recovers within 5s of disconnect"
+    priority: medium
+    test_ids:
+      - mission-control.e2e.sse-reconnect
+    coverage_required: 80%
+    waiver_allowed: true
+
+# Minimum Test Suite Composition — by Phase and Service
+
+suite_composition:
+  all_services:
+    unit:
+      required: true
+      minimum_coverage_pct: 80
+      core_modules_coverage_pct: 90
+    integration:
+      required: true
+      minimum_coverage_pct: 60
+    contract:
+      required: false
+      note: "Required for services with external API consumers"
+    e2e:
+      required: false
+      note: "Required for critical operator journeys in Mission Control"
+    chaos:
+      required: false
+      note: "Required before Phase 8 delivery sign-off"
+
+  by_service:
+    capability-registry:
+      unit: { required: true, coverage_pct: 90 }
+      integration: { required: true }
+      contract: { required: true, note: "Consumed by policy-engine and recipe-executor" }
+
+    policy-engine:
+      unit: { required: true, coverage_pct: 90 }
+      integration: { required: true }
+      contract: { required: true, note: "OPA policy stability contract" }
+
+    recipe-executor:
+      unit: { required: true, coverage_pct: 90 }
+      integration: { required: true }
+      e2e: { required: true, note: "Full recipe execution critical path" }
+
+    digital-twin:
+      unit: { required: true, coverage_pct: 80 }
+      integration: { required: true }
+
+    security-core:
+      unit: { required: true, coverage_pct: 95 }
+      integration: { required: true }
+      note: "Highest coverage requirement due to T1 compliance scope"
+
+    mission-control:
+      unit: { required: true, coverage_pct: 80 }
+      e2e: { required: true, note: "Operator journeys: command execution, line view, alarm acknowledgement" }
+      accessibility: { required: true, score_min: 95 }
+
+# Pass/Fail Evidence Artifact Format
+
+evidence_format:
+  machine_readable: true
+  schema:
+    format: json
+    fields:
+      runId:
+        type: uuid
+        description: "Unique run identifier"
+      timestamp:
+        type: iso8601
+      branch:
+        type: string
+      commitSha:
+        type: string
+      suite:
+        type: string
+        allowed: [unit, integration, contract, e2e, chaos, accessibility]
+      service:
+        type: string
+      passed:
+        type: boolean
+      coveragePct:
+        type: number
+        nullable: true
+      failedTests:
+        type: array
+        items: string
+      warningTests:
+        type: array
+        items: string
+      gateDecision:
+        type: string
+        allowed: [pass, warn, block]
+      notes:
+        type: string
+        nullable: true
+  storage_path: "planning/test-evidence/"
+  filename_pattern: "test-evidence-{issue}-{suite}-{timestamp}.json"
+
+# Gap Reporting and Waiver Process
+
+gap_reporting:
+  trigger: "any invariant coverage below required threshold"
+  report_fields:
+    - invariant_id
+    - current_coverage_pct
+    - required_coverage_pct
+    - gap_description
+    - remediation_plan
+    - target_date
+  waiver_process:
+    eligibility: "INV items with waiver_allowed: true"
+    required_approvals:
+      - tech-lead
+      - security-review (if safety-critical)
+    max_duration_days: 30
+    must_create_follow_up_issue: true
+    waiver_evidence_path: "planning/test-waivers/"
+
+# Coverage Thresholds — Phase-aware
+
+coverage_thresholds:
+  phase_1_through_6:
+    overall_pct: 80
+    core_modules_pct: 90
+    note: "Baseline thresholds for bootstrapped phases"
+
+  phase_7_and_above:
+    overall_pct: 85
+    core_modules_pct: 95
+    safety_critical_pct: 100
+    note: "Elevated thresholds for hardened production phases"
+
+  critical_invariant_coverage:
+    pct: 100
+    applies_to: "all INV items with waiver_allowed: false"
+    enforcement: block_pr_merge
+
+# CI Evidence Requirements for PR Comments
+
+ci_pr_comment:
+  required: true
+  format: markdown_table
+  fields:
+    - suite
+    - pass_fail
+    - coverage_pct
+    - failing_tests_count
+    - gate_decision
+  gate_enforcement:
+    block_merge_on: [any_failed_required_suite, coverage_below_threshold, critical_invariant_gap]
+    warn_on: [coverage_approaching_threshold, optional_suite_failed]
