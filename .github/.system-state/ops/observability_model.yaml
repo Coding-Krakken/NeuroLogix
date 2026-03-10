@@ -1,0 +1,286 @@
+schema_version: "1.0"
+model_id: OBS-001
+issue: "https://github.com/Coding-Krakken/NeuroLogix/issues/45"
+last_updated: "2026-03-10"
+status: active
+phase: "7-9"
+
+structured_logging:
+  provider: pino
+  format: json
+  transport: "stdout → ELK Stack"
+  required_fields:
+    level:
+      type: string
+      allowed: [trace, debug, info, warn, error, fatal]
+    timestamp:
+      type: iso8601
+    service:
+      type: string
+      description: "package/service name (e.g. policy-engine)"
+    traceId:
+      type: string
+      description: "OpenTelemetry trace ID (hex-16)"
+    spanId:
+      type: string
+      description: "OpenTelemetry span ID (hex-8)"
+    correlationId:
+      type: string
+      description: "Business-level correlation (e.g. recipeExecutionId)"
+    siteId:
+      type: string
+      description: "Multi-site tenancy identifier"
+    msg:
+      type: string
+  optional_fields:
+    userId:
+      type: string
+      note: "Redacted in non-audit contexts; RBAC-bound"
+    policyId:
+      type: string
+    capabilityId:
+      type: string
+    recipeId:
+      type: string
+    outcome:
+      type: string
+      allowed: [success, failure, blocked, bypassed]
+  forbidden_fields:
+    - credentials
+    - pii_unrestricted
+
+audit_log:
+  required_fields:
+    auditId:
+      type: uuid
+      description: "Immutable event ID"
+    actor:
+      type: string
+      description: "Service or operator identity (anonymised if non-operational)"
+    action:
+      type: string
+      examples: ["policy.evaluate", "recipe.execute.start", "audit.integrity.check"]
+    resource:
+      type: string
+    outcome:
+      type: string
+      allowed: [allowed, denied, blocked, error]
+    timestamp:
+      type: iso8601
+    traceId:
+      type: string
+  integrity: append-only
+  retention_days: 365
+  tampering_detection: checksum-chain
+  write_mode: service-account-only
+  access_control:
+    read: "RBAC role:audit-reader"
+    write: "service-account only (no human write path)"
+  redaction:
+    pii_fields: "userId → masked unless audit-reader role"
+    credentials: always_redacted
+
+golden_signals:
+  latency:
+    description: "Response time distribution (p50/p95/p99)"
+  traffic:
+    description: "Request throughput (req/s or events/s)"
+  errors:
+    description: "Error rate (% of requests resulting in error)"
+  saturation:
+    description: "CPU/memory/queue utilisation as fraction of capacity"
+
+services:
+  capability-registry:
+    latency_slo_p95_ms: 20
+    traffic_metric: capability_lookups_per_second
+    error_threshold_pct: 0.1
+    saturation_metric: registry_queue_depth
+
+  policy-engine:
+    latency_slo_p95_ms: 10
+    traffic_metric: policy_evaluations_per_second
+    error_threshold_pct: 0.1
+    saturation_metric: opa_evaluation_queue_depth
+    audit_events:
+      - policy.evaluate
+      - policy.mutation.privileged
+      - policy.denied
+      - policy.blocked
+
+  recipe-executor:
+    latency_slo_p95_ms: 50
+    traffic_metric: recipe_executions_per_second
+    error_threshold_pct: 0.1
+    saturation_metric: recipe_execution_queue_depth
+    critical_paths:
+      - recipe.execute.start
+      - recipe.execute.step
+      - recipe.execute.complete
+      - recipe.execute.abort
+
+  digital-twin:
+    latency_slo_p95_ms: 200
+    traffic_metric: tag_sync_operations_per_second
+    error_threshold_pct: 0.1
+    saturation_metric: twin_sync_lag_ms
+    audit_events:
+      - twin.state.update
+      - twin.alarm.raised
+
+  mission-control:
+    sse_stream_uptime_pct: 99.9
+    sse_reconnect_max_ms: 5000
+    lcp_slo_ms: 1200
+    fid_slo_ms: 10
+    cls_threshold: 0.05
+
+slis:
+  availability:
+    definition: "percentage of time service responds successfully to health checks"
+    formula: "(successful_health_checks / total_health_checks) * 100"
+  control_loop_latency:
+    definition: "wall-clock time from tag ingest to PLC command delivery at p95"
+    formula: "histogram_quantile(0.95, control_loop_duration_seconds)"
+  recipe_success_rate:
+    definition: "percentage of recipe executions completing without error"
+    formula: "(successful_recipe_executions / total_recipe_executions) * 100"
+  audit_write_success:
+    definition: "percentage of audit events written without error"
+    formula: "(audit_writes_ok / audit_writes_total) * 100"
+  policy_decision_latency:
+    definition: "time from policy evaluation request to decision at p95"
+    formula: "histogram_quantile(0.95, policy_decision_duration_seconds)"
+  digital_twin_sync_lag:
+    definition: "elapsed time between physical tag update and digital twin state update"
+    formula: "gauge: digital_twin_sync_lag_ms"
+
+slos:
+  system_availability:
+    sli: availability
+    target_pct: 99.99
+    window: rolling_30d
+    burn_rate_alert_threshold: "5x"
+  control_loop_latency_p95:
+    sli: control_loop_latency
+    target_ms: 50
+    window: rolling_1h
+    breach_action: alert_critical
+  control_loop_latency_p99:
+    sli: control_loop_latency
+    target_ms: 100
+    window: rolling_1h
+    breach_action: alert_critical
+  tag_throughput:
+    target_tags_per_second: 10000
+    window: rolling_1m
+    breach_action: alert_warning
+  recipe_success_rate:
+    sli: recipe_success_rate
+    target_pct: 99.9
+    window: rolling_1h
+    breach_action: alert_critical
+  audit_write_success:
+    sli: audit_write_success
+    target_pct: 100
+    window: rolling_1h
+    breach_action: alert_critical_immediate
+  safety_interlock_bypass:
+    target_count: 0
+    window: all_time
+    breach_action: "immediate_incident + pagerduty + plc_safe_mode"
+  policy_decision_latency_p95:
+    sli: policy_decision_latency
+    target_ms: 10
+    window: rolling_1h
+    breach_action: alert_warning
+  digital_twin_sync_lag:
+    sli: digital_twin_sync_lag
+    target_ms: 200
+    window: rolling_1m
+    breach_action: alert_warning
+  service_error_rate:
+    target_pct: 0.1
+    window: rolling_5m
+    breach_action: alert_warning
+  sse_stream_uptime:
+    target_pct: 99.9
+    window: rolling_30d
+    breach_action: alert_warning
+  mttr:
+    target_minutes: 5
+    window: per_incident
+    breach_action: post_incident_review
+
+dashboards:
+  control_plane:
+    owner: team-core
+    panels:
+      - control_loop_latency_p95_p99
+      - tag_throughput
+      - recipe_execution_success_rate
+      - safety_interlock_events
+  security_audit:
+    owner: team-security
+    panels:
+      - audit_log_write_rate
+      - policy_denied_events
+      - safety_bypass_events
+      - certificate_expiry_countdown
+  mission_control_ui:
+    owner: team-ui
+    panels:
+      - lcp_p95
+      - sse_stream_uptime
+      - error_rate_by_route
+
+alert_routing:
+  critical:
+    channels: [pagerduty, opsgenie]
+    escalation_delay_minutes: 5
+    examples:
+      - safety_interlock_bypass
+      - audit_write_failure
+      - control_loop_p99_breach
+  warning:
+    channels: [slack-ops-channel]
+    escalation_delay_minutes: 30
+    examples:
+      - service_error_rate_above_threshold
+      - sse_stream_degraded
+      - digital_twin_sync_lag_breach
+
+audit_trail:
+  scope: "all control actions, recipe executions, policy decisions, privileged mutations"
+  storage:
+    primary: ELK_Stack
+    archive: "S3 (90d+)"
+  retention:
+    hot_days: 90
+    archive_days: 365
+    legal_hold: on_demand
+  integrity:
+    method: sha256_chain
+    verification_endpoint: "/api/audit/integrity-check"
+    verification_frequency: hourly_batch
+
+tracing:
+  provider: "OpenTelemetry + Jaeger"
+  sampling:
+    control_loop: "100%"
+    recipe_execution: "100%"
+    policy_evaluation: "100%"
+    general_api: "10%"
+  propagation: W3C_TraceContext
+  required_spans:
+    - service.request.received
+    - policy.evaluate
+    - recipe.execute.start
+    - recipe.execute.step
+    - recipe.execute.complete
+    - twin.state.update
+    - audit.write
+  span_attributes_required:
+    - siteId
+    - correlationId
+    - outcome
