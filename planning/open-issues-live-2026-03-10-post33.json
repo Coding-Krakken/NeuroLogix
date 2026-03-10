@@ -1,0 +1,246 @@
+[
+  {
+    "body": "## Objective\nClarify how the standard-lane efficiency gate should evaluate bounded model/evidence-only PR slices where code deltas are intentionally zero.\n\n## Context\nIssue #44 / PR #48 produced a strict-lane pass while standard-lane failed on doc-to-code ratio and preferred-line checks for a bounded model/evidence artifact slice.\n\n## Decision Needed\n- Define whether model/evidence-only slices are:\n  1) evaluated under a dedicated lane/profile, or\n  2) standard lane with adjusted thresholds, or\n  3) standard lane with an explicit policy exemption workflow.\n\n## Acceptance Criteria\n- Deterministic policy rule documented for lane selection/exemption.\n- Required evidence fields for exemption/override are explicit.\n- Validator and planner handoff templates reference the same rule.\n\n## Traceability\n- Source issue: #44\n- Source PR: #48\n- Source evidence: planning/validation-evidence-issue-44-validator.md",
+    "createdAt": "2026-03-10T14:33:38Z",
+    "labels": [
+      {
+        "id": "LA_kwDOP4fdw88AAAACLkQwhg",
+        "name": "documentation",
+        "description": "Improvements or additions to documentation",
+        "color": "0075ca"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2ig",
+        "name": "model-first",
+        "description": "Model-first governance and planning work",
+        "color": "1D76DB"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2ww",
+        "name": "track:governance",
+        "description": "Governance/model/doc tracks",
+        "color": "0E8A16"
+      }
+    ],
+    "number": 49,
+    "title": "Policy Clarification: Standard-Lane Efficiency Gate for Model/Evidence-Only Slices",
+    "updatedAt": "2026-03-10T14:53:40Z",
+    "url": "https://github.com/Coding-Krakken/NeuroLogix/issues/49"
+  },
+  {
+    "body": "## Objective\r\nDefine one governance bundle for dependency intake, release environment controls, and machine-readable roadmap prioritization.\r\n\r\n## Scope\r\nCreate:\r\n- `.github/.system-state/deps/dependency_governance_model.yaml`\r\n- `.github/.system-state/ci/ci_cd_model.yaml`\r\n- `.github/.system-state/roadmap/roadmap_model.yaml`\r\n- Alignment report for `.github/workflows/ci-cd.yml`\r\n- Prioritized implementation queue artifact\r\n\r\n## TODO Checklist\r\n- [ ] Define dependency request template and mandatory justification fields.\r\n- [ ] Define license/security/maintenance review criteria.\r\n- [ ] Define dependency and abstraction budget per phase.\r\n- [ ] Define SBOM and vulnerability remediation cadence.\r\n- [ ] Define exception process requiring ADR and security signoff.\r\n- [ ] Define environment topology (dev/test/staging/prod) and promotion criteria.\r\n- [ ] Define required checks and risk-profile matrix per promotion.\r\n- [ ] Define secrets and environment variable boundary management rules.\r\n- [ ] Define deployment safety controls (canary/blue-green/rollback automation).\r\n- [ ] Define operational evidence required for release signoff.\r\n- [ ] Define scoring dimensions (business impact, risk reduction, dependency unlock, effort, compliance urgency).\r\n- [ ] Map current backlog items to phase and score.\r\n- [ ] Define WIP limits and sequencing rules for parallel work.\r\n- [ ] Define reprioritization trigger conditions.\r\n- [ ] Publish initial prioritized backlog and review cadence.\r\n\r\n## Acceptance Criteria\r\n- [ ] Governance model expresses enforceable rules and exception workflow.\r\n- [ ] Review checkpoints exist for license and CVE risk.\r\n- [ ] SBOM/dependency scan integration requirements are explicit.\r\n- [ ] CI/CD model enumerates required checks per risk level.\r\n- [ ] Rollback and deploy approval flow are explicit and testable.\r\n- [ ] Workflow-to-model alignment gaps are documented.\r\n- [ ] Roadmap model contains all active implementation tracks.\r\n- [ ] Each item has score inputs and computed priority.\r\n- [ ] Dependencies and parallelization constraints are explicit.\r\n\r\n## Deliverables\r\n- [ ] `.github/.system-state/deps/dependency_governance_model.yaml`\r\n- [ ] `.github/.system-state/ci/ci_cd_model.yaml`\r\n- [ ] `.github/.system-state/roadmap/roadmap_model.yaml`\r\n- [ ] Alignment report for `.github/workflows/ci-cd.yml`\r\n- [ ] Prioritized implementation queue artifact\r\n\r\n## Quality Gate Checklist\r\n- [ ] G1 Lint passes\r\n- [ ] G2 Format passes\r\n- [ ] G3 Typecheck passes\r\n- [ ] G4 Tests pass with required coverage\r\n- [ ] G5 Build succeeds\r\n- [ ] G6 Security scan and dependency audit pass\r\n- [ ] G7 Documentation/ADR updates complete\r\n- [ ] G8 PR completeness and linked issue verified\r\n- [ ] G9 Performance budget checked (if relevant)\r\n- [ ] G10 Release/rollback readiness confirmed\r\n\r\n## Dependencies / Blockers\r\n- MF-02: https://github.com/Coding-Krakken/NeuroLogix/issues/18\r\n- MF-05 (merged): https://github.com/Coding-Krakken/NeuroLogix/issues/44\r\n- MF-07-09 (merged): https://github.com/Coding-Krakken/NeuroLogix/issues/45\r\n- MF-01: https://github.com/Coding-Krakken/NeuroLogix/issues/17\r\n\r\n## Out of Scope\r\n- Any unrelated refactors not required for this scope\r\n\r\n## Definition of Done\r\n- [ ] Scope items completed and demoable\r\n- [ ] Acceptance criteria verified with evidence\r\n- [ ] All quality gates green\r\n- [ ] Linked docs/models updated\r\n- [ ] Rollback or mitigation path documented\r\n",
+    "createdAt": "2026-03-10T12:21:00Z",
+    "labels": [
+      {
+        "id": "LA_kwDOP4fdw88AAAACLkQwhg",
+        "name": "documentation",
+        "description": "Improvements or additions to documentation",
+        "color": "0075ca"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2MQ",
+        "name": "epic",
+        "description": "Epic-level tracked work item",
+        "color": "5319E7"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2ig",
+        "name": "model-first",
+        "description": "Model-first governance and planning work",
+        "color": "1D76DB"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2ww",
+        "name": "track:governance",
+        "description": "Governance/model/doc tracks",
+        "color": "0E8A16"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY4Xw",
+        "name": "phase:model",
+        "description": "System-state model phases (0-12)",
+        "color": "5319E7"
+      }
+    ],
+    "number": 46,
+    "title": "Model-First: Dependency Governance, CI/CD Environment Model, and Roadmap Prioritization (Phases 10-12)",
+    "updatedAt": "2026-03-10T15:17:04Z",
+    "url": "https://github.com/Coding-Krakken/NeuroLogix/issues/46"
+  },
+  {
+    "body": "## Objective\r\nDefine a single operability model that unifies telemetry contracts, requirement-to-test traceability, and enforceable performance budgets.\r\n\r\n## Scope\r\nCreate:\r\n- `.github/.system-state/ops/observability_model.yaml`\r\n- `.github/.system-state/ops/test_traceability_model.yaml`\r\n- `.github/.system-state/perf/budgets.yaml`\r\n\r\n## TODO Checklist\r\n- [ ] Define mandatory structured log fields and trace correlation IDs.\r\n- [ ] Define golden signals per service and data pipeline.\r\n- [ ] Define SLI/SLOs for availability, latency, correctness, and freshness.\r\n- [ ] Define dashboard and alert ownership with escalation routing.\r\n- [ ] Define audit trail requirements and retention boundaries.\r\n- [ ] Define trace matrix linking invariants/contracts to test IDs.\r\n- [ ] Define minimum suite composition by phase (unit, integration, contract, e2e, chaos).\r\n- [ ] Define pass/fail evidence artifact format for CI and PR comments.\r\n- [ ] Define gap-reporting and waiver process for uncovered controls.\r\n- [ ] Set coverage thresholds by package/service criticality.\r\n- [ ] Set latency budgets for core service APIs and control loops.\r\n- [ ] Define ingestion throughput targets for telemetry and event streams.\r\n- [ ] Define UI budgets (LCP/INP/CLS and bundle ceilings) for Mission Control.\r\n- [ ] Define benchmark scenario matrix and pass/fail thresholds.\r\n- [ ] Wire budget checks into PR and pre-release gates.\r\n\r\n## Acceptance Criteria\r\n- [ ] Each service has minimum metric and alert set documented.\r\n- [ ] SLO math and thresholds are explicit and testable.\r\n- [ ] Log schema includes enough fields for forensics.\r\n- [ ] Critical invariants have at least one mapped automated test requirement.\r\n- [ ] Traceability output format is machine-readable.\r\n- [ ] Coverage expectations are phase-aware and documented.\r\n- [ ] Budgets exist for all critical runtime paths and UI surfaces.\r\n- [ ] Thresholds map to explicit gate actions (warn/block).\r\n- [ ] Budget regressions have deterministic remediation path.\r\n\r\n## Deliverables\r\n- [ ] `.github/.system-state/ops/observability_model.yaml`\r\n- [ ] `.github/.system-state/ops/test_traceability_model.yaml`\r\n- [ ] `.github/.system-state/perf/budgets.yaml`\r\n\r\n## Quality Gate Checklist\r\n- [ ] G1 Lint passes\r\n- [ ] G2 Format passes\r\n- [ ] G3 Typecheck passes\r\n- [ ] G4 Tests pass with required coverage\r\n- [ ] G5 Build succeeds\r\n- [ ] G6 Security scan and dependency audit pass\r\n- [ ] G7 Documentation/ADR updates complete\r\n- [ ] G8 PR completeness and linked issue verified\r\n- [ ] G9 Performance budget checked (if relevant)\r\n- [ ] G10 Release/rollback readiness confirmed\r\n\r\n## Dependencies / Blockers\r\n- MF-04: https://github.com/Coding-Krakken/NeuroLogix/issues/20\r\n- MF-06 (merged): https://github.com/Coding-Krakken/NeuroLogix/issues/44\r\n- MF-03: https://github.com/Coding-Krakken/NeuroLogix/issues/19\r\n\r\n## Out of Scope\r\n- Any unrelated refactors not required for this scope\r\n\r\n## Definition of Done\r\n- [ ] Scope items completed and demoable\r\n- [ ] Acceptance criteria verified with evidence\r\n- [ ] All quality gates green\r\n- [ ] Linked docs/models updated\r\n- [ ] Rollback or mitigation path documented\r\n",
+    "createdAt": "2026-03-10T12:20:59Z",
+    "labels": [
+      {
+        "id": "LA_kwDOP4fdw88AAAACLkQwhg",
+        "name": "documentation",
+        "description": "Improvements or additions to documentation",
+        "color": "0075ca"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2MQ",
+        "name": "epic",
+        "description": "Epic-level tracked work item",
+        "color": "5319E7"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2ig",
+        "name": "model-first",
+        "description": "Model-first governance and planning work",
+        "color": "1D76DB"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY4GA",
+        "name": "track:qa",
+        "description": "Testing, validation, and quality evidence",
+        "color": "BFD4F2"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY4Xw",
+        "name": "phase:model",
+        "description": "System-state model phases (0-12)",
+        "color": "5319E7"
+      }
+    ],
+    "number": 45,
+    "title": "Model-First: Observability, Test Traceability, and Performance Budgets (Phases 7-9)",
+    "updatedAt": "2026-03-10T12:21:23Z",
+    "url": "https://github.com/Coding-Krakken/NeuroLogix/issues/45"
+  },
+  {
+    "body": "## Objective\r\nEnable multi-site operations with controlled rollout, site templating, and federation governance.\r\n\r\n## Scope\r\nImplement site template model, federated control topology, and progressive rollout controls.\r\n\r\n## TODO Checklist\r\n- [ ] Define site template schema and bootstrap process.\r\n- [ ] Implement federation-aware config and routing model.\r\n- [ ] Implement progressive rollout controls (feature flags/canary/site cohorts).\r\n- [ ] Implement tenant/site observability slicing and access controls.\r\n- [ ] Document rollback and incident response for federated deployments.\r\n\r\n## Acceptance Criteria\r\n- [ ] At least two isolated site profiles can be deployed with shared platform contracts.\r\n- [ ] Rollout controls support safe progressive enablement and rapid rollback.\r\n- [ ] Federated observability and access controls satisfy security model constraints.\r\n\r\n## Deliverables\r\n- [ ] Federation deployment model and implementation\r\n- [ ] Site template and rollout control artifacts\r\n- [ ] Federation runbook and validation evidence\r\n\r\n## Implementation Guidelines\r\n- [ ] Follow model-first gating: no implementation begins before required model artifacts are reviewed and accepted.\r\n- [ ] Keep canonical patterns single-path (one component pattern, one API pattern, one state pattern, one form pattern, one error pattern).\r\n- [ ] Respect entropy limits: justify each new dependency/abstraction and avoid pattern drift.\r\n- [ ] Preserve deterministic safety boundaries (no bypass of policy checks, recipe guardrails, or audit trail requirements).\r\n- [ ] Include tenant readiness (`tenant_id`), config UI hooks, and feature flags where applicable.\r\n- [ ] Keep files maintainable (target <=300 lines) and colocate related code/docs.\r\n\r\n## Quality Gate Checklist\r\n- [ ] G1 Lint passes\r\n- [ ] G2 Format passes\r\n- [ ] G3 Typecheck passes\r\n- [ ] G4 Tests pass with required coverage\r\n- [ ] G5 Build succeeds\r\n- [ ] G6 Security scan and dependency audit pass\r\n- [ ] G7 Documentation/ADR updates complete\r\n- [ ] G8 PR completeness and linked issue verified\r\n- [ ] G9 Performance budget checked (if relevant)\r\n- [ ] G10 Release/rollback readiness confirmed\r\n\r\n## Dependencies / Blockers\r\n- IM-07: https://github.com/Coding-Krakken/NeuroLogix/issues/35\r\n- IM-08: https://github.com/Coding-Krakken/NeuroLogix/issues/36\r\n- MF-12: https://github.com/Coding-Krakken/NeuroLogix/issues/46\r\n\r\n## Out of Scope\r\n- Any unrelated refactors not required for this scope\r\n\r\n## Definition of Done\r\n- [ ] Scope items completed and demoable\r\n- [ ] Acceptance criteria verified with evidence\r\n- [ ] All quality gates green\r\n- [ ] Linked docs/models updated\r\n- [ ] Rollback or mitigation path documented\r\n\r\n",
+    "createdAt": "2026-03-09T19:27:36Z",
+    "labels": [
+      {
+        "id": "LA_kwDOP4fdw88AAAACLkQwkA",
+        "name": "enhancement",
+        "description": "New feature or request",
+        "color": "a2eeef"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2MQ",
+        "name": "epic",
+        "description": "Epic-level tracked work item",
+        "color": "5319E7"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY3RQ",
+        "name": "track:integration",
+        "description": "External system and adapter integration",
+        "color": "C5DEF5"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY6iw",
+        "name": "phase:9-federation",
+        "description": "README Phase 9 Multi-Site Federation",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 37,
+    "title": "Phase 9 Delivery: Multi-Site Federation and Controlled Rollout",
+    "updatedAt": "2026-03-10T12:23:28Z",
+    "url": "https://github.com/Coding-Krakken/NeuroLogix/issues/37"
+  },
+  {
+    "body": "## Objective\r\nDeliver confidence suite for functional correctness, resilience, and performance under realistic conditions.\r\n\r\n## Scope\r\nImplement e2e scenario tests, performance benchmarks, and chaos experiments tied to resilience model.\r\n\r\n## TODO Checklist\r\n- [ ] Create end-to-end test scenarios for core operational workflows.\r\n- [ ] Implement performance benchmark harness and budget assertions.\r\n- [ ] Run chaos scenarios (broker loss, service degradation, delayed policy responses).\r\n- [ ] Publish reliability scorecards and remediation backlog for failures.\r\n- [ ] Integrate nightly and pre-release validation pipelines.\r\n\r\n## Acceptance Criteria\r\n- [ ] Critical workflows have stable e2e coverage and reproducible fixtures.\r\n- [ ] Performance budgets are enforced in CI/pre-release checks.\r\n- [ ] Chaos tests validate recovery behavior and alerting paths.\r\n\r\n## Deliverables\r\n- [ ] E2E suite and fixtures\r\n- [ ] Performance benchmark reports\r\n- [ ] Chaos validation reports and remediation issues\r\n\r\n## Implementation Guidelines\r\n- [ ] Follow model-first gating: no implementation begins before required model artifacts are reviewed and accepted.\r\n- [ ] Keep canonical patterns single-path (one component pattern, one API pattern, one state pattern, one form pattern, one error pattern).\r\n- [ ] Respect entropy limits: justify each new dependency/abstraction and avoid pattern drift.\r\n- [ ] Preserve deterministic safety boundaries (no bypass of policy checks, recipe guardrails, or audit trail requirements).\r\n- [ ] Include tenant readiness (`tenant_id`), config UI hooks, and feature flags where applicable.\r\n- [ ] Keep files maintainable (target <=300 lines) and colocate related code/docs.\r\n\r\n## Quality Gate Checklist\r\n- [ ] G1 Lint passes\r\n- [ ] G2 Format passes\r\n- [ ] G3 Typecheck passes\r\n- [ ] G4 Tests pass with required coverage\r\n- [ ] G5 Build succeeds\r\n- [ ] G6 Security scan and dependency audit pass\r\n- [ ] G7 Documentation/ADR updates complete\r\n- [ ] G8 PR completeness and linked issue verified\r\n- [ ] G9 Performance budget checked (if relevant)\r\n- [ ] G10 Release/rollback readiness confirmed\r\n\r\n## Dependencies / Blockers\r\n- IM-03: https://github.com/Coding-Krakken/NeuroLogix/issues/31\r\n- IM-05: https://github.com/Coding-Krakken/NeuroLogix/issues/33\r\n- IM-06: https://github.com/Coding-Krakken/NeuroLogix/issues/34\r\n- IM-07: https://github.com/Coding-Krakken/NeuroLogix/issues/35\r\n\r\n## Out of Scope\r\n- Any unrelated refactors not required for this scope\r\n\r\n## Definition of Done\r\n- [ ] Scope items completed and demoable\r\n- [ ] Acceptance criteria verified with evidence\r\n- [ ] All quality gates green\r\n- [ ] Linked docs/models updated\r\n- [ ] Rollback or mitigation path documented\r\n",
+    "createdAt": "2026-03-09T19:27:35Z",
+    "labels": [
+      {
+        "id": "LA_kwDOP4fdw88AAAACLkQwkA",
+        "name": "enhancement",
+        "description": "New feature or request",
+        "color": "a2eeef"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2MQ",
+        "name": "epic",
+        "description": "Epic-level tracked work item",
+        "color": "5319E7"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY4GA",
+        "name": "track:qa",
+        "description": "Testing, validation, and quality evidence",
+        "color": "BFD4F2"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY6Xw",
+        "name": "phase:8-validation",
+        "description": "README Phase 8 Testing and Validation",
+        "color": "5319E7"
+      }
+    ],
+    "number": 36,
+    "title": "Phase 8 Delivery: End-to-End Validation, Performance, and Chaos",
+    "updatedAt": "2026-03-09T19:27:35Z",
+    "url": "https://github.com/Coding-Krakken/NeuroLogix/issues/36"
+  },
+  {
+    "body": "## Objective\r\nImplement runtime security controls and compliance evidence paths required for production readiness.\r\n\r\n## Scope\r\nImplement mTLS, policy hardening, audit immutability approach, secrets management, and control verification.\r\n\r\n## TODO Checklist\r\n- [ ] Implement service-to-service mTLS and certificate rotation process.\r\n- [ ] Harden authN/authZ and least-privilege policies across services.\r\n- [ ] Implement immutable audit log strategy and tamper evidence.\r\n- [ ] Enforce secrets scanning and secure configuration loading.\r\n- [ ] Produce control verification matrix mapped to standards.\r\n\r\n## Acceptance Criteria\r\n- [ ] All critical service calls enforce authenticated/encrypted channels.\r\n- [ ] Audit events for privileged and safety-critical actions are immutable and queryable.\r\n- [ ] Compliance control matrix has pass/fail evidence links.\r\n\r\n## Deliverables\r\n- [ ] mTLS and auth hardening implementation\r\n- [ ] Audit trail hardening updates\r\n- [ ] Compliance verification report\r\n\r\n## Implementation Guidelines\r\n- [ ] Follow model-first gating: no implementation begins before required model artifacts are reviewed and accepted.\r\n- [ ] Keep canonical patterns single-path (one component pattern, one API pattern, one state pattern, one form pattern, one error pattern).\r\n- [ ] Respect entropy limits: justify each new dependency/abstraction and avoid pattern drift.\r\n- [ ] Preserve deterministic safety boundaries (no bypass of policy checks, recipe guardrails, or audit trail requirements).\r\n- [ ] Include tenant readiness (`tenant_id`), config UI hooks, and feature flags where applicable.\r\n- [ ] Keep files maintainable (target <=300 lines) and colocate related code/docs.\r\n\r\n## Quality Gate Checklist\r\n- [ ] G1 Lint passes\r\n- [ ] G2 Format passes\r\n- [ ] G3 Typecheck passes\r\n- [ ] G4 Tests pass with required coverage\r\n- [ ] G5 Build succeeds\r\n- [ ] G6 Security scan and dependency audit pass\r\n- [ ] G7 Documentation/ADR updates complete\r\n- [ ] G8 PR completeness and linked issue verified\r\n- [ ] G9 Performance budget checked (if relevant)\r\n- [ ] G10 Release/rollback readiness confirmed\r\n\r\n## Dependencies / Blockers\r\n- MF-05: https://github.com/Coding-Krakken/NeuroLogix/issues/44\r\n- IM-05: https://github.com/Coding-Krakken/NeuroLogix/issues/33\r\n- IM-06: https://github.com/Coding-Krakken/NeuroLogix/issues/34\r\n\r\n## Out of Scope\r\n- Any unrelated refactors not required for this scope\r\n\r\n## Definition of Done\r\n- [ ] Scope items completed and demoable\r\n- [ ] Acceptance criteria verified with evidence\r\n- [ ] All quality gates green\r\n- [ ] Linked docs/models updated\r\n- [ ] Rollback or mitigation path documented\r\n\r\n",
+    "createdAt": "2026-03-09T19:27:34Z",
+    "labels": [
+      {
+        "id": "LA_kwDOP4fdw88AAAACLkQwkA",
+        "name": "enhancement",
+        "description": "New feature or request",
+        "color": "a2eeef"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2MQ",
+        "name": "epic",
+        "description": "Epic-level tracked work item",
+        "color": "5319E7"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY34Q",
+        "name": "track:security",
+        "description": "Security and compliance workstream",
+        "color": "D93F0B"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY6QA",
+        "name": "phase:7-security",
+        "description": "README Phase 7 Security and Compliance",
+        "color": "B60205"
+      }
+    ],
+    "number": 35,
+    "title": "Phase 7 Delivery: Security and Compliance Hardening",
+    "updatedAt": "2026-03-10T12:23:29Z",
+    "url": "https://github.com/Coding-Krakken/NeuroLogix/issues/35"
+  },
+  {
+    "body": "## Objective\r\nBuild the operator-facing Mission Control UI with real-time visibility and control safety affordances.\r\n\r\n## Scope\r\nCreate mission-control app, shared UI package foundations, and key operational views.\r\n\r\n## TODO Checklist\r\n- [ ] Create `apps/mission-control` and baseline shell/navigation.\r\n- [ ] Implement Command Center, Line View, and alarm/event timeline surfaces.\r\n- [ ] Implement role-aware control actions with confirmation/approval UX.\r\n- [ ] Implement accessibility baseline (keyboard navigation, semantics, contrast, ARIA).\r\n- [ ] Implement real-time updates with resilient reconnect strategy.\r\n\r\n## Acceptance Criteria\r\n- [ ] Mission Control app runs locally and integrates with core service APIs.\r\n- [ ] Critical controls require explicit confirmation and reflect policy outcomes.\r\n- [ ] Accessibility score and baseline checks meet project thresholds.\r\n\r\n## Deliverables\r\n- [ ] apps/mission-control application\r\n- [ ] Shared UI primitives/package foundation\r\n- [ ] UI test and accessibility evidence\r\n\r\n## Implementation Guidelines\r\n- [ ] Follow model-first gating: no implementation begins before required model artifacts are reviewed and accepted.\r\n- [ ] Keep canonical patterns single-path (one component pattern, one API pattern, one state pattern, one form pattern, one error pattern).\r\n- [ ] Respect entropy limits: justify each new dependency/abstraction and avoid pattern drift.\r\n- [ ] Preserve deterministic safety boundaries (no bypass of policy checks, recipe guardrails, or audit trail requirements).\r\n- [ ] Include tenant readiness (`tenant_id`), config UI hooks, and feature flags where applicable.\r\n- [ ] Keep files maintainable (target <=300 lines) and colocate related code/docs.\r\n\r\n## Quality Gate Checklist\r\n- [ ] G1 Lint passes\r\n- [ ] G2 Format passes\r\n- [ ] G3 Typecheck passes\r\n- [ ] G4 Tests pass with required coverage\r\n- [ ] G5 Build succeeds\r\n- [ ] G6 Security scan and dependency audit pass\r\n- [ ] G7 Documentation/ADR updates complete\r\n- [ ] G8 PR completeness and linked issue verified\r\n- [ ] G9 Performance budget checked (if relevant)\r\n- [ ] G10 Release/rollback readiness confirmed\r\n\r\n## Dependencies / Blockers\r\n- IM-02: https://github.com/Coding-Krakken/NeuroLogix/issues/30\r\n- IM-05: https://github.com/Coding-Krakken/NeuroLogix/issues/33\r\n- MF-09: https://github.com/Coding-Krakken/NeuroLogix/issues/45\r\n\r\n## Out of Scope\r\n- Any unrelated refactors not required for this scope\r\n\r\n## Definition of Done\r\n- [ ] Scope items completed and demoable\r\n- [ ] Acceptance criteria verified with evidence\r\n- [ ] All quality gates green\r\n- [ ] Linked docs/models updated\r\n- [ ] Rollback or mitigation path documented\r\n\r\n",
+    "createdAt": "2026-03-09T19:27:32Z",
+    "labels": [
+      {
+        "id": "LA_kwDOP4fdw88AAAACLkQwkA",
+        "name": "enhancement",
+        "description": "New feature or request",
+        "color": "a2eeef"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY2MQ",
+        "name": "epic",
+        "description": "Epic-level tracked work item",
+        "color": "5319E7"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY3gA",
+        "name": "track:ui",
+        "description": "Mission control UI and operator experience",
+        "color": "F9D0C4"
+      },
+      {
+        "id": "LA_kwDOP4fdw88AAAACawY6Hw",
+        "name": "phase:6-ui",
+        "description": "README Phase 6 Mission Control UI",
+        "color": "E99695"
+      }
+    ],
+    "number": 34,
+    "title": "Phase 6 Delivery: Mission Control UI and Real-Time Operations UX",
+    "updatedAt": "2026-03-10T15:59:45Z",
+    "url": "https://github.com/Coding-Krakken/NeuroLogix/issues/34"
+  }
+]

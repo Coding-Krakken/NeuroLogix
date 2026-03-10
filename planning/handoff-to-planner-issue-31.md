@@ -1,0 +1,49 @@
+[Context]
+Work Item: Issue#31
+Chain Step: 13
+Target Agent: Planner-Architect
+Source: PR#52
+Status: merged-and-validated
+
+Objective
+Continue deterministic backlog execution after successful validator review, merge, and post-merge validation of Issue #31.
+
+Required Actions
+1. Treat Issue #31 and PR #52 as complete baseline for the bounded Phase 3 adapter/simulator slice.
+2. Select the next highest-value eligible issue using weighted scoring and eligibility gates.
+3. Produce a bounded Builder handoff for the selected next issue with explicit scope, risk, and validation expectations.
+
+Forbidden Actions
+- Do not reopen Issue #31 implementation scope unless a new regression issue is created.
+- Do not bypass deterministic scoring, PR workflow, required checks, or branch protection.
+- Do not modify `.github/` framework internals during normal issue execution.
+
+Files to Inspect
+- `planning/validation-evidence-issue-31-validator.md`
+- `planning/review-summary-issue-31.md`
+- `planning/validator-decision-issue-31.md`
+- `planning/merge-record-issue-31.md`
+- `planning/closure-record-issue-31.md`
+- `planning/open-issues-live-2026-03-10.json`
+- PR: https://github.com/Coding-Krakken/NeuroLogix/pull/52
+- Issue: https://github.com/Coding-Krakken/NeuroLogix/issues/31
+
+Acceptance Criteria
+1. Next issue selection is eligibility-gated and scoring-documented.
+2. Planner output defines bounded in-scope and out-of-scope implementation slice.
+3. Next Builder handoff is policy-compliant and traceable.
+
+Required GitHub Updates
+1. Preserve Issue #31 closure traceability in issue/PR history.
+2. Post next-cycle selection rationale on the newly selected issue.
+3. Link Issue #31 merge/closure records when relevant to dependencies or sequencing.
+
+Validation Expectations
+- Maintain deterministic weighted scoring and tie-breaker rules.
+- Keep next slice small, reviewable, testable, and reversible.
+- Include risk and rollback notes in planner outputs.
+
+Final Command Requirement
+```bash
+.\.utils\dispatch-code-chat.ps1 -Mode ask -TargetAgent "planner-architect" -PromptFile "planning/handoff-to-planner-issue-31.md" -AddFile ".github/templates/merge-record.md,.github/templates/closure-record.md,planning/validation-evidence-issue-31-validator.md"
+```
