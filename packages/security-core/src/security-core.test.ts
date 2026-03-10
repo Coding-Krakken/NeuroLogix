@@ -132,8 +132,8 @@ describe('CertificateManager', () => {
 
   it('should track certificate rotation', () => {
     const serviceid = 'policy-engine';
-    const cert1 = '-----BEGIN CERTIFICATE-----\nMIIC1\n-----END CERTIFICATE-----';
-    const cert2 = '-----BEGIN CERTIFICATE-----\nMIIC2\n-----END CERTIFICATE-----';
+    const cert1 = '-----BEGIN CERTIFICATE-----\nQUJDRA==\n-----END CERTIFICATE-----';
+    const cert2 = '-----BEGIN CERTIFICATE-----\nRUZHSA==\n-----END CERTIFICATE-----';
 
     manager.loadCertificate(serviceid, cert1);
     const status = manager.rotateCertificate(serviceid, cert2);
@@ -209,6 +209,23 @@ describe('AuditLogger', () => {
     expect(logger.getEventCount()).toBe(3);
   });
 
+  it('should expose integrity reports and checkpoints for evidence capture', () => {
+    const service: ServiceIdentity = { serviceId: 'policy-engine' };
+
+    logger.logAuthSuccess(service);
+    logger.logPolicyEnforced(service, 'require-mTLS', true);
+
+    const integrity = logger.getIntegrityReport();
+    const checkpoint = logger.getLatestCheckpoint();
+
+    expect(integrity.valid).toBe(true);
+    expect(integrity.checkedEvents).toBe(2);
+    expect(integrity.lastVerifiedHash).toBeTruthy();
+    expect(checkpoint).not.toBeNull();
+    expect(checkpoint?.sequence).toBe(2);
+    expect(checkpoint?.hash).toBeTruthy();
+  });
+
   it('should query events by criteria', () => {
     const service1: ServiceIdentity = { serviceId: 'policy-engine' };
     const service2: ServiceIdentity = { serviceId: 'core-adapter' };
@@ -222,6 +239,20 @@ describe('AuditLogger', () => {
 
     const failures = logger.queryEvents({ outcome: 'FAILURE' });
     expect(failures.length).toBe(1);
+  });
+
+  it('should query immutable chain entries with sequence metadata', () => {
+    const service: ServiceIdentity = { serviceId: 'policy-engine' };
+
+    logger.logAuthSuccess(service);
+    logger.logAuthFailure(service, undefined, 'Rejected mTLS client cert');
+
+    const entries = logger.queryEntries({ serviceId: 'policy-engine' });
+
+    expect(entries.length).toBe(2);
+    expect(entries[0].sequence).toBe(1);
+    expect(entries[1].sequence).toBe(2);
+    expect(entries[1].previousHash).toBe(entries[0].hash);
   });
 
   it('should track policy blocked events', () => {

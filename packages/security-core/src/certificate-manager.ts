@@ -154,9 +154,10 @@ export class CertificateManager {
    * Parse certificate issuance and expiration dates (placeholder)
    * In production, would use a proper certificate parsing library
    */
-  private parseCertificateDates(_certPem: string): { issuedAt: Date; expiresAt: Date } {
+  private parseCertificateDates(certPem: string): { issuedAt: Date; expiresAt: Date } {
     // Placeholder: In production, parse with crypto.X509Certificate or similar
     // For now, return predictable test values
+    void certPem;
     const issuedAt = new Date();
     const expiresAt = new Date(issuedAt.getTime() + 365 * 24 * 60 * 60 * 1000); // 1 year
 

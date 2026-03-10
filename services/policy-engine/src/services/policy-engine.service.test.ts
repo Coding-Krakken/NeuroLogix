@@ -527,4 +527,79 @@ describe('PolicyEngineService', () => {
       ).toBe(stats.evaluationsLast24h);
     });
   });
+
+  describe('Security audit trail', () => {
+    it('should record immutable audit events for privileged policy mutations', async () => {
+      const policy = await service.createPolicy({
+        name: 'Audit Managed Policy',
+        version: '1.0.0',
+        category: 'security',
+        priority: 'high',
+        status: 'active',
+        regoRules: 'package audit.managed\ndefault allow = true',
+        metadata: { author: 'security-team' },
+      });
+
+      await service.updatePolicy(policy.id, { description: 'Updated by audit test' });
+      await service.deletePolicy(policy.id);
+
+      const auditTrail = service.getSecurityAuditTrail();
+      const eventTypes = auditTrail.map((entry) => entry.event.eventType);
+
+      expect(eventTypes).toContain('POLICY_CREATE');
+      expect(eventTypes).toContain('POLICY_UPDATE');
+      expect(eventTypes).toContain('POLICY_DELETE');
+      expect(service.verifySecurityAuditTrail().valid).toBe(true);
+    });
+
+    it('should expose queryable blocked evaluations and linked violations', async () => {
+      const request: PolicyEvaluationRequest = {
+        requestId: '550e8400-e29b-41d4-a716-446655440010',
+        action: 'recipe.execute',
+        resource: 'conveyor/line-2',
+        context: {
+          plc_interlocks: [{ name: 'light_curtain', active: true }],
+        },
+        subject: {
+          userId: 'operator-audit',
+          roles: ['operator'],
+          permissions: ['recipe.execute'],
+        },
+        timestamp: new Date(),
+      };
+
+      const result = await service.evaluateRequest(request);
+      const blockedEvaluations = service.getSecurityAuditTrail({
+        eventType: 'POLICY_EVALUATION',
+        outcome: 'BLOCKED',
+      });
+      const violations = service.getSecurityAuditTrail({ eventType: 'POLICY_VIOLATION' });
+
+      expect(result.decision).toBe('deny');
+      expect(blockedEvaluations.length).toBeGreaterThan(0);
+      expect(blockedEvaluations[0].event.metadata?.decision).toBe('deny');
+      expect(violations.length).toBeGreaterThan(0);
+      expect(violations[0].event.metadata?.policyName).toBeDefined();
+    });
+
+    it('should honor audit disablement without recording immutable entries', async () => {
+      const noAuditService = new PolicyEngineService({
+        ...mockConfig,
+        auditEnabled: false,
+      });
+
+      await noAuditService.createPolicy({
+        name: 'No Audit Policy',
+        version: '1.0.0',
+        category: 'quality',
+        priority: 'low',
+        status: 'active',
+        regoRules: 'package audit.disabled\ndefault allow = true',
+        metadata: { author: 'test-user' },
+      });
+
+      expect(noAuditService.getSecurityAuditTrail()).toHaveLength(0);
+      expect(noAuditService.verifySecurityAuditTrail().valid).toBe(true);
+    });
+  });
 });

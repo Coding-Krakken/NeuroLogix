@@ -4,16 +4,22 @@
  */
 
 import crypto from 'crypto';
-import { AuditEvent, ServiceIdentity } from './security-types';
+import {
+  AuditChainEntry,
+  AuditEvent,
+  AuditIntegrityReport,
+  AuditLogCheckpoint,
+  AuditQueryCriteria,
+  ServiceIdentity,
+} from './security-types';
 
 /**
  * Audit logger for tracking security and compliance events
  * Uses hash chain for immutability verification
  */
 export class AuditLogger {
-  private events: AuditEvent[] = [];
-  private eventHashes: string[] = [];
-  private lastHash: string = '';
+  private chainEntries: AuditChainEntry[] = [];
+  private lastHash: string | null = null;
 
   /**
    * Log an audit event with immutability verification
@@ -34,12 +40,14 @@ export class AuditLogger {
       immutable: true,
     };
 
-    // Store event
-    this.events.push(fullEvent);
-
-    // Calculate hash for immutability chain
-    const hash = this.calculateEventHash(fullEvent, this.lastHash);
-    this.eventHashes.push(hash);
+    const previousHash = this.lastHash;
+    const hash = this.calculateEventHash(fullEvent, previousHash);
+    this.chainEntries.push({
+      sequence: this.chainEntries.length + 1,
+      event: fullEvent,
+      previousHash,
+      hash,
+    });
     this.lastHash = hash;
 
     return { eventId, hash };
@@ -133,33 +141,21 @@ export class AuditLogger {
    * @returns Whether hash chain is intact and immutable
    */
   verifyImmutability(): boolean {
-    let expectedHash = '';
-
-    for (let i = 0; i < this.events.length; i++) {
-      const event = this.events[i];
-      const calculatedHash = this.calculateEventHash(event, expectedHash);
-
-      if (calculatedHash !== this.eventHashes[i]) {
-        return false;
-      }
-
-      expectedHash = calculatedHash;
-    }
-
-    return expectedHash === this.lastHash;
+    return this.getIntegrityReport().valid;
   }
 
   /**
    * Query events by criteria
    */
-  queryEvents(criteria: {
-    eventType?: string;
-    serviceId?: string;
-    outcome?: string;
-    startDate?: Date;
-    endDate?: Date;
-  }): AuditEvent[] {
-    return this.events.filter((event) => {
+  queryEvents(criteria: AuditQueryCriteria): AuditEvent[] {
+    return this.queryEntries(criteria).map((entry) => entry.event);
+  }
+
+  /**
+   * Query full immutable chain entries by criteria
+   */
+  queryEntries(criteria: AuditQueryCriteria): AuditChainEntry[] {
+    return this.chainEntries.filter(({ event }) => {
       if (criteria.eventType && event.eventType !== criteria.eventType) return false;
       if (criteria.serviceId && event.service.serviceId !== criteria.serviceId) return false;
       if (criteria.outcome && event.outcome !== criteria.outcome) return false;
@@ -173,14 +169,21 @@ export class AuditLogger {
    * Get all events
    */
   getAllEvents(): AuditEvent[] {
-    return [...this.events];
+    return this.chainEntries.map((entry) => entry.event);
+  }
+
+  /**
+   * Get all immutable chain entries
+   */
+  getChainEntries(): AuditChainEntry[] {
+    return [...this.chainEntries];
   }
 
   /**
    * Get event count
    */
   getEventCount(): number {
-    return this.events.length;
+    return this.chainEntries.length;
   }
 
   /**
@@ -198,9 +201,75 @@ export class AuditLogger {
   }
 
   /**
+   * Produce an integrity report for the current chain
+   */
+  getIntegrityReport(): AuditIntegrityReport {
+    let expectedPreviousHash: string | null = null;
+    let lastVerifiedHash: string | null = null;
+
+    for (const entry of this.chainEntries) {
+      if (entry.previousHash !== expectedPreviousHash) {
+        return {
+          valid: false,
+          checkedEvents: entry.sequence,
+          lastVerifiedHash,
+          firstInvalidSequence: entry.sequence,
+          expectedHash: expectedPreviousHash ?? undefined,
+          actualHash: entry.previousHash ?? undefined,
+        };
+      }
+
+      const calculatedHash = this.calculateEventHash(entry.event, expectedPreviousHash);
+      if (calculatedHash !== entry.hash) {
+        return {
+          valid: false,
+          checkedEvents: entry.sequence,
+          lastVerifiedHash,
+          firstInvalidSequence: entry.sequence,
+          expectedHash: calculatedHash,
+          actualHash: entry.hash,
+        };
+      }
+
+      lastVerifiedHash = calculatedHash;
+      expectedPreviousHash = calculatedHash;
+    }
+
+    return {
+      valid: lastVerifiedHash === this.lastHash,
+      checkedEvents: this.chainEntries.length,
+      lastVerifiedHash,
+      ...(lastVerifiedHash === this.lastHash
+        ? {}
+        : {
+            firstInvalidSequence: this.chainEntries.length,
+            expectedHash: lastVerifiedHash ?? undefined,
+            actualHash: this.lastHash ?? undefined,
+          }),
+    };
+  }
+
+  /**
+   * Get the latest persisted checkpoint in the hash chain
+   */
+  getLatestCheckpoint(): AuditLogCheckpoint | null {
+    const latestEntry = this.chainEntries.at(-1);
+    if (!latestEntry) {
+      return null;
+    }
+
+    return {
+      sequence: latestEntry.sequence,
+      eventId: latestEntry.event.eventId,
+      hash: latestEntry.hash,
+      timestamp: latestEntry.event.timestamp,
+    };
+  }
+
+  /**
    * Calculate hash for an event (immutability chain)
    */
-  private calculateEventHash(event: AuditEvent, previousHash: string): string {
+  private calculateEventHash(event: AuditEvent, previousHash: string | null): string {
     const eventString = JSON.stringify({
       eventId: event.eventId,
       eventType: event.eventType,
@@ -209,7 +278,7 @@ export class AuditLogger {
       timestamp: event.timestamp.toISOString(),
     });
 
-    const content = `${previousHash}:${eventString}`;
+    const content = `${previousHash ?? 'GENESIS'}:${eventString}`;
     return crypto.createHash('sha256').update(content).digest('hex');
   }
 
