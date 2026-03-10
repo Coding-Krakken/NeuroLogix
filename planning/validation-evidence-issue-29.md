@@ -4,6 +4,7 @@ Date: 2026-03-10
 Agent Mode: `builder`
 Repository: `Coding-Krakken/NeuroLogix`
 Branch: `issue-29-phase0-readiness-docs`
+PR: `https://github.com/Coding-Krakken/NeuroLogix/pull/50`
 
 ## Scope Audit
 
