@@ -1,6 +1,6 @@
 # PR Summary Record
 
-- PR: TBD
+- PR: #54
 - Linked Issue: #33
 - Branch: issue-33-wms-wcs-dispatch-slice
 

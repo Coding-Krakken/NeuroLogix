@@ -2,7 +2,7 @@
 
 Date: 2026-03-10  
 Branch: `issue-33-wms-wcs-dispatch-slice`  
-PR: `TBD`  
+PR: `#54`  
 Work Item: `#33`
 
 ## Bounded Scope
@@ -53,3 +53,9 @@ Work Item: `#33`
 - Risk: In-memory idempotency/dead-letter store is process-local by design for this bounded slice.
 - Mitigation: Behavior is deterministic and test-locked; persistent store/federated routing remains out of scope for downstream issues.
 - Rollback: Revert the Issue #33 PR commit(s) to remove the bounded WMS/WCS adapter and schema path.
+
+## GitHub Traceability
+
+- Issue #33 implementation start comment: https://github.com/Coding-Krakken/NeuroLogix/issues/33#issuecomment-4032611957
+- Issue #33 PR/check update comment: https://github.com/Coding-Krakken/NeuroLogix/issues/33#issuecomment-4032650360
+- PR #54 design tradeoff/risk mitigation comment: https://github.com/Coding-Krakken/NeuroLogix/pull/54#issuecomment-4032650982
