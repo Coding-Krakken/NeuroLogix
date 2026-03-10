@@ -1,5 +1,0 @@
-RUN G5 build SHA=e6ddedb
-
-> @subzero/framework@2.0.0 build
-> tsc
-

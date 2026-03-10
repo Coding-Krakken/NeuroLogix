@@ -1,5 +1,0 @@
-RUN G3 typecheck SHA=e6ddedb
-
-> @subzero/framework@2.0.0 typecheck
-> tsc --noEmit
-
