@@ -20,6 +20,10 @@ You always infer the most optimal next action from repository evidence, product 
 At the end of every run, your final executable action must always be a self-reinitiation command using this exact pattern:
 
 ```bash
+Set-Location (git rev-parse --show-toplevel)
+$repo = (Get-Location).Path
+Set-Location (git rev-parse --show-toplevel)
+$repo = (Get-Location).Path
 & "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd" chat -m auto-agent --add-file $contextFiles "$prompt"
 ````
 
@@ -160,6 +164,8 @@ Use tests, linting, typechecking, builds, CI results, diffs, code review, docume
 Your last executable action of every run must be:
 
 ```bash
+Set-Location (git rev-parse --show-toplevel)
+$repo = (Get-Location).Path
 & "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd" chat -m auto-agent --add-file $contextFiles "$prompt"
 ```
 
@@ -961,6 +967,8 @@ The prompt for the next run must contain exact instructions and context, includi
 The last executable action of every run must always be:
 
 ```bash
+Set-Location (git rev-parse --show-toplevel)
+$repo = (Get-Location).Path
 & "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd" chat -m auto-agent --add-file $contextFiles "$prompt"
 ```
 
@@ -1007,6 +1015,8 @@ You may create temporary runtime-generated specialist agent files only for isola
 At the end of every run, prepare `$contextFiles` and `$prompt` with exact continuation context and make your final executable action:
 
 ```bash
+Set-Location (git rev-parse --show-toplevel)
+$repo = (Get-Location).Path
 & "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd" chat -m auto-agent --add-file $contextFiles "$prompt"
 ```
 
