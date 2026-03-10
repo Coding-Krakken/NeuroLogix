@@ -1,0 +1,23 @@
+{
+  "timestamp_utc": "2026-03-10T11:35:08.844827+00:00",
+  "contracts_file": ".github\\.system-state\\contracts\\contracts_model.yaml",
+  "api_file": ".github\\.system-state\\contracts\\api.yaml",
+  "yaml_parse": {
+    "contracts_model": true,
+    "api": true
+  },
+  "required_field_checks": {
+    "current_services_present": true,
+    "missing_current_services": [],
+    "planned_contract_groups_present": true,
+    "missing_planned_groups": [],
+    "versioning_policy_present": true,
+    "contract_testing_quality_gates_present": true,
+    "missing_quality_gates": [],
+    "companion_artifact_reference_present": true,
+    "openapi_version_valid": true,
+    "required_paths_present": true,
+    "missing_paths": []
+  },
+  "overall_pass": true
+}
