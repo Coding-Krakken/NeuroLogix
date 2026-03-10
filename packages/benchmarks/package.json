@@ -1,0 +1,22 @@
+{
+  "name": "@neurologix/benchmarks",
+  "version": "0.1.0",
+  "description": "Performance benchmark harness for NeuroLogix services",
+  "private": true,
+  "scripts": {
+    "bench": "node dist/run-all.js",
+    "bench:control-loop": "node dist/scenarios/control-loop.bench.js",
+    "bench:policy-engine": "node dist/scenarios/policy-engine.bench.js",
+    "bench:capability-lookup": "node dist/scenarios/capability-lookup.bench.js",
+    "build": "tsc --build",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/node": "^20.0.0",
+    "autocannon": "^7.15.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

@@ -1,0 +1,327 @@
+# ============================================================================
+# NeuroLogix — Nightly Validation Pipeline
+# Risk Tier: T1 (Mission-Critical)
+# Model Ref: TEST-TRACE-001, PERF-BUDGETS-001, CICD-001
+#
+# Runs every night at 02:00 UTC and on manual dispatch.
+# Executes the full validation suite: E2E → Benchmarks → Chaos
+# Generates reliability scorecard artifact for trend tracking.
+#
+# REQUIRED SETUP
+#   For full execution against staging:
+#   - STAGING_URL repository variable (enables server startup skip)
+#   - missions-control server must be reachable at BASE_URL
+#
+#   For local server mode (default when STAGING_URL not set):
+#   - Nightly builds the app and starts a local server on port 3100
+# ============================================================================
+
+name: Nightly Validation
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # 02:00 UTC every night
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Override target URL (default: starts local server)"
+        required: false
+        type: string
+      skip_chaos:
+        description: "Skip chaos experiments"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  NODE_VERSION: "22.x"
+  PORT: "3100"
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────
+  # Prepare: Build the application before running validation
+  # ─────────────────────────────────────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all packages
+        run: npx turbo run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-build
+          path: |
+            **/dist/
+            apps/*/dist/
+            packages/*/dist/
+          retention-days: 3
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # E2E Tests: Playwright critical operator journeys
+  # ─────────────────────────────────────────────────────────────────────────
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [build]
+    env:
+      BASE_URL: ${{ inputs.base_url || vars.STAGING_URL || 'http://localhost:3100' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nightly-build
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Start mission-control server (local mode)
+        if: vars.STAGING_URL == ''
+        run: |
+          node apps/mission-control/dist/index.js &
+          echo "SERVER_PID=$!" >> $GITHUB_ENV
+          # Wait for server to be ready
+          for i in {1..30}; do
+            curl -sf http://localhost:3100/health && break || sleep 1
+          done
+        env:
+          PORT: "3100"
+
+      - name: Run Playwright E2E tests
+        run: npx playwright test
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+          CI: "true"
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-nightly
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-results-nightly
+          path: test-results/
+          retention-days: 14
+
+      - name: Stop local server
+        if: always() && vars.STAGING_URL == ''
+        run: kill $SERVER_PID 2>/dev/null || true
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Benchmarks: Performance budget assertions (PERF-BUDGETS-001)
+  # ─────────────────────────────────────────────────────────────────────────
+  benchmarks:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    needs: [build]
+    env:
+      BASE_URL: ${{ inputs.base_url || vars.STAGING_URL || 'http://localhost:3100' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nightly-build
+
+      - name: Build benchmarks package
+        run: npx turbo run build --filter=@neurologix/benchmarks
+
+      - name: Start mission-control server (local mode)
+        if: vars.STAGING_URL == ''
+        run: |
+          node apps/mission-control/dist/index.js &
+          echo "SERVER_PID=$!" >> $GITHUB_ENV
+          for i in {1..30}; do
+            curl -sf http://localhost:3100/health && break || sleep 1
+          done
+        env:
+          PORT: "3100"
+
+      - name: Run benchmark suite
+        run: node packages/benchmarks/dist/run-all.js
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+          CI: "true"
+        continue-on-error: true # Warnings do not fail nightly; failures noted in scorecard
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-results-nightly
+          path: benchmark-results/
+          retention-days: 30
+
+      - name: Stop local server
+        if: always() && vars.STAGING_URL == ''
+        run: kill $SERVER_PID 2>/dev/null || true
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Chaos Experiments: Service resilience validation
+  # ─────────────────────────────────────────────────────────────────────────
+  chaos:
+    name: Chaos Experiments
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: ${{ !inputs.skip_chaos }}
+    env:
+      BASE_URL: ${{ inputs.base_url || vars.STAGING_URL || 'http://localhost:3100' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nightly-build
+
+      - name: Start mission-control server (local mode)
+        if: vars.STAGING_URL == ''
+        run: |
+          node apps/mission-control/dist/index.js &
+          echo "SERVER_PID=$!" >> $GITHUB_ENV
+          for i in {1..30}; do
+            curl -sf http://localhost:3100/health && break || sleep 1
+          done
+        env:
+          PORT: "3100"
+
+      - name: Run chaos experiment suite
+        run: npx tsx tests/chaos/runner.ts
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+          CI: "true"
+        continue-on-error: true # Chaos failures are notable but do not block nightly
+
+      - name: Upload chaos results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chaos-results-nightly
+          path: chaos-results/
+          retention-days: 30
+
+      - name: Stop local server
+        if: always() && vars.STAGING_URL == ''
+        run: kill $SERVER_PID 2>/dev/null || true
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Reliability Scorecard: Aggregate results from all validation jobs
+  # ─────────────────────────────────────────────────────────────────────────
+  reliability-scorecard:
+    name: Generate Reliability Scorecard
+    runs-on: ubuntu-latest
+    needs: [e2e, benchmarks, chaos]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Download all nightly artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: nightly-artifacts/
+
+      - name: Generate reliability scorecard
+        run: |
+          mkdir -p reliability-scorecards
+
+          cat > reliability-scorecards/scorecard-$(date +%Y%m%d).json << EOF
+          {
+            "schemaVersion": "1.0",
+            "modelRef": "TEST-TRACE-001 / PERF-BUDGETS-001",
+            "runId": "nightly-${{ github.run_id }}",
+            "date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "commit": "${{ github.sha }}",
+            "branch": "${{ github.ref_name }}",
+            "baseURL": "${{ inputs.base_url || vars.STAGING_URL || 'http://localhost:3100' }}",
+            "jobs": {
+              "e2e": "${{ needs.e2e.result }}",
+              "benchmarks": "${{ needs.benchmarks.result }}",
+              "chaos": "${{ needs.chaos.result }}"
+            },
+            "overall": "${{ (needs.e2e.result == 'success' && needs.benchmarks.result != 'failure') && 'healthy' || 'degraded' }}"
+          }
+          EOF
+
+          cat reliability-scorecards/scorecard-$(date +%Y%m%d).json
+
+      - name: Upload reliability scorecard
+        uses: actions/upload-artifact@v4
+        with:
+          name: reliability-scorecard-${{ github.run_id }}
+          path: reliability-scorecards/
+          retention-days: 90
+
+      - name: Summary
+        run: |
+          echo "## Nightly Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ needs.e2e.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Benchmarks | ${{ needs.benchmarks.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Chaos | ${{ needs.chaos.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
