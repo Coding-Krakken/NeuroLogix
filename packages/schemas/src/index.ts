@@ -16,4 +16,4 @@ export * from './intents/index.js';
 export * from './recipes/index.js';
 export * from './assets/index.js';
 export * from './audit/index.js';
-// export * from './api/index.js';
+export * from './api/index.js';
