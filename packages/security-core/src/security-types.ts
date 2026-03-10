@@ -90,6 +90,68 @@ export interface AuditEvent {
 }
 
 /**
+ * Query criteria for audit event retrieval
+ */
+export interface AuditQueryCriteria {
+  /** Filter by event type */
+  eventType?: string;
+  /** Filter by originating service */
+  serviceId?: string;
+  /** Filter by event outcome */
+  outcome?: AuditEvent['outcome'];
+  /** Filter by inclusive start timestamp */
+  startDate?: Date;
+  /** Filter by inclusive end timestamp */
+  endDate?: Date;
+}
+
+/**
+ * One immutable audit chain entry with hash linkage metadata
+ */
+export interface AuditChainEntry {
+  /** Monotonic sequence number in the chain */
+  sequence: number;
+  /** Stored audit event */
+  event: AuditEvent;
+  /** Previous chain hash, or null for genesis entry */
+  previousHash: string | null;
+  /** Current entry hash */
+  hash: string;
+}
+
+/**
+ * Integrity verification report for the current audit chain
+ */
+export interface AuditIntegrityReport {
+  /** Whether the full chain verified successfully */
+  valid: boolean;
+  /** Number of events checked during verification */
+  checkedEvents: number;
+  /** Last hash confirmed during verification */
+  lastVerifiedHash: string | null;
+  /** First invalid sequence number if corruption is detected */
+  firstInvalidSequence?: number;
+  /** Expected hash when corruption is detected */
+  expectedHash?: string;
+  /** Actual stored hash when corruption is detected */
+  actualHash?: string;
+}
+
+/**
+ * Latest immutable checkpoint for external persistence or evidence capture
+ */
+export interface AuditLogCheckpoint {
+  /** Chain sequence number */
+  sequence: number;
+  /** Event identifier at the checkpoint */
+  eventId: string;
+  /** Checkpoint hash */
+  hash: string;
+  /** Checkpoint timestamp */
+  timestamp: Date;
+}
+
+/**
  * Service authentication policy configuration
  */
 export interface AuthenticationPolicy {

@@ -27,6 +27,14 @@ import {
   generateId,
   logAuditEvent,
 } from '@neurologix/core';
+import {
+  createAuditLogger,
+  type AuditChainEntry,
+  type AuditEvent,
+  type AuditIntegrityReport,
+  type AuditQueryCriteria,
+  type ServiceIdentity,
+} from '@neurologix/security-core';
 import logger from '@neurologix/core/logger';
 import { z } from 'zod';
 
@@ -53,6 +61,8 @@ export class PolicyEngineService {
   private evaluationCache: Map<string, { result: PolicyEvaluationResult; expiresAt: Date }> =
     new Map();
   private config: PolicyEngineConfig;
+  private readonly securityAuditLogger = createAuditLogger();
+  private readonly serviceIdentity: ServiceIdentity = { serviceId: 'policy-engine' };
   private evaluationMetrics: {
     evaluationsLast24h: number;
     decisionsLast24h: { allow: number; deny: number; approval_required: number };
@@ -101,16 +111,19 @@ export class PolicyEngineService {
 
       this.policies.set(policy.id, policy);
 
-      logAuditEvent({
+      this.recordSecurityAudit({
+        eventType: 'POLICY_CREATE',
         action: 'policy_create',
         resource: `policy/${policy.id}`,
-        outcome: 'success',
-        details: {
+        outcome: 'SUCCESS',
+        description: `Policy ${policy.name} created in policy-engine`,
+        severity: 'medium',
+        metadata: {
+          policyId: policy.id,
           policyName: policy.name,
           category: policy.category,
           priority: policy.priority,
         },
-        severity: 'medium',
       });
 
       return policy;
@@ -151,15 +164,18 @@ export class PolicyEngineService {
       // Clear related cache entries
       this.clearPolicyCache(policyId);
 
-      logAuditEvent({
+      this.recordSecurityAudit({
+        eventType: 'POLICY_UPDATE',
         action: 'policy_update',
         resource: `policy/${policyId}`,
-        outcome: 'success',
-        details: {
+        outcome: 'SUCCESS',
+        description: `Policy ${updatedPolicy.name} updated in policy-engine`,
+        severity: 'medium',
+        metadata: {
+          policyId,
           policyName: updatedPolicy.name,
           changes: Object.keys(updates),
         },
-        severity: 'medium',
       });
 
       return updatedPolicy;
@@ -196,12 +212,14 @@ export class PolicyEngineService {
     this.policies.delete(policyId);
     this.clearPolicyCache(policyId);
 
-    logAuditEvent({
+    this.recordSecurityAudit({
+      eventType: 'POLICY_DELETE',
       action: 'policy_delete',
       resource: `policy/${policyId}`,
-      outcome: 'success',
-      details: { policyName: policy.name },
+      outcome: 'SUCCESS',
+      description: `Policy ${policy.name} deleted from policy-engine`,
       severity: 'high',
+      metadata: { policyId, policyName: policy.name },
     });
   }
 
@@ -328,16 +346,19 @@ export class PolicyEngineService {
             evaluatedAt: new Date(),
           };
 
-          logAuditEvent({
+          this.recordSecurityAudit({
+            eventType: 'POLICY_EVALUATION',
             action: 'policy_evaluation_emergency',
             resource: validatedRequest.resource,
-            outcome: 'success',
-            details: {
-              action: validatedRequest.action,
-              userId: validatedRequest.subject.userId,
-              decision: 'allow',
-            },
+            outcome: 'SUCCESS',
+            description: 'Emergency mode override bypassed normal policy evaluation',
             severity: 'critical',
+            userId: validatedRequest.subject.userId,
+            metadata: {
+              action: validatedRequest.action,
+              decision: 'allow',
+              emergencyMode: true,
+            },
           });
 
           return emergencyResult;
@@ -436,18 +457,25 @@ export class PolicyEngineService {
       this.evaluationMetrics.decisionsLast24h[overallDecision]++;
       this.evaluationMetrics.totalEvaluationTime += evaluationTime;
 
-      logAuditEvent({
+      this.recordSecurityAudit({
+        eventType: 'POLICY_EVALUATION',
         action: 'policy_evaluation',
         resource: validatedRequest.resource,
-        outcome: 'success',
-        details: {
+        outcome: overallDecision === 'allow' ? 'SUCCESS' : 'BLOCKED',
+        description: `Policy evaluation completed with ${overallDecision} decision`,
+        severity:
+          overallDecision === 'deny'
+            ? 'high'
+            : overallDecision === 'approval_required'
+              ? 'medium'
+              : 'low',
+        userId: validatedRequest.subject.userId,
+        metadata: {
           action: validatedRequest.action,
-          userId: validatedRequest.subject.userId,
           decision: overallDecision,
           policiesEvaluated: applicablePolicies.length,
           evaluationTimeMs: evaluationTime,
         },
-        severity: overallDecision === 'deny' ? 'high' : 'low',
       });
 
       return result;
@@ -455,17 +483,19 @@ export class PolicyEngineService {
       const evaluationTime = Date.now() - startTime;
       this.evaluationMetrics.totalEvaluationTime += evaluationTime;
 
-      logAuditEvent({
+      this.recordSecurityAudit({
+        eventType: 'POLICY_EVALUATION_ERROR',
         action: 'policy_evaluation',
         resource: validatedRequest.resource,
-        outcome: 'failure',
-        details: {
+        outcome: 'FAILURE',
+        description: 'Policy evaluation failed before a decision could be finalized',
+        severity: 'high',
+        userId: validatedRequest.subject.userId,
+        metadata: {
           action: validatedRequest.action,
-          userId: validatedRequest.subject.userId,
           error: error instanceof Error ? error.message : String(error),
           evaluationTimeMs: evaluationTime,
         },
-        severity: 'high',
       });
 
       throw new InternalServerError('Policy evaluation failed', {
@@ -531,6 +561,20 @@ export class PolicyEngineService {
       averageEvaluationTimeMs: averageEvaluationTime,
       cacheHitRate,
     };
+  }
+
+  /**
+   * Retrieve immutable audit trail entries recorded by the policy engine.
+   */
+  getSecurityAuditTrail(criteria: AuditQueryCriteria = {}): AuditChainEntry[] {
+    return this.securityAuditLogger.queryEntries(criteria);
+  }
+
+  /**
+   * Verify the immutable policy-engine audit trail hash chain.
+   */
+  verifySecurityAuditTrail(): AuditIntegrityReport {
+    return this.securityAuditLogger.getIntegrityReport();
   }
 
   // Private helper methods
@@ -775,19 +819,75 @@ export class PolicyEngineService {
       this.violations.set(violation.id, violation);
       this.evaluationMetrics.violationsLast24h++;
 
-      logAuditEvent({
+      this.recordSecurityAudit({
+        eventType: 'POLICY_VIOLATION',
         action: 'policy_violation',
         resource: request.resource,
-        outcome: 'success',
-        details: {
+        outcome: 'BLOCKED',
+        description: `Policy violation recorded for ${request.action}`,
+        severity: 'high',
+        userId: request.subject.userId,
+        metadata: {
           violationId: violation.id,
           policyId: match.policyId,
           policyName: match.policyName,
           severity: match.priority,
-          userId: request.subject.userId,
+          action: request.action,
         },
-        severity: 'high',
       });
+    }
+  }
+
+  private recordSecurityAudit(event: {
+    eventType: string;
+    action: string;
+    resource: string;
+    outcome: AuditEvent['outcome'];
+    description: string;
+    metadata?: Record<string, unknown>;
+    severity?: 'low' | 'medium' | 'high' | 'critical';
+    userId?: string;
+  }): void {
+    if (!this.config.auditEnabled) {
+      return;
+    }
+
+    this.securityAuditLogger.logEvent({
+      eventType: event.eventType,
+      service: this.serviceIdentity,
+      outcome: event.outcome,
+      description: event.description,
+      metadata: {
+        action: event.action,
+        resource: event.resource,
+        ...event.metadata,
+      },
+    });
+
+    logAuditEvent({
+      action: event.action,
+      resource: event.resource,
+      userId: event.userId,
+      outcome: this.toCoreAuditOutcome(event.outcome),
+      details: {
+        eventType: event.eventType,
+        description: event.description,
+        ...event.metadata,
+      },
+      severity: event.severity,
+    });
+  }
+
+  private toCoreAuditOutcome(outcome: AuditEvent['outcome']): 'success' | 'failure' | 'partial' {
+    switch (outcome) {
+      case 'SUCCESS':
+        return 'success';
+      case 'FAILURE':
+        return 'failure';
+      case 'BLOCKED':
+        return 'partial';
+      default:
+        return 'partial';
     }
   }
 }
