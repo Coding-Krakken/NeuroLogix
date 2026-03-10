@@ -13,8 +13,7 @@ export * from './feature-flags/index.js';
 export * from './sparkplug/index.js';
 export * from './broker/index.js';
 export * from './intents/index.js';
-// Note: Other schema modules will be implemented in subsequent phases
-// export * from './recipes/index.js';
-// export * from './assets/index.js';
-// export * from './audit/index.js';
+export * from './recipes/index.js';
+export * from './assets/index.js';
+export * from './audit/index.js';
 // export * from './api/index.js';
