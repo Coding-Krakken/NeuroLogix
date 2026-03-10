@@ -25,7 +25,6 @@
     "generate:json-schema": "typescript-json-schema tsconfig.json '*' --out schemas.json"
   },
   "dependencies": {
-    "@neurologix/core": "*",
     "zod": "^3.22.4"
   },
   "devDependencies": {
