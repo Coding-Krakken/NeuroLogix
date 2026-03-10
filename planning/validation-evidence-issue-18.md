@@ -3,6 +3,25 @@
 Date: 2026-03-10 Agent Mode: `builder` Repository: `Coding-Krakken/NeuroLogix`
 Branch: `issue-18-delivery-model-phase-2` Issue: `#18`
 
+## Recovery PR Context Snapshot
+
+- PR URL: `https://github.com/Coding-Krakken/NeuroLogix/pull/41`
+- PR state: `OPEN` (non-draft)
+- Merge state status: `UNSTABLE` (checks in progress at capture time)
+- Review decision: `NONE` (no approvals yet)
+- Required-check snapshot at capture:
+   - `CI/CD Pipeline/🔒 Security Scan` — `IN_PROGRESS`
+   - `CI/CD Pipeline/🧹 Lint & Format` — `IN_PROGRESS`
+   - `CI/CD Pipeline/🧪 Test Suite (20.19.0)` — `IN_PROGRESS`
+   - `CI/CD Pipeline/🧪 Test Suite (22.x)` — `IN_PROGRESS`
+   - `CI/CD Pipeline/🛡️ Security Audit` — `SKIPPED`
+
+Interpretation:
+
+- Dedicated Issue #18 PR now exists and is linked.
+- Required checks are visible/enforceable for validator review.
+- Approval state is explicit and pending reviewer action.
+
 ## Scope Audit
 
 Changed implementation files (intended):
