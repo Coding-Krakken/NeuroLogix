@@ -1,0 +1,206 @@
+{
+  "generatedAt": "2026-03-10T16:16:53.7116793Z",
+  "sourceFile": "planning/open-issues-live-2026-03-10-post33.json",
+  "repository": "Coding-Krakken/NeuroLogix",
+  "eligibleCandidates": [
+    49,
+    45
+  ],
+  "ineligibleIssues": [
+    46,
+    37,
+    36,
+    35,
+    34
+  ],
+  "issues": [
+    {
+      "issueNumber": 49,
+      "title": "Policy Clarification: Standard-Lane Efficiency Gate for Model/Evidence-Only Slices",
+      "dependencies": null,
+      "dependencyStates": [],
+      "unresolvedDependencies": [],
+      "blocked": false,
+      "eligibility": "eligible-candidate"
+    },
+    {
+      "issueNumber": 46,
+      "title": "Model-First: Dependency Governance, CI/CD Environment Model, and Roadmap Prioritization (Phases 10-12)",
+      "dependencies": [
+        18,
+        44,
+        45,
+        17
+      ],
+      "dependencyStates": [
+        {
+          "number": 18,
+          "state": "CLOSED"
+        },
+        {
+          "number": 44,
+          "state": "CLOSED"
+        },
+        {
+          "number": 45,
+          "state": "OPEN"
+        },
+        {
+          "number": 17,
+          "state": "CLOSED"
+        }
+      ],
+      "unresolvedDependencies": [
+        45
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 45,
+      "title": "Model-First: Observability, Test Traceability, and Performance Budgets (Phases 7-9)",
+      "dependencies": [
+        20,
+        44,
+        19
+      ],
+      "dependencyStates": [
+        {
+          "number": 20,
+          "state": "CLOSED"
+        },
+        {
+          "number": 44,
+          "state": "CLOSED"
+        },
+        {
+          "number": 19,
+          "state": "CLOSED"
+        }
+      ],
+      "unresolvedDependencies": [],
+      "blocked": false,
+      "eligibility": "eligible-candidate"
+    },
+    {
+      "issueNumber": 37,
+      "title": "Phase 9 Delivery: Multi-Site Federation and Controlled Rollout",
+      "dependencies": [
+        35,
+        36,
+        46
+      ],
+      "dependencyStates": [
+        {
+          "number": 35,
+          "state": "OPEN"
+        },
+        {
+          "number": 36,
+          "state": "OPEN"
+        },
+        {
+          "number": 46,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        35,
+        36,
+        46
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 36,
+      "title": "Phase 8 Delivery: End-to-End Validation, Performance, and Chaos",
+      "dependencies": [
+        31,
+        33,
+        34,
+        35
+      ],
+      "dependencyStates": [
+        {
+          "number": 31,
+          "state": "CLOSED"
+        },
+        {
+          "number": 33,
+          "state": "CLOSED"
+        },
+        {
+          "number": 34,
+          "state": "OPEN"
+        },
+        {
+          "number": 35,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        34,
+        35
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 35,
+      "title": "Phase 7 Delivery: Security and Compliance Hardening",
+      "dependencies": [
+        44,
+        33,
+        34
+      ],
+      "dependencyStates": [
+        {
+          "number": 44,
+          "state": "CLOSED"
+        },
+        {
+          "number": 33,
+          "state": "CLOSED"
+        },
+        {
+          "number": 34,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        34
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    },
+    {
+      "issueNumber": 34,
+      "title": "Phase 6 Delivery: Mission Control UI and Real-Time Operations UX",
+      "dependencies": [
+        30,
+        33,
+        45
+      ],
+      "dependencyStates": [
+        {
+          "number": 30,
+          "state": "CLOSED"
+        },
+        {
+          "number": 33,
+          "state": "CLOSED"
+        },
+        {
+          "number": 45,
+          "state": "OPEN"
+        }
+      ],
+      "unresolvedDependencies": [
+        45
+      ],
+      "blocked": false,
+      "eligibility": "ineligible"
+    }
+  ]
+}
