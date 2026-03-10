@@ -39,6 +39,7 @@ Work Item: `#33`
 | `npm run lint` | PASS (warnings only, pre-existing in other workspaces) |
 | `npm run test` | PASS |
 | `npm run build` | PASS |
+| `gh pr checks 54 --repo Coding-Krakken/NeuroLogix` | No checks reported for branch |
 
 ## Acceptance Criteria Mapping
 
