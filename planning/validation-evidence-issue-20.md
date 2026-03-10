@@ -137,19 +137,22 @@ if not all_pass:
 
 ## Acceptance Criteria Mapping
 
-| Criterion | Evidence | Status |
-| --- | --- | --- |
-| 1. `.github/.system-state/data/data_model.yaml` exists and is machine-readable | File created and validated by deterministic YAML parse in `planning/validation-issue-20-structural-check.json` | PASS |
-| 2. Model covers implemented + planned schema domains | `schema_domains.implemented` includes `capability-registry`, `policy-engine`, `recipe-executor`, `digital-twin`; `schema_domains.planned` includes `dispatch`, `wms-wcs-connectors`, `asr`, `cv`, `edge-adapters`; validation JSON confirms presence | PASS |
-| 3. Partitioning and retention sections are explicit and testable | `tenancy_partitioning` and `retention_classes` sections are present with required keys and entity mappings; structural checks pass | PASS |
-| 4. Validation evidence demonstrates deterministic structural checks with outputs | This file includes reproducible command and results, and generated JSON output artifact captures pass/fail details | PASS |
-| 5. Scope remains strictly bounded to Issue #20 | Changed files are limited to data model + validation artifacts; no `packages/` or `services/` runtime changes | PASS |
+| Criterion                                                                        | Evidence                                                                                                                                                                                                                                             | Status |
+| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1. `.github/.system-state/data/data_model.yaml` exists and is machine-readable   | File created and validated by deterministic YAML parse in `planning/validation-issue-20-structural-check.json`                                                                                                                                       | PASS   |
+| 2. Model covers implemented + planned schema domains                             | `schema_domains.implemented` includes `capability-registry`, `policy-engine`, `recipe-executor`, `digital-twin`; `schema_domains.planned` includes `dispatch`, `wms-wcs-connectors`, `asr`, `cv`, `edge-adapters`; validation JSON confirms presence | PASS   |
+| 3. Partitioning and retention sections are explicit and testable                 | `tenancy_partitioning` and `retention_classes` sections are present with required keys and entity mappings; structural checks pass                                                                                                                   | PASS   |
+| 4. Validation evidence demonstrates deterministic structural checks with outputs | This file includes reproducible command and results, and generated JSON output artifact captures pass/fail details                                                                                                                                   | PASS   |
+| 5. Scope remains strictly bounded to Issue #20                                   | Changed files are limited to data model + validation artifacts; no `packages/` or `services/` runtime changes                                                                                                                                        | PASS   |
 
 ## Scope-Boundary Verification
 
-No runtime service code, package manifests, or unrelated refactors were introduced as part of Issue #20 implementation slice.
+No runtime service code, package manifests, or unrelated refactors were
+introduced as part of Issue #20 implementation slice.
 
 ## Risk Notes
 
-- Low risk: model is currently declarative and scoped to governance artifacts only.
-- Mitigation: deterministic structural checks enforce required sections and coverage expectations before validator handoff.
+- Low risk: model is currently declarative and scoped to governance artifacts
+  only.
+- Mitigation: deterministic structural checks enforce required sections and
+  coverage expectations before validator handoff.
