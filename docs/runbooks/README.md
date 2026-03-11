@@ -25,6 +25,7 @@ Operational guidance also lives in:
 
 - `docs/runbooks/` — platform-wide and service-specific triage runbooks
 - `.developer/RELEASE.md` — full release checklist and rollback triggers
+- `infrastructure/observability/grafana/` — baseline Grafana dashboard stubs aligned to OBS-001
 - planning validation and closure records under `planning/`
 
 ## Near-Term Contents
