@@ -26,6 +26,8 @@ import {
 } from '@neurologix/core';
 import logger from '@neurologix/core/logger';
 
+const nowIso = (): string => new Date().toISOString();
+
 /**
  * Enterprise-grade Recipe Executor Service
  *
@@ -49,11 +51,12 @@ export class RecipeExecutorService {
    */
   async createRecipe(recipeData: Omit<Recipe, 'id' | 'createdAt' | 'updatedAt'>): Promise<Recipe> {
     try {
+      const timestamp = nowIso();
       const recipe: Recipe = {
         ...recipeData,
         id: generateId(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: timestamp,
+        updatedAt: timestamp,
       };
 
       // Validate recipe
@@ -115,7 +118,7 @@ export class RecipeExecutorService {
       ...existingRecipe,
       ...updates,
       id, // Ensure ID cannot be changed
-      updatedAt: new Date(),
+      updatedAt: nowIso(),
     };
 
     // Validate updated recipe
@@ -145,16 +148,15 @@ export class RecipeExecutorService {
    */
   async deleteRecipe(id: string): Promise<void> {
     const recipe = await this.getRecipe(id);
+    const activeExecutionStatuses: RecipeExecutionStatus[] = [
+      RecipeExecutionStatus.EXECUTING,
+      RecipeExecutionStatus.PENDING,
+      RecipeExecutionStatus.APPROVED,
+    ];
 
     // Check if recipe has active executions
     const activeExecutions = Array.from(this.executions.values()).filter(
-      exec =>
-        exec.recipeId === id &&
-        [
-          RecipeExecutionStatus.EXECUTING,
-          RecipeExecutionStatus.PENDING,
-          RecipeExecutionStatus.APPROVED,
-        ].includes(exec.status)
+      exec => exec.recipeId === id && activeExecutionStatuses.includes(exec.status)
     );
 
     if (activeExecutions.length > 0) {
@@ -183,6 +185,7 @@ export class RecipeExecutorService {
       RecipeExecutionRequestSchema.parse(request);
 
       const recipe = await this.getRecipe(request.recipeId);
+      const timestamp = nowIso();
 
       // Create execution record
       const execution: RecipeExecution = {
@@ -205,8 +208,8 @@ export class RecipeExecutorService {
         rollbackSteps: [],
         tags: request.tags,
         metadata: request.metadata,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: timestamp,
+        updatedAt: timestamp,
       };
 
       RecipeExecutionSchema.parse(execution);
@@ -244,7 +247,8 @@ export class RecipeExecutorService {
         this.activeExecutions.set(execution.id, executionPromise);
       } else {
         execution.status = RecipeExecutionStatus.COMPLETED;
-        execution.completedAt = new Date();
+        execution.completedAt = nowIso();
+        execution.updatedAt = nowIso();
         execution.result = { dryRun: true, message: 'Dry run completed successfully' };
         this.executions.set(execution.id, execution);
       }
@@ -291,23 +295,22 @@ export class RecipeExecutorService {
    */
   async cancelExecution(id: string, reason?: string): Promise<void> {
     const execution = await this.getExecution(id);
+    const cancellableStatuses: RecipeExecutionStatus[] = [
+      RecipeExecutionStatus.PENDING,
+      RecipeExecutionStatus.EXECUTING,
+      RecipeExecutionStatus.PAUSED,
+    ];
 
-    if (
-      ![
-        RecipeExecutionStatus.PENDING,
-        RecipeExecutionStatus.EXECUTING,
-        RecipeExecutionStatus.PAUSED,
-      ].includes(execution.status)
-    ) {
+    if (!cancellableStatuses.includes(execution.status)) {
       throw new ValidationError('Cannot cancel execution', {
         errors: ['Execution is not in a cancellable state'],
       });
     }
 
     execution.status = RecipeExecutionStatus.CANCELLED;
-    execution.completedAt = new Date();
+    execution.completedAt = nowIso();
     execution.error = reason || 'Execution cancelled by user';
-    execution.updatedAt = new Date();
+    execution.updatedAt = nowIso();
 
     this.executions.set(id, execution);
 
@@ -404,11 +407,15 @@ export class RecipeExecutorService {
 
       // Apply date filters
       if (query.createdAfter) {
-        filteredRecipes = filteredRecipes.filter(r => r.createdAt >= query.createdAfter!);
+        filteredRecipes = filteredRecipes.filter(
+          r => (r.createdAt ? Date.parse(r.createdAt) : 0) >= Date.parse(query.createdAfter!)
+        );
       }
 
       if (query.createdBefore) {
-        filteredRecipes = filteredRecipes.filter(r => r.createdAt <= query.createdBefore!);
+        filteredRecipes = filteredRecipes.filter(
+          r => (r.createdAt ? Date.parse(r.createdAt) : 0) <= Date.parse(query.createdBefore!)
+        );
       }
 
       // Sort results
@@ -420,17 +427,17 @@ export class RecipeExecutorService {
             comparison = a.name.localeCompare(b.name);
             break;
           case 'createdAt':
-            comparison = a.createdAt.getTime() - b.createdAt.getTime();
+            comparison = Date.parse(a.createdAt ?? '') - Date.parse(b.createdAt ?? '');
             break;
           case 'updatedAt':
-            comparison = a.updatedAt.getTime() - b.updatedAt.getTime();
+            comparison = Date.parse(a.updatedAt ?? '') - Date.parse(b.updatedAt ?? '');
             break;
           case 'priority':
             const priorityOrder = { low: 1, normal: 2, high: 3, critical: 4, emergency: 5 };
             comparison = priorityOrder[a.priority] - priorityOrder[b.priority];
             break;
           default:
-            comparison = a.createdAt.getTime() - b.createdAt.getTime();
+            comparison = Date.parse(a.createdAt ?? '') - Date.parse(b.createdAt ?? '');
         }
 
         return query.sortOrder === 'desc' ? -comparison : comparison;
@@ -479,10 +486,10 @@ export class RecipeExecutorService {
     ).length;
 
     // Calculate average execution time
-    const completedExecutions = executions.filter(e => e.duration !== undefined);
+    const completedExecutions = executions.filter(e => e.durationMs !== undefined);
     const averageExecutionTime =
       completedExecutions.length > 0
-        ? completedExecutions.reduce((sum, e) => sum + (e.duration || 0), 0) /
+        ? completedExecutions.reduce((sum, e) => sum + (e.durationMs || 0), 0) /
           completedExecutions.length
         : 0;
 
@@ -527,7 +534,7 @@ export class RecipeExecutorService {
 
     // Recent executions
     const recentExecutions = executions
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
       .slice(0, 10);
 
     const stats: RecipeExecutionStats = {
@@ -563,7 +570,7 @@ export class RecipeExecutorService {
     // Estimate time remaining based on average step time
     let estimatedTimeRemaining: number | null = null;
     if (execution.status === RecipeExecutionStatus.EXECUTING && execution.startedAt) {
-      const elapsedTime = Date.now() - execution.startedAt.getTime();
+      const elapsedTime = Date.now() - Date.parse(execution.startedAt);
       const remainingSteps = execution.totalSteps - execution.completedSteps;
 
       if (execution.completedSteps > 0) {
@@ -665,17 +672,17 @@ export class RecipeExecutorService {
   ): Promise<{
     passed: boolean;
     violations: Array<{
-      type: string;
+      type: SafetyCheckType;
       message: string;
       severity: 'low' | 'medium' | 'high' | 'critical';
-      timestamp: Date;
+      timestamp: string;
     }>;
   }> {
     const violations: Array<{
-      type: string;
+      type: SafetyCheckType;
       message: string;
       severity: 'low' | 'medium' | 'high' | 'critical';
-      timestamp: Date;
+      timestamp: string;
     }> = [];
 
     // Mock safety checks (in real implementation, these would check actual system state)
@@ -684,10 +691,10 @@ export class RecipeExecutorService {
     const plcInterlockActive = false; // Mock check
     if (plcInterlockActive) {
       violations.push({
-        type: 'plc_interlock',
+        type: SafetyCheckType.PLC_INTERLOCK,
         message: 'PLC safety interlock is active',
         severity: 'critical',
-        timestamp: new Date(),
+        timestamp: nowIso(),
       });
     }
 
@@ -695,10 +702,10 @@ export class RecipeExecutorService {
     const emergencyStopActive = false; // Mock check
     if (emergencyStopActive) {
       violations.push({
-        type: 'emergency_stop',
+        type: SafetyCheckType.EMERGENCY_STOP,
         message: 'Emergency stop is active',
         severity: 'critical',
-        timestamp: new Date(),
+        timestamp: nowIso(),
       });
     }
 
@@ -707,10 +714,10 @@ export class RecipeExecutorService {
       const resourceAvailable = true; // Mock check
       if (!resourceAvailable) {
         violations.push({
-          type: 'resource_unavailable',
+          type: SafetyCheckType.RESOURCE_AVAILABLE,
           message: `Required resource ${resource} is not available`,
           severity: 'high',
-          timestamp: new Date(),
+          timestamp: nowIso(),
         });
       }
     }
@@ -731,8 +738,8 @@ export class RecipeExecutorService {
   ): Promise<void> {
     try {
       execution.status = RecipeExecutionStatus.EXECUTING;
-      execution.startedAt = new Date();
-      execution.updatedAt = new Date();
+      execution.startedAt = nowIso();
+      execution.updatedAt = nowIso();
       this.executions.set(execution.id, execution);
 
       logger.info('Starting recipe execution', {
@@ -750,7 +757,7 @@ export class RecipeExecutorService {
         }
 
         execution.currentStep = step.id;
-        execution.updatedAt = new Date();
+        execution.updatedAt = nowIso();
         this.executions.set(execution.id, execution);
 
         try {
@@ -761,9 +768,9 @@ export class RecipeExecutorService {
           execution.stepResults.push({
             stepId: step.id,
             status: StepExecutionStatus.COMPLETED,
-            startedAt: new Date(),
-            completedAt: new Date(),
-            duration: 1000, // Mock duration
+            startedAt: nowIso(),
+            completedAt: nowIso(),
+            durationMs: 1000,
             result: { success: true },
           });
         } catch (stepError) {
@@ -771,9 +778,9 @@ export class RecipeExecutorService {
           execution.stepResults.push({
             stepId: step.id,
             status: StepExecutionStatus.FAILED,
-            startedAt: new Date(),
-            completedAt: new Date(),
-            duration: 500,
+            startedAt: nowIso(),
+            completedAt: nowIso(),
+            durationMs: 500,
             error: stepError instanceof Error ? stepError.message : String(stepError),
           });
 
@@ -788,21 +795,22 @@ export class RecipeExecutorService {
 
       // Complete execution
       execution.status = RecipeExecutionStatus.COMPLETED;
-      execution.completedAt = new Date();
-      execution.duration = execution.completedAt.getTime() - (execution.startedAt?.getTime() || 0);
+      execution.completedAt = nowIso();
+      execution.durationMs =
+        Date.parse(execution.completedAt) - Date.parse(execution.startedAt ?? execution.completedAt);
       execution.result = { message: 'Recipe executed successfully' };
-      execution.updatedAt = new Date();
+      execution.updatedAt = nowIso();
       this.executions.set(execution.id, execution);
 
       logger.info('Recipe execution completed successfully', {
         executionId: execution.id,
-        duration: execution.duration,
+        durationMs: execution.durationMs,
       });
     } catch (error) {
       execution.status = RecipeExecutionStatus.FAILED;
-      execution.completedAt = new Date();
+      execution.completedAt = nowIso();
       execution.error = error instanceof Error ? error.message : String(error);
-      execution.updatedAt = new Date();
+      execution.updatedAt = nowIso();
       this.executions.set(execution.id, execution);
 
       logger.error('Recipe execution failed', {
@@ -843,7 +851,7 @@ export class RecipeExecutorService {
 
     execution.status = RecipeExecutionStatus.ROLLING_BACK;
     execution.rollbackExecuted = true;
-    execution.updatedAt = new Date();
+    execution.updatedAt = nowIso();
     this.executions.set(execution.id, execution);
 
     // Execute rollback steps in reverse order
@@ -862,7 +870,7 @@ export class RecipeExecutorService {
     }
 
     execution.status = RecipeExecutionStatus.ROLLED_BACK;
-    execution.updatedAt = new Date();
+    execution.updatedAt = nowIso();
     this.executions.set(execution.id, execution);
 
     logger.info('Recipe rollback completed', {
