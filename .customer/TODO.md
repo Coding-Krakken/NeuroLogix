@@ -2,13 +2,15 @@
 
 ## In Progress
 
-- Data Spine & Contracts hardening
-- CI/CD governance and release safety gates
+- Phase 7 security and compliance hardening rollout
+- OPA-based authorization runtime integration completion
+- Expanded observability runbook and evidence workflows
 
 ## Planned
 
 - Expanded configuration UX for multi-site controls
 - Additional operational reporting templates
+- Operational dashboard baseline expansion
 
 ## Notes
 
