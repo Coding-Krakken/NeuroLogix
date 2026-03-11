@@ -17,12 +17,10 @@ export default defineConfig({
         'src/index.ts', // barrel re-export; no testable logic
       ],
       thresholds: {
-        global: {
-          branches: 70, // SSE and 500-path error branches are infrastructure code
-          functions: 80,
-          lines: 80,
-          statements: 80,
-        },
+        branches: 70, // SSE and 500-path error branches are infrastructure code
+        functions: 80,
+        lines: 80,
+        statements: 80,
       },
     },
   },
