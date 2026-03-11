@@ -21,3 +21,10 @@ Include:
 ## Security Posture Summary
 
 NeuroLogix is built with safety-first controls, auditability, and industrial security alignment (including IEC 62443 direction) as core principles.
+
+## Authorization Runtime Posture
+
+- Policy decisions are evaluated through the policy-engine with OPA authorization controls.
+- In `strict` runtime mode, OPA endpoint unavailability is treated as deny (fail closed).
+- In `fallback` runtime mode, local policy evaluation is used only as an approved degraded path and must be incident-tracked.
+- High-risk command paths remain safety-gated and require documented operator/auditor review.
