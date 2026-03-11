@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitest/config';
+import path from 'path';
 
 export default defineConfig({
   test: {
@@ -22,6 +23,11 @@ export default defineConfig({
         lines: 80,
         statements: 80,
       },
+    },
+  },
+  resolve: {
+    alias: {
+      '@neurologix/schemas': path.resolve(__dirname, '../../packages/schemas/src/index.ts'),
     },
   },
 });
