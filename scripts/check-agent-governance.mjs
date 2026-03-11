@@ -48,7 +48,7 @@ if (fs.existsSync('.github/copilot-instructions.md')) {
 
   const requiredCopilotPhrases = [
     'Phase 1 Contracts',
-    'OPA authorizer integration baseline',
+    'OPA runtime wiring',
     'governance drift checks in CI'
   ];
 
