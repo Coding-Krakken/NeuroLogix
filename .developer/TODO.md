@@ -25,10 +25,11 @@
 - [x] PLC interlock override checklist runbook (Phase 7)
 - [x] Staging observability wiring artifact baseline (Prometheus alert integration values, OTEL collector deployment baseline, Grafana provisioning baseline)
 - [x] Staging observability rollout evidence scaffold (required verification template + runbook linkage)
+- [x] First staging observability rollout evidence capture — dry-run baseline record in `planning/obs-staging-rollout-evidence-2026-03-11-issue-153.md` (Phase 7)
 
 ## Active / Near Term
 
-- Execute first staging rollout and attach filled observability evidence record in `planning/` (Phase 7)
+- Provision live staging Kubernetes cluster and execute live `kubectl apply -k` + Helm upgrades to replace dry-run evidence record with live cluster artifacts (Phase 9 / multi-site federation)
 
 ## Quality Targets
 
