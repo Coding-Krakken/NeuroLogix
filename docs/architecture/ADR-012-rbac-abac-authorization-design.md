@@ -236,14 +236,14 @@ results in a deny-with-log rather than an inadvertent allow.
 
 ## Implementation Checklist (Phase 7)
 
-- [ ] Implement `safety_guard.rego` with unit tests
-- [ ] Implement `zone_boundary.rego` with unit tests
-- [ ] Implement `role_permissions.rego` with `data/roles.json`
+- [x] Implement `safety_guard.rego` with unit tests
+- [x] Implement `zone_boundary.rego` with unit tests
+- [x] Implement `role_permissions.rego` with `data/roles.json`
 - [ ] Implement `command_risk.rego` with `data/command_risk_levels.json`
-- [ ] Implement `ai_agent.rego` with unit tests
+- [x] Implement `ai_agent.rego` with unit tests
 - [ ] Wire `authorizer.ts` into policy-engine service
 - [ ] Validate OPA decision log routing to ELK audit pipeline
-- [ ] Add CI gate: `opa test packages/security-core/src/policies/`
+- [x] Add CI gate: `opa test packages/security-core/src/policies/`
 - [ ] Penetration test: verify AI agent cannot issue `critical` commands
 
 ## References
