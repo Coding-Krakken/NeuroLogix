@@ -49,13 +49,13 @@ the repository's current, committed directories.
 | ADR in index | File exists | Gap classification |
 |---|---|---|
 | ADR-001 | Yes | None |
-| ADR-002 | No | Missing artifact |
-| ADR-003 | No | Missing artifact |
-| ADR-004 | No | Missing artifact |
-| ADR-005 | No | Missing artifact |
-| ADR-006 | No | Missing artifact |
-| ADR-007 | No | Missing artifact |
-| ADR-008 | No | Missing artifact |
+| ADR-002 | Yes | Resolved |
+| ADR-003 | Yes | Resolved |
+| ADR-004 | Yes | Resolved |
+| ADR-005 | Yes | Resolved |
+| ADR-006 | Yes | Resolved |
+| ADR-007 | Yes | Resolved |
+| ADR-008 | Yes | Resolved |
 
 ### Bounded Remediation Recommendation
 
