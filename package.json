@@ -34,6 +34,7 @@
     "type-check": "turbo run type-check",
     "clean": "turbo run clean && rm -rf node_modules",
     "validate:model:system-state": "node -e \"const fs=require('fs'); const file='.github/.system-state/model/federation_model.yaml'; if(!fs.existsSync(file)){ console.error('ERROR: Missing required system-state model file: '+file); process.exit(1);}\"",
+    "validate:doc-packets": "node scripts/validate-doc-packets.js",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yaml,yml}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,yaml,yml}\"",
     "security:audit": "npm audit && turbo run security:audit",
