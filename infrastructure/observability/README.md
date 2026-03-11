@@ -9,6 +9,7 @@ NeuroLogix platform.
 |---|---|
 | `prometheus-alerts.yml` | Prometheus alerting rules for all T1 SLOs (OBS-001) |
 | `otel-collector-config.yaml` | OpenTelemetry Collector configuration stub |
+| `elk/audit-index-template.json` | Elasticsearch index template baseline for audit logs, including `audit_hash` and `audit_chain_id` integrity fields |
 | `grafana/*.dashboard.json` | Grafana dashboard baseline stubs aligned to OBS-001 dashboard panel intent |
 | `staging/` | Staging wiring artifacts for Prometheus alert integration, OTEL collector deployment, and Grafana provisioning |
 

@@ -7,7 +7,7 @@ Validate the integrity of audit log hash chains to detect tampering and ensure n
 ## Overview
 
 NeuroLogix audit logs use hash-chaining for immutability verification:
-- Each audit record includes a unique ID, timestamp, and hash computed from the previous record + current record content
+- Each audit record includes a unique ID, timestamp, and hash computed from the previous record hash + current record content
 - The chain is stored as: `GENESIS` → record1 → record2 → ... → recordN
 - Hash tampering is detectable by recomputing hashes and comparing against stored values
 
@@ -236,7 +236,7 @@ Each audit record contains:
   "id": "audit_abc123_1699999999999",
   "timestamp": "2026-03-11T10:15:30.123Z",
   "action": "RECIPE_EXECUTE",
-  "audit_hash": "sha256(GENESIS:audit_abc123_1699999999999:{record_json})",
+   "audit_hash": "hmac_sha256(GENESIS:audit_abc123_1699999999999:{record_json}, AUDIT_HASH_KEY)",
   "audit_chain_id": "GENESIS"
 }
 ```
@@ -247,7 +247,7 @@ Next record:
   "id": "audit_def456_1699999999444",
   "timestamp": "2026-03-11T10:15:31.456Z",
   "action": "POLICY_DECISION",
-  "audit_hash": "sha256(audit_abc123_1699999999999:audit_def456_1699999999444:{record_json})",
+   "audit_hash": "hmac_sha256(<previous_audit_hash>:audit_def456_1699999999444:{record_json}, AUDIT_HASH_KEY)",
   "audit_chain_id": "audit_abc123_1699999999999"
 }
 ```

@@ -12,17 +12,40 @@ import { APP_CONFIG } from '../constants/index.js';
 let lastAuditId: string | null = null;
 let lastAuditHash: string | null = null;
 
+function normalizeForHash(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(normalizeForHash);
+  }
+
+  if (value && typeof value === 'object') {
+    const entries = Object.entries(value as Record<string, unknown>)
+      .filter(([, entryValue]) => entryValue !== undefined)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, entryValue]) => [key, normalizeForHash(entryValue)]);
+    return Object.fromEntries(entries);
+  }
+
+  return value;
+}
+
 /**
- * Compute an audit event hash using the previous audit ID and current record
- * HMAC-SHA256(chain_input, audit_key) where chain_input = ${previousId}:${recordJson}
+ * Compute an audit event hash using previous hash and current record
+ * HMAC-SHA256(chain_input, audit_key) where chain_input = ${previousHash}:${recordId}:${recordJson}
  */
 function computeAuditHash(
+  previousAuditHash: string | null,
   currentAuditId: string,
   recordData: Record<string, unknown>,
   auditKey: string = process.env.AUDIT_HASH_KEY ?? 'neurolog-audit-integrity'
 ): string {
-  const chainInput = `${lastAuditId ?? 'GENESIS'}:${currentAuditId}:${JSON.stringify(recordData)}`;
+  const canonicalRecord = normalizeForHash(recordData);
+  const chainInput = `${previousAuditHash ?? 'GENESIS'}:${currentAuditId}:${JSON.stringify(canonicalRecord)}`;
   return crypto.createHmac('sha256', auditKey).update(chainInput).digest('hex');
+}
+
+export function resetAuditHashChainStateForTests(): void {
+  lastAuditId = null;
+  lastAuditHash = null;
 }
 
 // Custom log format for structured logging
@@ -112,7 +135,7 @@ export const auditLogger = winston.createLogger({
       };
 
       // Compute hash chain
-      const auditHash = computeAuditHash(currentAuditId, auditEntry);
+      const auditHash = computeAuditHash(lastAuditHash, currentAuditId, auditEntry);
       auditEntry.audit_hash = auditHash;
       auditEntry.audit_chain_id = lastAuditId ?? 'GENESIS';
 
