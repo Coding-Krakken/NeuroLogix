@@ -386,4 +386,4 @@ curl -X POST http://localhost:3100/api/dispatch \
 - **Model:** `.github/.system-state/model/federation_model.yaml`
 - **API Contracts:** `.github/.system-state/contracts/federation-api.yaml`
 - **Site Registry Service:** `services/site-registry/src/`
-- **Architecture Decision:** `docs/architecture/ADR-007-federation.md`
+- **Architecture Decision:** `docs/architecture/ADR-009-federation-architecture.md`
