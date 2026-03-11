@@ -11,7 +11,7 @@ NeuroLogix controls, policies, and evidence tracking.
 
 | Document | Status | Last Updated |
 |---|---|---|
-| [IEC 62443 Control Mapping](./IEC-62443-control-mapping.md) | ✅ Baseline | 2026-03-11 |
+| [IEC 62443 Control Mapping](./IEC-62443-control-mapping.md) | ✅ Baseline + FR-5 allowlist/mTLS evidence | 2026-03-11 |
 | ISO 27001 / NIST CSF Alignment Matrix | 🔄 Planned (Phase 7) | — |
 | Audit Evidence Register | 🔄 Planned (Phase 7) | — |
 | Penetration Test Report | 🔄 Planned (Phase 7) | — |
@@ -34,6 +34,10 @@ See [IEC-62443-control-mapping.md](./IEC-62443-control-mapping.md) for full deta
 - [ADR-008: Policy Engine with OPA](../architecture/ADR-008-policy-engine-opa.md)
 - [ADR-011: mTLS and Zero-Trust Service Mesh](../architecture/ADR-011-mtls-zero-trust-service-mesh.md)
 - [ADR-012: RBAC/ABAC Authorization Design](../architecture/ADR-012-rbac-abac-authorization-design.md)
+
+## Operational Evidence
+
+- [mTLS and mesh policy operations runbook](../runbooks/mtls-mesh-policy-validation.md)
 
 ## Related
 

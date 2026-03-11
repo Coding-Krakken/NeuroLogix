@@ -28,7 +28,7 @@ the Core, AI, and UI zones, and **Security Level 1 (SL-1)** for the Edge zone.
 | Req ID | Requirement | SL-2 Condition | Status | Evidence |
 |---|---|---|---|---|
 | SR 1.1 | Human user identification and authentication | RBAC with IdP (OIDC + JWT) | ✅ Designed (Phase 7 impl.) | [ADR-012](./ADR-012-rbac-abac-authorization-design.md) |
-| SR 1.2 | Software process and device identification | mTLS certificate identity per service | ✅ Designed (Phase 7 impl.) | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md) |
+| SR 1.2 | Software process and device identification | mTLS certificate identity per service | ✅ Designed (Phase 7 impl.) | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md), [mTLS and mesh policy runbook](../runbooks/mtls-mesh-policy-validation.md) |
 | SR 1.3 | Account management | Roles defined in OPA data files (roles.json) | ✅ Designed | [ADR-012](./ADR-012-rbac-abac-authorization-design.md) |
 | SR 1.4 | Identifier management | JWT subject + mTLS CN as identity tokens | ✅ Designed | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md), [ADR-012](./ADR-012-rbac-abac-authorization-design.md) |
 | SR 1.5 | Authenticator management | cert-manager automated rotation (30-day TTL) | ✅ Designed | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md) |
@@ -60,7 +60,7 @@ the Core, AI, and UI zones, and **Security Level 1 (SL-1)** for the Edge zone.
 
 | Req ID | Requirement | SL-2 Condition | Status | Evidence |
 |---|---|---|---|---|
-| SR 3.1 | Communication integrity | mTLS for all inter-service; TLS 1.3 at ingress | ✅ Designed | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md) |
+| SR 3.1 | Communication integrity | mTLS for all inter-service; TLS 1.3 at ingress | ✅ Designed | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md), [mTLS and mesh policy runbook](../runbooks/mtls-mesh-policy-validation.md) |
 | SR 3.2 | Malicious code protection | Container image scanning (Trivy/Grype) in CI | ✅ Implemented | `.github/workflows/ci.yml` |
 | SR 3.3 | Security functionality verification | OPA unit tests gate policy bundle in CI | ✅ Designed | [ADR-010](./ADR-010-contract-testing-strategy.md) |
 | SR 3.4 | Software and information integrity | SBOM (CycloneDX) generated per build; signed images (cosign) | ✅ Implemented | `.github/workflows/release.yml` |
@@ -87,7 +87,7 @@ the Core, AI, and UI zones, and **Security Level 1 (SL-1)** for the Edge zone.
 | Req ID | Requirement | SL-2 Condition | Status | Evidence |
 |---|---|---|---|---|
 | SR 5.1 | Network segmentation | Kubernetes namespace isolation + NetworkPolicy per zone | ✅ Implemented (IaC baseline) | [ADR-003](./ADR-003-security-first-architecture.md), `infrastructure/security/network-policies/` |
-| SR 5.2 | Zone boundary protection | Istio/Linkerd AuthorizationPolicy allowlists per zone pair | ✅ Implemented (IaC baseline) | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md), `infrastructure/security/authorization-policies/` |
+| SR 5.2 | Zone boundary protection | Istio `AuthorizationPolicy` allowlists plus STRICT `PeerAuthentication` manifests per zone pair | ✅ Implemented (IaC baseline) | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md), `infrastructure/security/authorization-policies/`, [mTLS and mesh policy runbook](../runbooks/mtls-mesh-policy-validation.md) |
 | SR 5.3 | Security function isolation | Safety-critical code in `service/recipe-executor`; AI services isolated in AI zone | ✅ Implemented | `services/recipe-executor/` |
 | SR 5.4 | Control system backup | Helm chart state in Git (GitOps); Vault unseal keys backed up | 🔄 Planned | `infrastructure/` |
 

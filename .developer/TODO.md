@@ -33,7 +33,7 @@
 - [x] OPA authorizer integration baseline wired into policy-engine (`packages/security-core/src/opa-authorizer.ts`, `services/policy-engine/src/services/policy-engine.service.ts`) (Phase 7)
 - [x] Session replay protection baseline wired through `security-core` nonce/timestamp guard and `policy-engine` requestId/session nonce integration (Phase 7)
 - [x] Kubernetes NetworkPolicy baseline pack for zone segmentation (`infrastructure/security/network-policies/`) (Phase 7)
-- [x] Istio AuthorizationPolicy allowlist baseline pack for zone boundary protection (`infrastructure/security/authorization-policies/`) (Phase 7)
+- [x] Istio AuthorizationPolicy allowlist baseline pack with STRICT PeerAuthentication companion manifests (`infrastructure/security/authorization-policies/`) (Phase 7)
 
 ## Active / Near Term
 
