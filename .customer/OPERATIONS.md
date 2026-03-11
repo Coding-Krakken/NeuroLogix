@@ -6,12 +6,15 @@
 - Review active alerts, acknowledgements, and unresolved incidents.
 - Verify planned recipe windows and operator staffing.
 - Validate command latency and recipe success metrics are within expected thresholds.
+- Confirm policy-engine authorization runtime reports expected mode (`strict` in normal operations unless an approved fallback window is active).
+- If fallback mode is active, verify incident ticket and risk owner acknowledgement exist before continuing autonomous operations.
 
 ## During Shift
 
 - Monitor policy decisions and safety-related warnings.
 - Investigate anomalies before applying operational changes.
 - Keep incident notes with UTC timestamps for audit continuity.
+- Track OPA authorizer unavailability warnings and escalate immediately if strict mode behavior changes unexpectedly.
 
 ## Incident Handling
 
@@ -20,6 +23,7 @@
 3. Capture timeline, affected workflows, and supporting evidence.
 4. Coordinate with support using your escalation runbook.
 5. Record recovery actions and final state for post-incident review.
+6. Record authorization runtime state (`strict` or `fallback`) and whether any requests were denied due to runtime readiness protections.
 
 ## Escalation
 
