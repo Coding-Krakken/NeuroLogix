@@ -17,6 +17,7 @@
     "test:watch": "vitest",
     "test:ci": "vitest run --coverage",
     "test:contracts": "vitest run --reporter=verbose src/server.contract.test.ts",
+    "test:contracts:consumer": "vitest run --reporter=verbose src/consumer.contract.test.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
