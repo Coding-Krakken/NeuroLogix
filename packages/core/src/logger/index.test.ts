@@ -10,6 +10,7 @@ import logger, {
   logError,
   logPerformanceMetric,
   performanceLogger,
+  resetAuditHashChainStateForTests,
   sanitizeLogData,
 } from '@/logger/index';
 
@@ -73,6 +74,10 @@ describe('Main logger format pipeline', () => {
 });
 
 describe('auditLogger format pipeline', () => {
+  beforeEach(() => {
+    resetAuditHashChainStateForTests();
+  });
+
   it('produces valid JSON with type=AUDIT when auditLogger.info is called', () => {
     const { transport, lines } = makeCapture();
     auditLogger.add(transport);
@@ -105,12 +110,12 @@ describe('auditLogger format pipeline', () => {
     
     expect(entries.length).toBeGreaterThanOrEqual(2);
 
-    // First record should have audit_hash and a valid audit_chain_id (GENESIS or previous ID)
+    // First record should have audit_hash and GENESIS chain marker
     const first = entries[0];
     expect(typeof first.audit_hash).toBe('string');
     expect(first.audit_hash.length).toBeGreaterThan(0);
     expect(typeof first.audit_chain_id).toBe('string');
-    expect(first.audit_chain_id.length).toBeGreaterThan(0); // Either GENESIS or prev ID
+    expect(first.audit_chain_id).toBe('GENESIS');
     expect(typeof first.id).toBe('string');
     expect(first.id.startsWith('audit_')).toBe(true);
 
