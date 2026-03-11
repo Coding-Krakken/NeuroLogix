@@ -1,0 +1,76 @@
+# PeerAuthentication — STRICT mTLS for all NeuroLogix trust zones
+#
+# Aligned with ADR-011 (mTLS Zero-Trust Service Mesh), IEC 62443 SR 1.2
+# (software process identification) and SR 3.1 (communication integrity).
+#
+# Enforcement: ALL inbound connections to each zone namespace must present a
+# valid Istio mTLS client certificate. Plain-text connections are rejected at
+# the Envoy sidecar before reaching the workload.
+#
+# This resource is a prerequisite for the AuthorizationPolicy allowlists in
+# this directory: without STRICT PeerAuthentication, principal-based allow
+# policies cannot be enforced.
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: neurologix-core
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: core
+    security.neurologix.io/sl: "sl-2"
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 1.2, SR 3.1"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: neurologix-ai
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: ai
+    security.neurologix.io/sl: "sl-2"
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 1.2, SR 3.1"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: neurologix-edge
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: edge
+    security.neurologix.io/sl: "sl-1"
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 1.2, SR 3.1"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: neurologix-ui
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: ui
+    security.neurologix.io/sl: "sl-2"
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 1.2, SR 3.1"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  mtls:
+    mode: STRICT

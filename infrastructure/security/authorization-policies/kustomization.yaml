@@ -1,8 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  # mTLS enforcement prerequisite — STRICT PeerAuthentication for all zones
+  - peer-authentication-strict.yaml
+  # Default-deny baseline — all zones
   - deny-all-default.yaml
-  - allow-core-ingress-from-ui-ai-edge.yaml
-  - allow-ai-ingress-from-core.yaml
-  - allow-edge-ingress-from-core.yaml
+  # Zone-pair allowlists — per-pair with HTTP method restrictions
+  - allow-edge-to-core.yaml
+  - allow-ai-to-core.yaml
+  - allow-ui-to-core.yaml
+  - allow-core-to-ai.yaml
+  - allow-core-to-edge.yaml
+  # Ingress gateway → UI zone (external operator access path)
   - allow-ui-ingress-from-istio-ingress.yaml
