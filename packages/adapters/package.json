@@ -22,6 +22,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ci": "vitest run --coverage",
+    "test:contracts": "vitest run --reporter=verbose src/contracts/broker-consumer.contract.test.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
