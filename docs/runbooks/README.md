@@ -11,12 +11,17 @@ recovery, and safe-mode procedures.
 |---------|-------|--------|
 | [release-rollback.md](./release-rollback.md) | Production + staging Helm rollback, automated and manual rollback procedures | Active |
 | [observability-baseline.md](./observability-baseline.md) | Alert triage, availability, control-loop latency, audit log, policy engine, safety interlock procedures | Active |
+| [capability-registry-triage.md](./capability-registry-triage.md) | Incident triage for capability lifecycle, health checks, and registry recovery | Active |
+| [policy-engine-triage.md](./policy-engine-triage.md) | Incident triage for policy evaluation latency, decision anomalies, and safety escalation | Active |
+| [recipe-executor-triage.md](./recipe-executor-triage.md) | Incident triage for recipe execution failures, stalled progress, and safety-guarded recovery | Active |
+| [digital-twin-triage.md](./digital-twin-triage.md) | Incident triage for twin state ingestion, simulation failures, and sync lag recovery | Active |
+| [site-registry-triage.md](./site-registry-triage.md) | Incident triage for provisioning, feature flags, and federation topology integrity | Active |
 
 ## Related Guidance
 
 Operational guidance also lives in:
 
-- `.developer/RUNBOOKS/` — service-specific runbooks
+- `docs/runbooks/` — platform-wide and service-specific triage runbooks
 - `.developer/RELEASE.md` — full release checklist and rollback triggers
 - planning validation and closure records under `planning/`
 
