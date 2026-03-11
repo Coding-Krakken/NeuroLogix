@@ -47,6 +47,8 @@
       (`docs/architecture/ADR-012-rbac-abac-authorization-design.md`) (Phase 7)
 - [x] ISO 27001 / NIST CSF baseline alignment matrix
       (`docs/compliance/ISO27001-NIST-CSF-alignment-matrix.md`) (Phase 7)
+- [x] Audit evidence register baseline
+      (`docs/compliance/AUDIT-EVIDENCE-REGISTER.md`) (Phase 7)
 - [x] OPA authorizer integration baseline wired into policy-engine
       (`packages/security-core/src/opa-authorizer.ts`,
       `services/policy-engine/src/services/policy-engine.service.ts`) (Phase 7)
