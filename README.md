@@ -199,7 +199,7 @@ docker compose logs -f capability-registry
 - [ ] CI/CD pipelines
 - [ ] Observability stack setup
 - [ ] Security baseline
-- [ ] Architecture documentation ([Phase 0 gap report](./docs/architecture/phase-0-gap-report.md), [Phase 1 definition of ready](./docs/architecture/phase-1-definition-of-ready.md))
+- [x] Architecture documentation ([Phase 0 gap report](./docs/architecture/phase-0-gap-report.md), [Phase 1 definition of ready](./docs/architecture/phase-1-definition-of-ready.md))
 
 ### 🔄 Phase 1 — Data Spine & Contracts
 

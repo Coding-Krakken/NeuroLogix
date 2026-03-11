@@ -16,12 +16,14 @@ consequences.
 - [ADR-002: TypeScript and Build System](./ADR-002-typescript-build-system.md)
 - [ADR-003: Security-First Architecture](./ADR-003-security-first-architecture.md)
 - [ADR-004: Observability Strategy](./ADR-004-observability-strategy.md)
+- [Phase 0 Gap Report (Foundations Hardening)](./phase-0-gap-report.md)
 
 ### Phase 1 - Data Spine
 
 - [ADR-005: Message Broker Selection](./ADR-005-message-broker-selection.md)
 - [ADR-006: Schema Registry and Contracts](./ADR-006-schema-registry-contracts.md)
 - [Phase 1 Topic Governance (Bounded Slice)](./phase-1-topic-governance.md)
+- [Phase 1 Definition of Ready](./phase-1-definition-of-ready.md)
 
 ### Phase 2 - Core Runtime
 
