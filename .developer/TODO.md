@@ -24,10 +24,11 @@
 - [x] Safe-mode activation procedure runbook (Phase 7)
 - [x] PLC interlock override checklist runbook (Phase 7)
 - [x] Staging observability wiring artifact baseline (Prometheus alert integration values, OTEL collector deployment baseline, Grafana provisioning baseline)
+- [x] Staging observability rollout evidence scaffold (required verification template + runbook linkage)
 
 ## Active / Near Term
 
-- Apply staging observability wiring artifacts and capture rollout evidence in staging (Phase 7)
+- Execute first staging rollout and attach filled observability evidence record in `planning/` (Phase 7)
 
 ## Quality Targets
 

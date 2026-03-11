@@ -52,6 +52,15 @@ Grafana checks:
 - Dashboard provider `neurologix-observability` is present.
 - Baseline dashboards render without query errors.
 
+## Evidence Capture
+
+For every staging rollout, complete:
+
+- `docs/runbooks/observability-staging-rollout-evidence.md`
+
+Store the filled record in `planning/` with timestamped artifact references
+(Prometheus logs, OTEL collector logs, Grafana verification outputs/screenshots).
+
 ## Notes
 
 - These files are deployment baselines only; environment-specific endpoints,

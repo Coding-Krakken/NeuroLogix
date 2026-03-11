@@ -75,6 +75,30 @@ Deployment baseline artifacts are in `infrastructure/observability/staging/`.
 
 ---
 
+## Rollout Evidence Capture (Required)
+
+For every staging rollout, create a filled evidence record using:
+
+- `docs/runbooks/observability-staging-rollout-evidence.md`
+
+Store execution-specific evidence under `planning/` and include:
+
+- command outputs for Prometheus rule load and active alerts,
+- OTEL collector health and exporter signals,
+- Grafana datasource/provider verification plus dashboard load checks,
+- operator, timestamp window, Git SHA/revision, and rollback trigger decisions.
+
+Recommended verification commands:
+
+```bash
+kubectl get configmap -n neurologix-observability neurologix-prometheus-alert-rules -o yaml
+kubectl logs -n neurologix-observability deploy/prometheus-server --tail=200 | grep -i "rule"
+kubectl logs -n neurologix-observability deploy/otel-collector --tail=200
+kubectl get pods -n neurologix-observability -l app.kubernetes.io/name=grafana
+```
+
+---
+
 ## Failure Handling
 
 - If Prometheus fails after values rollout, revert to prior release revision:
