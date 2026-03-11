@@ -26,5 +26,7 @@ allow if {
   not safety_interlock_blocked
   zone_transition_allowed
   allowed_by_role
+  command_risk_constraints_satisfied
+  auditor_read_only_constraints_satisfied
   ai_agent_constraints_satisfied
 }
