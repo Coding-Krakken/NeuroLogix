@@ -86,7 +86,7 @@ the Core, AI, and UI zones, and **Security Level 1 (SL-1)** for the Edge zone.
 
 | Req ID | Requirement | SL-2 Condition | Status | Evidence |
 |---|---|---|---|---|
-| SR 5.1 | Network segmentation | Kubernetes namespace isolation + NetworkPolicy per zone | ✅ Designed | [ADR-003](./ADR-003-security-first-architecture.md) |
+| SR 5.1 | Network segmentation | Kubernetes namespace isolation + NetworkPolicy per zone | ✅ Implemented (IaC baseline) | [ADR-003](./ADR-003-security-first-architecture.md), `infrastructure/security/network-policies/` |
 | SR 5.2 | Zone boundary protection | Istio/Linkerd AuthorizationPolicy allowlists per zone pair | ✅ Designed | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md) |
 | SR 5.3 | Security function isolation | Safety-critical code in `service/recipe-executor`; AI services isolated in AI zone | ✅ Implemented | `services/recipe-executor/` |
 | SR 5.4 | Control system backup | Helm chart state in Git (GitOps); Vault unseal keys backed up | 🔄 Planned | `infrastructure/` |
@@ -145,7 +145,7 @@ are all Phase 7 implementation work items, not design gaps)
 | Implement append-only audit log with hash-chaining | FR-2, FR-3 | High |
 | Concurrent session limits in OPA | FR-2 | Medium |
 | Session replay protection (nonce) | FR-3 | Medium |
-| Kubernetes NetworkPolicy + Istio AuthorizationPolicy | FR-5 | High |
+| Istio AuthorizationPolicy allowlists per zone pair | FR-5 | High |
 | Kubernetes resource requests/limits | FR-7 | Medium |
 | Helm GitOps IaC completion | FR-5, FR-7 | Medium |
 | API gateway rate limiting | FR-7 | Medium |
