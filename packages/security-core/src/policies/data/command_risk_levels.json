@@ -1,0 +1,11 @@
+{
+  "neurologix": {
+    "command_risk_levels": {
+      "execute_recipe": "low",
+      "manage_recipe_library": "medium",
+      "approve_command": "high",
+      "update_site_config": "critical",
+      "update_feature_flag": "critical"
+    }
+  }
+}

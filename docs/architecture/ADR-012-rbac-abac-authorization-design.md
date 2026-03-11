@@ -239,8 +239,9 @@ results in a deny-with-log rather than an inadvertent allow.
 - [x] Implement `safety_guard.rego` with unit tests
 - [x] Implement `zone_boundary.rego` with unit tests
 - [x] Implement `role_permissions.rego` with `data/roles.json`
-- [ ] Implement `command_risk.rego` with `data/command_risk_levels.json`
+- [x] Implement `command_risk.rego` with `data/command_risk_levels.json`
 - [x] Implement `ai_agent.rego` with unit tests
+- [x] Implement `auditor.rego` read-only enforcement policy
 - [ ] Wire `authorizer.ts` into policy-engine service
 - [ ] Validate OPA decision log routing to ELK audit pipeline
 - [x] Add CI gate: `opa test packages/security-core/src/policies/`
