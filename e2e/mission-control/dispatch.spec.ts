@@ -106,8 +106,8 @@ test.describe('Mission Control — Control Policy Gate', () => {
 });
 
 test.describe('Mission Control — Dispatch Command (INV-001)', () => {
-  test('INV-001: dispatch with allowed policy succeeds', async ({ request, baseURL }) => {
-    // First check policy
+  test('INV-001: dispatch with deterministic allowed policy succeeds', async ({ request, baseURL }) => {
+    // Deterministic path: allocate_pick does not require elevated approval.
     const policyParams = new URLSearchParams({
       commandType: 'allocate_pick',
       actorRole: 'operator',
@@ -116,11 +116,7 @@ test.describe('Mission Control — Dispatch Command (INV-001)', () => {
     const policyResponse = await request.get(`${baseURL}/api/control-policy?${policyParams}`);
     const policy = await policyResponse.json();
 
-    if (policy.status !== 'allowed') {
-      // If policy doesn't grant 'allowed' in this configuration, skip gracefully
-      test.skip(true, `Policy returned ${policy.status}; dispatch test requires 'allowed' policy`);
-      return;
-    }
+    expect(policy.status).toBe('allowed');
 
     const dispatchResponse = await request.post(`${baseURL}/api/dispatch`, {
       data: makeDispatchPayload({
@@ -130,11 +126,13 @@ test.describe('Mission Control — Dispatch Command (INV-001)', () => {
       }),
     });
 
-    // Dispatch with valid policy should succeed (200 range)
-    expect(dispatchResponse.status()).toBeLessThan(500);
+    // Dispatch with valid policy should succeed
+    expect(dispatchResponse.status()).toBe(200);
 
     const result = await dispatchResponse.json();
     expect(result).not.toBeNull();
+    expect(result).toHaveProperty('status');
+    expect(result.status).toBe('dispatched');
   });
 
   test('INV-001: dispatch without confirmation is rejected by policy gate', async ({
