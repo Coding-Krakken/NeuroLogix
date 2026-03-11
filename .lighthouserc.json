@@ -24,6 +24,7 @@
         "categories:seo": ["warn", { "minScore": 0.8 }],
         "first-contentful-paint": ["warn", { "maxNumericValue": 1500 }],
         "largest-contentful-paint": ["error", { "maxNumericValue": 1200 }],
+        "max-potential-fid": ["error", { "maxNumericValue": 10 }],
         "total-blocking-time": ["warn", { "maxNumericValue": 200 }],
         "cumulative-layout-shift": ["error", { "maxNumericValue": 0.05 }],
         "interactive": ["warn", { "maxNumericValue": 2500 }],

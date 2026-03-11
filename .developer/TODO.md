@@ -18,6 +18,7 @@
 - [x] CI contract-tests gate (mainline + release workflows)
 - [x] Vitest coverage thresholds enforced repo-wide
 - [x] ADR index and phase-0 gap-report reconciled
+- [x] Lighthouse CI gate for mission-control in mainline CI
 
 ## Active / Near Term
 
@@ -27,7 +28,6 @@
 - Safe-mode activation procedure runbook (Phase 7)
 - PLC interlock override checklist (Phase 7 — Security & Compliance)
 - Expand observability to include Grafana dashboard baselines
-- Continue CI/CD hardening — add Lighthouse CI gate for mission-control
 
 ## Quality Targets
 

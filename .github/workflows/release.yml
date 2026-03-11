@@ -295,7 +295,6 @@ jobs:
         with:
           urls: |
             ${{ vars.STAGING_URL }}
-            ${{ vars.STAGING_URL }}/dashboard
           budgetPath: ./.lighthouserc.json
           uploadArtifacts: true
           temporaryPublicStorage: false
