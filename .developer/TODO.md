@@ -15,6 +15,7 @@
 - [x] Observability baseline stubs (Prometheus alert rules, OTEL collector config)
 - [x] Observability baseline runbook
 - [x] Release rollback runbook
+- [x] Service incident triage playbooks per service (capability-registry, policy-engine, recipe-executor, digital-twin, site-registry)
 - [x] CI contract-tests gate (mainline + release workflows)
 - [x] Vitest coverage thresholds enforced repo-wide
 - [x] ADR index and phase-0 gap-report reconciled
@@ -24,7 +25,6 @@
 
 - Wire Prometheus alert rules into staging Prometheus instance (Phase 7)
 - Deploy OTEL collector config to staging (Phase 7)
-- Add service incident triage playbooks per service (Phase 7)
 - Safe-mode activation procedure runbook (Phase 7)
 - PLC interlock override checklist (Phase 7 — Security & Compliance)
 - Expand observability to include Grafana dashboard baselines
