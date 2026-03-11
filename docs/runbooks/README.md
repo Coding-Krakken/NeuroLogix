@@ -12,6 +12,7 @@ recovery, and safe-mode procedures.
 | [release-rollback.md](./release-rollback.md) | Production + staging Helm rollback, automated and manual rollback procedures | Active |
 | [observability-baseline.md](./observability-baseline.md) | Alert triage, availability, control-loop latency, audit log, policy engine, safety interlock procedures | Active |
 | [observability-staging-wiring.md](./observability-staging-wiring.md) | Staging wiring procedure for Prometheus alert rules, OTEL collector deployment baseline, and Grafana provisioning baseline | Active |
+| [observability-staging-rollout-evidence.md](./observability-staging-rollout-evidence.md) | Required evidence template for staging rollout verification of Prometheus, OTEL, and Grafana wiring | Active |
 | [capability-registry-triage.md](./capability-registry-triage.md) | Incident triage for capability lifecycle, health checks, and registry recovery | Active |
 | [policy-engine-triage.md](./policy-engine-triage.md) | Incident triage for policy evaluation latency, decision anomalies, and safety escalation | Active |
 | [recipe-executor-triage.md](./recipe-executor-triage.md) | Incident triage for recipe execution failures, stalled progress, and safety-guarded recovery | Active |
@@ -31,7 +32,7 @@ Operational guidance also lives in:
 
 ## Near-Term Contents
 
-- No pending runbook-only gaps; near-term delivery tracked in `.developer/TODO.md`.
+- Execute a staging rollout using `observability-staging-wiring.md` and capture a filled evidence record from `observability-staging-rollout-evidence.md` under `planning/`.
 
 ## Related Architecture Evidence
 
