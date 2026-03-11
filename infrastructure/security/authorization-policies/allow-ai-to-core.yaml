@@ -1,0 +1,53 @@
+# AuthorizationPolicy: allow-ai-to-core
+#
+# Permits mTLS-authenticated workloads in the AI zone (neurologix-ai) to make
+# READ-ONLY calls to the Core zone (neurologix-core) for inference input.
+#
+# Allowed flows (ADR-011 trust zone table, HARD CONSTRAINT):
+#   - AI service → Core API: GET inference context, tag snapshots, digital twin
+#     state reads.
+#
+# Methods: GET only (strictly read-only).
+#
+# HARD CONSTRAINT from ADR-011:
+# AI zone MUST NOT have an allow policy for POST/PUT/DELETE on recipe-executor
+# or any Core command path. All command issuance must flow via Core recipe-
+# executor which enforces validated safety checks. Violating this constraint
+# is a safety boundary breach (IEC 62443 FR-2 / SR 2.1).
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ai-to-core-readonly
+  namespace: neurologix-core
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: core
+    security.neurologix.io/source-zone: ai
+    security.neurologix.io/policy-type: zone-allowlist
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 2.1, SR 5.2"
+    security.neurologix.io/adr: "ADR-011"
+    security.neurologix.io/safety-note: >
+      AI zone is permitted read-only access only. POST/PUT/DELETE on
+      recipe-executor command path is explicitly NOT permitted here.
+      Any proposed edit to this policy that adds write methods must
+      undergo explicit safety review per NeuroLogix safety-first mandate.
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/neurologix-ai/sa/*"
+      to:
+        - operation:
+            methods:
+              - "GET"
+            paths:
+              - "/api/digital-twin/*"
+              - "/api/tags/*"
+              - "/api/capabilities/*"
+              - "/api/health*"
+              - "/healthz"
+              - "/readyz"

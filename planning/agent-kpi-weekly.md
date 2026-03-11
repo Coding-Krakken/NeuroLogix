@@ -14,6 +14,7 @@ Track quality and delivery stability signals week-over-week.
 | Week (UTC) | Merge Success Rate | Reopened Issue Rate | Repeat Failure Rate | Median PR Size (Net LOC) | Notes / Actions |
 | --- | --- | --- | --- | --- | --- |
 | 2026-W11 | ~100% (60+ PRs merged, no rollbacks) | ~0% (no issues reopened) | 5% (1 governance phrase mismatch, fixed in same run) | ~180 LOC | Governance CI gate live. recurring-failures/KPI baseline committed. Phase 7 OPA+security stack complete. |
+| 2026-W11 (post-186) | 100% (PR #186 merged, no CI failures) | 0% | 0% (no recurring failures) | ~350 LOC | Issue #184 closed. Phase 7 session replay protection baseline complete. ReplayProtectionGuard + OPA authorizer integration + policy-engine wiring + runbook. All 12 CI checks green on main run 22952215549. |
 
 ## Operating Rule
 

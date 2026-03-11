@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deny-all-default.yaml
+  - allow-core-ingress-from-ui-ai-edge.yaml
+  - allow-ai-ingress-from-core.yaml
+  - allow-edge-ingress-from-core.yaml
+  - allow-ui-ingress-from-istio-ingress.yaml

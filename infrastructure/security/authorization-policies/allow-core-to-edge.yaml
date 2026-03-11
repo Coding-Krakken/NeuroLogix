@@ -1,0 +1,51 @@
+# AuthorizationPolicy: allow-core-to-edge
+#
+# Permits mTLS-authenticated workloads in the Core zone (neurologix-core) to
+# communicate with Edge zone (neurologix-edge) adapter services.
+#
+# Allowed flows (ADR-011 trust zone table):
+#   - Core → Edge adapter: POST control command delivery (MQTT bridge API)
+#   - Core → Edge adapter: GET health / adapter status checks
+#
+# Methods: POST (command dispatch), GET (health/status)
+#
+# All PLC commands originate in Core recipe-executor (which has validated
+# the recipe and enforced OPA policy). Edge adapters forward commands to
+# the PLC via the hardware MQTT/OPC-UA layer. Hardware interlocks remain
+# active independently of this software permission layer.
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-core-to-edge
+  namespace: neurologix-edge
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: edge
+    security.neurologix.io/source-zone: core
+    security.neurologix.io/policy-type: zone-allowlist
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 2.1, SR 5.2"
+    security.neurologix.io/adr: "ADR-011"
+    security.neurologix.io/safety-note: >
+      Commands routed here have been validated by Core recipe-executor and OPA
+      policy. Edge adapters must not accept commands from any source other than
+      neurologix-core. Hardware PLC interlocks remain active independently.
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/neurologix-core/sa/*"
+      to:
+        - operation:
+            methods:
+              - "POST"
+              - "GET"
+            paths:
+              - "/api/commands/*"
+              - "/api/adapters/*"
+              - "/health*"
+              - "/healthz"
+              - "/readyz"
