@@ -196,6 +196,85 @@ describe('OPAAuthorizer', () => {
     expect(authorizer.verifyAuditTrail().valid).toBe(true);
   });
 
+  it('should reject duplicate nonces before calling OPA when replay protection is enabled', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ result: { allow: true, reason: 'allowed by role policy' } }),
+    } as Response);
+
+    const timestamp = new Date();
+    const authorizer = createOPAAuthorizer({
+      endpoint,
+      replayProtection: {
+        enabled: true,
+        nonceTtlMs: 60_000,
+        maxTimestampSkewMs: 60_000,
+      },
+    });
+
+    const firstResult = await authorizer.authorize({
+      action: 'recipe.execute',
+      resource: 'recipe/line-6',
+      context: {},
+      subject: {
+        userId: 'operator-replay',
+        roles: ['operator'],
+        permissions: ['recipe.execute'],
+      },
+      timestamp,
+      nonce: 'replay-nonce-001',
+    });
+
+    const secondResult = await authorizer.authorize({
+      action: 'recipe.execute',
+      resource: 'recipe/line-6',
+      context: {},
+      subject: {
+        userId: 'operator-replay',
+        roles: ['operator'],
+        permissions: ['recipe.execute'],
+      },
+      timestamp: new Date(timestamp.getTime() + 1_000),
+      nonce: 'replay-nonce-001',
+    });
+
+    expect(firstResult.decision).toBe('allow');
+    expect(secondResult.decision).toBe('deny');
+    expect(secondResult.policyName).toBe('Session Replay Protection');
+    expect(secondResult.reason).toContain('Replay protection rejected request');
+    expect(vi.mocked(fetch)).toHaveBeenCalledTimes(1);
+  });
+
+  it('should reject stale timestamps before calling OPA when replay protection is enabled', async () => {
+    const authorizer = createOPAAuthorizer({
+      endpoint,
+      replayProtection: {
+        enabled: true,
+        nonceTtlMs: 60_000,
+        maxTimestampSkewMs: 30_000,
+      },
+    });
+
+    const result = await authorizer.authorize({
+      action: 'recipe.execute',
+      resource: 'recipe/line-7',
+      context: {},
+      subject: {
+        userId: 'operator-stale',
+        roles: ['operator'],
+        permissions: ['recipe.execute'],
+      },
+      timestamp: new Date(Date.now() - 120_000),
+      nonce: 'replay-nonce-002',
+    });
+
+    expect(result.decision).toBe('deny');
+    expect(result.policyName).toBe('Session Replay Protection');
+    expect(result.reason).toContain('Timestamp outside allowed skew window');
+    expect(vi.mocked(fetch)).not.toHaveBeenCalled();
+  });
+
   it('should throw when OPA response shape is invalid', async () => {
     vi.mocked(fetch).mockResolvedValue({
       ok: true,

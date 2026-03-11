@@ -67,7 +67,7 @@ the Core, AI, and UI zones, and **Security Level 1 (SL-1)** for the Edge zone.
 | SR 3.5 | Input validation | Zod schema validation on all API inputs | ✅ Implemented | `packages/schemas/` |
 | SR 3.6 | Deterministic output | Recipe executor produces deterministic output from validated recipes | ✅ Implemented | `services/recipe-executor/` |
 | SR 3.7 | Error handling | Typed error codes in all API responses; no raw stack traces | ✅ Implemented | `packages/schemas/src/common/errors.ts` |
-| SR 3.8 | Session integrity | JWT + mTLS session; replay protection via nonce (Phase 7) | 🔄 Planned | [ADR-012](./ADR-012-rbac-abac-authorization-design.md) |
+| SR 3.8 | Session integrity | JWT + mTLS session; replay protection baseline via deterministic nonce + timestamp guard in `security-core` / `policy-engine` | ✅ Implemented (baseline) | [ADR-012](./ADR-012-rbac-abac-authorization-design.md), `packages/security-core/src/replay-protection.ts`, `services/policy-engine/src/services/policy-engine.service.ts` |
 | SR 3.9 | Protection of audit information | Append-only ELK store; Prometheus alert on tampering | 🔄 Planned | [ADR-003](./ADR-003-security-first-architecture.md) |
 
 ### FR-4: Data Confidentiality (DC)
@@ -124,14 +124,14 @@ the Core, AI, and UI zones, and **Security Level 1 (SL-1)** for the Edge zone.
 |---|---|---|---|---|
 | FR-1 IAC | 6 | 0 | 1 | 7 |
 | FR-2 UC | 9 | 2 | 1 | 12 |
-| FR-3 SI | 7 | 2 | 0 | 9 |
+| FR-3 SI | 8 | 1 | 0 | 9 |
 | FR-4 DC | 3 | 0 | 0 | 3 |
 | FR-5 RDF | 3 | 1 | 0 | 4 |
 | FR-6 TRE | 3 | 0 | 0 | 3 |
 | FR-7 RA | 2 | 4 | 2 | 8 |
-| **Total** | **33** | **9** | **4** | **46** |
+| **Total** | **34** | **8** | **4** | **46** |
 
-**Compliance rate (designed + implemented):** 33/42 = **79%** (planned items
+**Compliance rate (designed + implemented):** 34/42 = **81%** (planned items
 are all Phase 7 implementation work items, not design gaps)
 
 ---
@@ -144,7 +144,6 @@ are all Phase 7 implementation work items, not design gaps)
 | Wire OPA authorizer into all services | FR-2 | High |
 | Implement append-only audit log with hash-chaining | FR-2, FR-3 | High |
 | Concurrent session limits in OPA | FR-2 | Medium |
-| Session replay protection (nonce) | FR-3 | Medium |
 | Istio AuthorizationPolicy allowlists per zone pair | FR-5 | High |
 | Kubernetes resource requests/limits | FR-7 | Medium |
 | Helm GitOps IaC completion | FR-5, FR-7 | Medium |

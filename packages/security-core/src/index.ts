@@ -8,3 +8,4 @@ export { CertificateManager, createCertificateManager } from './certificate-mana
 export { ServiceAuthenticator, createServiceAuthenticator } from './service-auth';
 export { AuditLogger, createAuditLogger } from './audit-logger';
 export { OPAAuthorizer, createOPAAuthorizer } from './opa-authorizer';
+export { ReplayProtectionGuard, createReplayProtectionGuard } from './replay-protection';

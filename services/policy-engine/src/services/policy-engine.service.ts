@@ -85,6 +85,9 @@ export class PolicyEngineService {
       ? createOPAAuthorizer({
           endpoint: this.config.opaEndpoint,
           serviceId: this.serviceIdentity.serviceId,
+          replayProtection: this.config.sessionReplayProtection.enabled
+            ? this.config.sessionReplayProtection
+            : undefined,
         })
       : null;
     const opaRuntimeMode = this.getOpaRuntimeMode();
@@ -742,6 +745,7 @@ export class PolicyEngineService {
         context: request.context,
         subject: request.subject,
         timestamp: request.timestamp,
+        nonce: this.getReplayNonce(request),
       });
     } catch (error) {
       if (allowLocalFallback) {
@@ -776,7 +780,7 @@ export class PolicyEngineService {
   ): PolicyEvaluationResult['policyMatches'][number] {
     return {
       policyId: PolicyEngineService.OPA_POLICY_ID,
-      policyName: 'OPA Authorizer',
+      policyName: decision.policyName ?? 'OPA Authorizer',
       decision: decision.decision,
       reasoning: decision.reason,
       priority:
@@ -801,6 +805,34 @@ export class PolicyEngineService {
     }
 
     return 'allow';
+  }
+
+  private getReplayNonce(request: PolicyEvaluationRequest): string {
+    return (
+      this.getStringValue(request.context['nonce']) ??
+      this.getStringValue(request.context['sessionNonce']) ??
+      this.getStringValue(request.context['authNonce']) ??
+      this.getNestedNonce(request.context['auth']) ??
+      this.getNestedNonce(request.context['session']) ??
+      request.requestId
+    );
+  }
+
+  private getNestedNonce(value: unknown): string | null {
+    if (!value || typeof value !== 'object') {
+      return null;
+    }
+
+    return this.getStringValue((value as Record<string, unknown>).nonce);
+  }
+
+  private getStringValue(value: unknown): string | null {
+    if (typeof value !== 'string') {
+      return null;
+    }
+
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : null;
   }
 
   private initializeDefaultPolicies(): void {

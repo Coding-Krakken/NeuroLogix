@@ -13,6 +13,12 @@ describe('PolicyEngineService', () => {
 
   beforeEach(() => {
     mockConfig = {
+      sessionReplayProtection: {
+        enabled: true,
+        nonceTtlMs: 5 * 60 * 1000,
+        maxTimestampSkewMs: 60 * 1000,
+        maxEntries: 10_000,
+      },
       enableLocalEvaluation: true,
       defaultDecision: 'deny',
       cacheEnabled: true,
@@ -625,6 +631,87 @@ describe('PolicyEngineService', () => {
 
       expect(result.decision).toBe('approval_required');
       expect(result.policyMatches.some(match => match.policyName === 'OPA Authorizer')).toBe(true);
+    });
+
+    it('should reject duplicate request identifiers through replay protection baseline', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({
+          ok: true,
+          status: 200,
+          json: async () => ({ result: { allow: true, reason: 'allowed by role policy' } }),
+        })
+      );
+
+      const replayProtectedService = new PolicyEngineService({
+        ...mockConfig,
+        cacheEnabled: false,
+        opaEndpoint: 'http://localhost:8181',
+      });
+
+      const request: PolicyEvaluationRequest = {
+        requestId: '550e8400-e29b-41d4-a716-446655440034',
+        action: 'sensor.read',
+        resource: 'sensor/temperature/zone2',
+        context: {},
+        subject: {
+          userId: 'operator-replay-baseline',
+          roles: ['operator'],
+          permissions: ['sensor.read'],
+        },
+        timestamp: new Date(),
+      };
+
+      const firstResult = await replayProtectedService.evaluateRequest(request);
+      const secondResult = await replayProtectedService.evaluateRequest({
+        ...request,
+        timestamp: new Date(request.timestamp.getTime() + 1_000),
+      });
+
+      expect(firstResult.decision).toBe('allow');
+      expect(secondResult.decision).toBe('deny');
+      expect(
+        secondResult.policyMatches.some(match => match.policyName === 'Session Replay Protection')
+      ).toBe(true);
+    });
+
+    it('should honor explicit session nonces when provided in request context', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({
+          ok: true,
+          status: 200,
+          json: async () => ({ result: { allow: true, reason: 'allowed by role policy' } }),
+        })
+      );
+
+      const replayProtectedService = new PolicyEngineService({
+        ...mockConfig,
+        cacheEnabled: false,
+        opaEndpoint: 'http://localhost:8181',
+      });
+
+      const result = await replayProtectedService.evaluateRequest({
+        requestId: '550e8400-e29b-41d4-a716-446655440035',
+        action: 'sensor.read',
+        resource: 'sensor/temperature/zone3',
+        context: {
+          session: {
+            nonce: 'session-nonce-001',
+          },
+        },
+        subject: {
+          userId: 'operator-session-nonce',
+          roles: ['operator'],
+          permissions: ['sensor.read'],
+        },
+        timestamp: new Date(),
+      });
+
+      expect(result.decision).toBe('allow');
+
+      const requestBody = JSON.parse(String(vi.mocked(fetch).mock.calls[0]?.[1]?.body));
+      expect(requestBody.input.nonce).toBe('session-nonce-001');
     });
 
     it('should evaluate plc_interlocks policy branch via evaluator helper', async () => {

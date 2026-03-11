@@ -34,6 +34,7 @@ export const PolicyEvaluationRequestSchema = z.object({
   requestId: z.string().uuid(),
   action: z.string(), // The action being requested (e.g., "recipe.execute", "capability.install")
   resource: z.string(), // The resource being acted upon
+  nonce: z.string().trim().min(1).optional(),
   context: z.record(z.any()), // Additional context data
   subject: z.object({
     userId: z.string(),
@@ -172,6 +173,19 @@ export type PolicyViolation = z.infer<typeof PolicyViolationSchema>;
 export const PolicyEngineConfigSchema = z.object({
   opaEndpoint: z.string().url().optional(),
   opaRuntimeMode: z.enum(['strict', 'fallback']).optional(),
+  sessionReplayProtection: z
+    .object({
+      enabled: z.boolean().default(false),
+      nonceTtlMs: z.number().int().min(1_000).max(3_600_000).default(5 * 60 * 1000),
+      maxTimestampSkewMs: z.number().int().min(0).max(300_000).default(60 * 1000),
+      maxEntries: z.number().int().min(1).max(100_000).default(10_000),
+    })
+    .default({
+      enabled: false,
+      nonceTtlMs: 5 * 60 * 1000,
+      maxTimestampSkewMs: 60 * 1000,
+      maxEntries: 10_000,
+    }),
   enableLocalEvaluation: z.boolean().default(true),
   defaultDecision: z.enum(['deny', 'allow']).default('deny'),
   cacheEnabled: z.boolean().default(true),

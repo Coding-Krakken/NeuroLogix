@@ -25,6 +25,7 @@ Use this runbook with:
 - Sudden spikes in denied decisions for known-valid requests.
 - Recipe execution blocked waiting for policy decisions.
 - Audit trail generation or integrity checks fail.
+- Repeated `Session Replay Protection` denies or `AUTHZ_REPLAY_REJECTED` audit events.
 
 ---
 
@@ -54,7 +55,11 @@ Use this runbook with:
    ```
 3. Inspect policy-evaluation error patterns and `requestId` correlation in logs.
 4. Verify default decision mode and emergency-mode config are as expected.
-5. Check for recent policy bundle or rule changes causing behavior drift.
+5. Inspect replay-protection diagnostics:
+   - confirm request timestamps are within the configured skew window
+   - confirm unique request identifiers or session nonces are emitted per request
+   - verify NTP drift has not exceeded the `sessionReplayProtection.maxTimestampSkewMs` setting
+6. Check for recent policy bundle or rule changes causing behavior drift.
 
 ---
 
@@ -81,3 +86,4 @@ Use this runbook with:
 - Require contract + policy regression tests for all policy changes.
 - Keep policy metadata complete (author, tags, category, priority).
 - Monitor policy decision latency and error-rate alerts continuously.
+- Preserve deterministic unique request IDs across retries; never reuse a prior request nonce inside the replay TTL window.
