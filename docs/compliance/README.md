@@ -13,7 +13,7 @@ NeuroLogix controls, policies, and evidence tracking.
 | -------------------------------------------------------------------------------- | ------------------------------------------ | ------------ |
 | [IEC 62443 Control Mapping](./IEC-62443-control-mapping.md)                      | ✅ Baseline + FR-5 allowlist/mTLS evidence | 2026-03-11   |
 | [ISO 27001 / NIST CSF Alignment Matrix](./ISO27001-NIST-CSF-alignment-matrix.md) | ✅ Baseline established                    | 2026-03-11   |
-| Audit Evidence Register                                                          | 🔄 Planned (Phase 7)                       | —            |
+| [Audit Evidence Register](./AUDIT-EVIDENCE-REGISTER.md)                          | ✅ Baseline established                    | 2026-03-11   |
 | Penetration Test Report                                                          | 🔄 Planned (Phase 7)                       | —            |
 
 ## IEC 62443 Compliance Summary
