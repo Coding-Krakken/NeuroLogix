@@ -1,0 +1,19 @@
+# Baseline values for grafana/grafana Helm chart in staging.
+# Mounts provisioning and dashboard ConfigMaps created by `kubectl apply -k`.
+
+extraConfigmapMounts:
+  - name: neurologix-grafana-provisioning
+    configMap: neurologix-grafana-provisioning
+    mountPath: /etc/grafana/provisioning
+    readOnly: true
+
+  - name: neurologix-grafana-dashboards
+    configMap: neurologix-grafana-dashboards
+    mountPath: /var/lib/grafana/dashboards/neurologix
+    readOnly: true
+
+sidecar:
+  dashboards:
+    enabled: false
+  datasources:
+    enabled: false

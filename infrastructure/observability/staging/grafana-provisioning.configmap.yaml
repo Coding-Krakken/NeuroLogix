@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: neurologix-grafana-provisioning
+  namespace: neurologix-observability
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: neurologix
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        uid: prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus-server.neurologix-observability.svc.cluster.local:9090
+        isDefault: true
+        editable: false
+      - name: Jaeger
+        uid: jaeger
+        type: jaeger
+        access: proxy
+        url: http://jaeger-query.neurologix-observability.svc.cluster.local:16686
+        editable: false
+
+  dashboard-providers.yaml: |
+    apiVersion: 1
+    providers:
+      - name: neurologix-observability
+        orgId: 1
+        type: file
+        disableDeletion: true
+        editable: false
+        updateIntervalSeconds: 30
+        options:
+          path: /var/lib/grafana/dashboards/neurologix

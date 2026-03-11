@@ -23,12 +23,11 @@
 - [x] Lighthouse CI gate for mission-control in mainline CI
 - [x] Safe-mode activation procedure runbook (Phase 7)
 - [x] PLC interlock override checklist runbook (Phase 7)
+- [x] Staging observability wiring artifact baseline (Prometheus alert integration values, OTEL collector deployment baseline, Grafana provisioning baseline)
 
 ## Active / Near Term
 
-- Wire Prometheus alert rules into staging Prometheus instance (Phase 7)
-- Deploy OTEL collector config to staging (Phase 7)
-- Import and wire Grafana dashboard baselines in staging (Phase 7)
+- Apply staging observability wiring artifacts and capture rollout evidence in staging (Phase 7)
 
 ## Quality Targets
 

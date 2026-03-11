@@ -33,7 +33,8 @@ Use these dashboards with this runbook as follows:
 - `mission-control-ui` dashboard supports mission-control SLO visibility
    (LCP p95, SSE stream uptime, error rate by route).
 
-Import and datasource wiring are environment tasks tracked in `.developer/TODO.md`.
+Import and datasource wiring procedures are documented in
+[observability-staging-wiring.md](./observability-staging-wiring.md).
 
 ---
 

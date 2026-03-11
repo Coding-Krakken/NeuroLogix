@@ -1,0 +1,15 @@
+# Baseline values for prometheus-community/prometheus Helm chart in staging.
+# This mounts the generated alert rules ConfigMap created by `kubectl apply -k`.
+
+server:
+  extraConfigmapMounts:
+    - name: neurologix-alert-rules
+      configMap: neurologix-prometheus-alert-rules
+      mountPath: /etc/prometheus/neurologix-rules
+      readOnly: true
+
+  # Include NeuroLogix OBS-001 alert rules in Prometheus startup flags.
+  extraFlags:
+    - web.enable-lifecycle
+    - rule.file=/etc/prometheus/config/*.yml
+    - rule.file=/etc/prometheus/neurologix-rules/*.yml

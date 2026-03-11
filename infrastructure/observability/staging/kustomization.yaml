@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: neurologix-observability
+
+commonLabels:
+  app.kubernetes.io/part-of: neurologix
+  app.kubernetes.io/component: observability
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: neurologix-prometheus-alert-rules
+    files:
+      - prometheus-alerts.yml=../prometheus-alerts.yml
+  - name: neurologix-otel-collector-config
+    files:
+      - otel-collector-config.yaml=../otel-collector-config.yaml
+  - name: neurologix-grafana-dashboards
+    files:
+      - control-plane.dashboard.json=../grafana/control-plane.dashboard.json
+      - security-audit.dashboard.json=../grafana/security-audit.dashboard.json
+      - mission-control-ui.dashboard.json=../grafana/mission-control-ui.dashboard.json
+
+resources:
+  - otel-collector.deployment.yaml
+  - grafana-provisioning.configmap.yaml
