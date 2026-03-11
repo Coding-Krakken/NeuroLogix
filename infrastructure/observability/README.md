@@ -10,6 +10,7 @@ NeuroLogix platform.
 | `prometheus-alerts.yml` | Prometheus alerting rules for all T1 SLOs (OBS-001) |
 | `otel-collector-config.yaml` | OpenTelemetry Collector configuration stub |
 | `grafana/*.dashboard.json` | Grafana dashboard baseline stubs aligned to OBS-001 dashboard panel intent |
+| `staging/` | Staging wiring artifacts for Prometheus alert integration, OTEL collector deployment, and Grafana provisioning |
 
 ## Status
 
@@ -26,6 +27,16 @@ Services (OTLP) ──► otel-collector ──► Jaeger (traces)
 Prometheus ◄── scraped /metrics endpoints (all services)
 Prometheus ──► Alertmanager ──► PagerDuty / OpsGenie
 ```
+
+## Staging Wiring Baseline
+
+Use the staging wiring baseline to connect the existing observability stubs into
+a staging environment:
+
+- [Staging wiring baseline guide](./staging/README.md)
+- [Kustomize wiring bundle](./staging/kustomization.yaml)
+- [Prometheus values baseline](./staging/prometheus.values.staging.yaml)
+- [Grafana values baseline](./staging/grafana.values.staging.yaml)
 
 ## SLOs Covered by Alert Rules
 
