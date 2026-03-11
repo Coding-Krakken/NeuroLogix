@@ -6,6 +6,7 @@ import {
   PolicyQuery,
   PolicyDocumentSchema,
   PolicyEvaluationRequestSchema,
+  PolicyEngineConfigSchema,
   PolicyQuerySchema,
 } from '../types/index.js';
 
@@ -172,6 +173,39 @@ describe('Policy Engine Types', () => {
       };
 
       expect(() => PolicyQuerySchema.parse(invalidQuery)).toThrow();
+    });
+  });
+
+  describe('PolicyEngineConfigSchema', () => {
+    it('should validate strict and fallback OPA runtime modes', () => {
+      const baseConfig = {
+        emergencyMode: {},
+        notifications: {},
+      };
+
+      expect(() =>
+        PolicyEngineConfigSchema.parse({
+          ...baseConfig,
+          opaRuntimeMode: 'strict',
+        })
+      ).not.toThrow();
+
+      expect(() =>
+        PolicyEngineConfigSchema.parse({
+          ...baseConfig,
+          opaRuntimeMode: 'fallback',
+        })
+      ).not.toThrow();
+    });
+
+    it('should reject invalid OPA runtime mode', () => {
+      expect(() =>
+        PolicyEngineConfigSchema.parse({
+          emergencyMode: {},
+          notifications: {},
+          opaRuntimeMode: 'invalid',
+        })
+      ).toThrow();
     });
   });
 

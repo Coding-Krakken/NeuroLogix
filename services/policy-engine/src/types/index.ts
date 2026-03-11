@@ -171,6 +171,7 @@ export type PolicyViolation = z.infer<typeof PolicyViolationSchema>;
  */
 export const PolicyEngineConfigSchema = z.object({
   opaEndpoint: z.string().url().optional(),
+  opaRuntimeMode: z.enum(['strict', 'fallback']).optional(),
   enableLocalEvaluation: z.boolean().default(true),
   defaultDecision: z.enum(['deny', 'allow']).default('deny'),
   cacheEnabled: z.boolean().default(true),
@@ -189,6 +190,13 @@ export const PolicyEngineConfigSchema = z.object({
 });
 
 export type PolicyEngineConfig = z.infer<typeof PolicyEngineConfigSchema>;
+export type OPARuntimeMode = NonNullable<PolicyEngineConfig['opaRuntimeMode']>;
+
+export interface OPARuntimeReadiness {
+  ready: boolean;
+  mode: OPARuntimeMode;
+  reason?: string;
+}
 
 /**
  * Query schemas for policy operations

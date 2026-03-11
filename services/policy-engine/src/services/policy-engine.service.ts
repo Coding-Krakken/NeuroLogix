@@ -9,6 +9,8 @@ import {
   ApprovalQuery,
   ViolationQuery,
   PolicyStatistics,
+  OPARuntimeMode,
+  OPARuntimeReadiness,
   PolicyDocumentSchema,
   PolicyEvaluationRequestSchema,
   PolicyEvaluationResultSchema,
@@ -85,6 +87,8 @@ export class PolicyEngineService {
           serviceId: this.serviceIdentity.serviceId,
         })
       : null;
+    const opaRuntimeMode = this.getOpaRuntimeMode();
+    const opaReadiness = this.getOpaRuntimeReadiness(opaRuntimeMode);
     this.evaluationMetrics = {
       evaluationsLast24h: 0,
       decisionsLast24h: { allow: 0, deny: 0, approval_required: 0 },
@@ -100,6 +104,8 @@ export class PolicyEngineService {
     logger.info('Policy Engine Service initialized', {
       service: 'policy-engine',
       config: this.config,
+      opaRuntimeMode,
+      opaReadiness,
     });
   }
 
@@ -376,14 +382,18 @@ export class PolicyEngineService {
         }
       }
 
-      if (!this.config.enableLocalEvaluation && !this.opaAuthorizer) {
-        throw new InternalServerError('No policy evaluation path configured', {
-          reason: 'Local evaluation disabled and OPA endpoint not configured',
+      const opaRuntimeMode = this.getOpaRuntimeMode();
+      const opaReadiness = this.getOpaRuntimeReadiness(opaRuntimeMode);
+
+      if (!opaReadiness.ready) {
+        throw new InternalServerError('Policy engine runtime is not ready', {
+          reason: opaReadiness.reason,
+          mode: opaReadiness.mode,
           requestId: validatedRequest.requestId,
         });
       }
 
-      if (!this.config.enableLocalEvaluation && this.opaAuthorizer) {
+      if (opaRuntimeMode === 'strict') {
         const externalDecision = await this.evaluateWithOpaAuthorizer(validatedRequest, false);
         if (!externalDecision) {
           throw new InternalServerError('OPA authorizer did not return a decision', {
@@ -440,6 +450,7 @@ export class PolicyEngineService {
             policiesEvaluated: policyMatches.length,
             evaluationTimeMs: evaluationTime,
             opaIntegrated: true,
+            opaRuntimeMode,
             opaDecision: externalDecision.decision,
           },
         });
@@ -571,6 +582,7 @@ export class PolicyEngineService {
           policiesEvaluated: applicablePolicies.length,
           evaluationTimeMs: evaluationTime,
           opaIntegrated: Boolean(externalDecision),
+          opaRuntimeMode,
           opaDecision: externalDecision?.decision,
         },
       });
@@ -672,6 +684,43 @@ export class PolicyEngineService {
    */
   verifySecurityAuditTrail(): AuditIntegrityReport {
     return this.securityAuditLogger.getIntegrityReport();
+  }
+
+  /**
+   * Determine how OPA is used at runtime for policy evaluation.
+   */
+  getOpaRuntimeMode(): OPARuntimeMode {
+    if (this.config.opaRuntimeMode) {
+      return this.config.opaRuntimeMode;
+    }
+
+    return this.config.enableLocalEvaluation ? 'fallback' : 'strict';
+  }
+
+  /**
+   * Determine readiness of the configured OPA runtime mode.
+   */
+  getOpaRuntimeReadiness(mode: OPARuntimeMode = this.getOpaRuntimeMode()): OPARuntimeReadiness {
+    if (mode === 'strict' && !this.opaAuthorizer) {
+      return {
+        ready: false,
+        mode,
+        reason: 'OPA strict runtime mode requires an OPA endpoint',
+      };
+    }
+
+    if (mode === 'fallback' && !this.config.enableLocalEvaluation) {
+      return {
+        ready: false,
+        mode,
+        reason: 'OPA fallback runtime mode requires local evaluation to be enabled',
+      };
+    }
+
+    return {
+      ready: true,
+      mode,
+    };
   }
 
   // Private helper methods
