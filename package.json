@@ -35,6 +35,7 @@
     "test:contracts:consumers": "npm run test:contracts:consumer --workspace @neurologix/mission-control && npm run test:contracts --workspace @neurologix/adapters",
     "test:opa": "npm run test:opa --workspace @neurologix/security-core",
     "test:e2e": "playwright test --config=playwright.config.ts",
+    "test:e2e:triage": "node scripts/export-playwright-triage.js",
     "type-check": "turbo run type-check",
     "clean": "turbo run clean && rm -rf node_modules",
     "validate:model:system-state": "node -e \"const fs=require('fs'); const file='.github/.system-state/model/federation_model.yaml'; if(!fs.existsSync(file)){ console.error('ERROR: Missing required system-state model file: '+file); process.exit(1);}\"",

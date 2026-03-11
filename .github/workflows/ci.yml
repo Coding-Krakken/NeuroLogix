@@ -262,6 +262,23 @@ jobs:
         env:
           CI: true
 
+      - name: Export E2E triage summary
+        if: always()
+        run: node scripts/export-playwright-triage.js
+
+      - name: Upload E2E evidence artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            playwright-report/
+            test-results/e2e-results.json
+            test-results/e2e-triage-summary.json
+            test-results/e2e-triage-summary.md
+          retention-days: 14
+          if-no-files-found: warn
+
   # ─────────────────────────
   # Build
   # ─────────────────────────
