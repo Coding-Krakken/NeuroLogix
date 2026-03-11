@@ -19,6 +19,23 @@ const path = require('path');
 
 const AUDIT_KEY = process.env.AUDIT_HASH_KEY || 'neurolog-audit-integrity';
 
+function normalizeForHash(value) {
+  if (Array.isArray(value)) {
+    return value.map(normalizeForHash);
+  }
+
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([, entryValue]) => entryValue !== undefined)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, entryValue]) => [key, normalizeForHash(entryValue)])
+    );
+  }
+
+  return value;
+}
+
 /**
  * Parse command-line arguments
  */
@@ -90,15 +107,13 @@ function loadAuditRecords(filePath, startDate, endDate, siteId) {
 /**
  * Recompute hash for a record
  */
-function recomputeHash(record, previousId, auditKey = AUDIT_KEY) {
-  const chainInput = `${previousId || 'GENESIS'}:${record.id}:${JSON.stringify({
-    timestamp: record.timestamp,
-    level: record.level,
-    message: record.message,
-    type: record.type,
-    environment: record.environment,
-    ...record,
-  }.filter((k) => !['audit_hash', 'audit_chain_id'].includes(k)))}`;
+function recomputeHash(record, previousHash, auditKey = AUDIT_KEY) {
+  const recordForHash = { ...record };
+  delete recordForHash.audit_hash;
+  delete recordForHash.audit_chain_id;
+
+  const canonicalRecord = normalizeForHash(recordForHash);
+  const chainInput = `${previousHash || 'GENESIS'}:${record.id}:${JSON.stringify(canonicalRecord)}`;
 
   return crypto.createHmac('sha256', auditKey).update(chainInput).digest('hex');
 }
@@ -119,10 +134,12 @@ function validateChain(records, verbose = false) {
     return report;
   }
 
+  let previousId = null;
+  let previousHash = null;
+
   for (let i = 0; i < records.length; i++) {
     const record = records[i];
-    const previousId = i === 0 ? 'GENESIS' : records[i - 1].id;
-    const expectedChainId = previousId;
+    const expectedChainId = previousId || 'GENESIS';
 
     if (verbose) {
       console.log(`\nValidating record ${i + 1}/${records.length}:`);
@@ -138,7 +155,7 @@ function validateChain(records, verbose = false) {
       continue;
     }
 
-    const computedHash = recomputeHash(record, previousId);
+    const computedHash = recomputeHash(record, previousHash);
     if (record.audit_hash !== computedHash) {
       report.tampered.push({
         index: i,
@@ -173,6 +190,8 @@ function validateChain(records, verbose = false) {
     }
 
     report.validRecords++;
+    previousId = record.id || null;
+    previousHash = record.audit_hash || null;
     if (verbose) {
       console.log(`  ✓ Valid (hash: ${record.audit_hash.substring(0, 16)}...)`);
     }

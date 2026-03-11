@@ -1,0 +1,67 @@
+{
+  "index_patterns": [
+    "neurologix-audit-*"
+  ],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "index.lifecycle.name": "neurologix-audit-ilm"
+    },
+    "mappings": {
+      "dynamic": true,
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "timestamp": {
+          "type": "date"
+        },
+        "level": {
+          "type": "keyword"
+        },
+        "type": {
+          "type": "keyword"
+        },
+        "action": {
+          "type": "keyword"
+        },
+        "resource": {
+          "type": "keyword"
+        },
+        "resourceId": {
+          "type": "keyword"
+        },
+        "outcome": {
+          "type": "keyword"
+        },
+        "severity": {
+          "type": "keyword"
+        },
+        "actorId": {
+          "type": "keyword"
+        },
+        "siteId": {
+          "type": "keyword"
+        },
+        "traceId": {
+          "type": "keyword"
+        },
+        "audit_hash": {
+          "type": "keyword"
+        },
+        "audit_chain_id": {
+          "type": "keyword"
+        }
+      }
+    }
+  },
+  "priority": 200,
+  "_meta": {
+    "description": "NeuroLogix audit index template with hash-chain integrity fields",
+    "compliance": [
+      "IEC-62443-SR-2.12",
+      "IEC-62443-SR-3.9"
+    ]
+  }
+}
