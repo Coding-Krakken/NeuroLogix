@@ -37,6 +37,30 @@ policy-gated dispatch command flow in Mission Control.
 - Playwright summary shows all mission-control specs passed.
 - No conditional skips in the critical dispatch allow-path test.
 - CI `E2E` job is green for the PR head SHA.
+- CI uploads `e2e-evidence-<run_id>-<run_attempt>` with:
+  - `playwright-report/`
+  - `test-results/e2e-results.json`
+  - `test-results/e2e-triage-summary.json`
+  - `test-results/e2e-triage-summary.md`
+
+## Evidence Export (Local)
+
+1. Run deterministic baseline:
+
+   ```bash
+   npm run test:e2e
+   ```
+
+2. Export triage summary:
+
+   ```bash
+   npm run test:e2e:triage
+   ```
+
+3. Review generated artifacts:
+   - `test-results/e2e-results.json`
+   - `test-results/e2e-triage-summary.json`
+   - `test-results/e2e-triage-summary.md`
 
 ## Failure Triage
 
@@ -52,4 +76,13 @@ policy-gated dispatch command flow in Mission Control.
    npm run test:e2e
    ```
 
-4. If still failing, inspect mission-control policy logic in `apps/mission-control/src/state/mission-control-state.ts` and dispatch route wiring in `apps/mission-control/src/server.ts`.
+4. Export local triage summary for incident evidence:
+
+   ```bash
+   npm run test:e2e:triage
+   ```
+
+5. Open `test-results/e2e-triage-summary.md` and correlate failed specs with
+   `playwright-report/` trace artifacts.
+
+6. If still failing, inspect mission-control policy logic in `apps/mission-control/src/state/mission-control-state.ts` and dispatch route wiring in `apps/mission-control/src/server.ts`.
