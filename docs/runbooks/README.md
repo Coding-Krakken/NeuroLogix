@@ -17,6 +17,7 @@ recovery, and safe-mode procedures.
 | [digital-twin-triage.md](./digital-twin-triage.md) | Incident triage for twin state ingestion, simulation failures, and sync lag recovery | Active |
 | [site-registry-triage.md](./site-registry-triage.md) | Incident triage for provisioning, feature flags, and federation topology integrity | Active |
 | [safe-mode-activation.md](./safe-mode-activation.md) | Full platform safe-mode activation, service suspension sequence, hardware interlock verification, and controlled recovery | Active |
+| [plc-interlock-override-checklist.md](./plc-interlock-override-checklist.md) | Temporary PLC interlock override authorization, execution guardrails, abort criteria, and audit evidence checklist | Active |
 
 ## Related Guidance
 
@@ -28,7 +29,7 @@ Operational guidance also lives in:
 
 ## Near-Term Contents
 
-- PLC interlock override checklist (Phase 7 — Security & Compliance)
+- No pending runbook-only gaps; near-term delivery tracked in `.developer/TODO.md`.
 
 ## Related Architecture Evidence
 
