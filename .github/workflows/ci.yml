@@ -145,6 +145,9 @@ jobs:
       - name: Run server contract tests
         run: npm run test:contracts:servers
 
+      - name: Run consumer contract tests
+        run: npm run test:contracts:consumers
+
   # ─────────────────────────
   # Build
   # ─────────────────────────
