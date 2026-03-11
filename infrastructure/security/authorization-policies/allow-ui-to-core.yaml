@@ -1,0 +1,52 @@
+# AuthorizationPolicy: allow-ui-to-core
+#
+# Permits mTLS-authenticated workloads in the UI zone (neurologix-ui) to call
+# the Core zone (neurologix-core) API Gateway. The UI zone is the Mission
+# Control frontend (Next.js SSR + API routes) and is the sole operator-facing
+# entry point into the Core command surface.
+#
+# Allowed flows (ADR-011 trust zone table):
+#   - Mission Control UI → Core API Gateway: operator commands, recipe
+#     management, capability queries, digital twin state reads, SSE streams.
+#   - Operator mobile clients reach the UI zone via ingress TLS; their requests
+#     are proxied to Core by the UI service (not directly).
+#
+# Methods: GET, POST, PUT, DELETE, HEAD, OPTIONS (standard API surface verbs)
+#
+# Note: UI zone has NO direct access to AI or Edge zones.
+# All AI inference results are surfaced through Core API.
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ui-to-core
+  namespace: neurologix-core
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: core
+    security.neurologix.io/source-zone: ui
+    security.neurologix.io/policy-type: zone-allowlist
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 2.1, SR 5.2"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/neurologix-ui/sa/*"
+      to:
+        - operation:
+            methods:
+              - "GET"
+              - "POST"
+              - "PUT"
+              - "DELETE"
+              - "HEAD"
+              - "OPTIONS"
+            paths:
+              - "/api/*"
+              - "/health*"
+              - "/healthz"
+              - "/readyz"

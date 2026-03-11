@@ -154,7 +154,7 @@ window to under 30 minutes.
 - [ ] Deploy Vault PKI in staging cluster
 - [ ] Install cert-manager and configure VaultIssuer CRD
 - [ ] Apply PeerAuthentication STRICT policy per namespace
-- [ ] Create AuthorizationPolicy allowlists per service pair
+- [x] Create AuthorizationPolicy allowlists baseline pack (`infrastructure/security/authorization-policies/`)
 - [ ] Validate E2E smoke tests pass under STRICT mTLS
 - [ ] Confirm `cert_expiry_days < 7` alert fires correctly
 - [ ] Document Vault root CA backup and restoration procedure

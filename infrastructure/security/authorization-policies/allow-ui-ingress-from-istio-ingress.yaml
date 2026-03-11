@@ -1,0 +1,21 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ui-ingress-from-istio-ingress
+  namespace: neurologix-ui
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: ui
+    security.neurologix.io/policy-type: allowlist
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 5.2"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - istio-system
+            principals:
+              - cluster.local/ns/istio-system/sa/*

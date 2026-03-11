@@ -1,0 +1,33 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-core-ingress-from-ui-ai-edge
+  namespace: neurologix-core
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: core
+    security.neurologix.io/policy-type: allowlist
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 5.2"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - neurologix-ui
+            principals:
+              - cluster.local/ns/neurologix-ui/sa/*
+    - from:
+        - source:
+            namespaces:
+              - neurologix-ai
+            principals:
+              - cluster.local/ns/neurologix-ai/sa/*
+    - from:
+        - source:
+            namespaces:
+              - neurologix-edge
+            principals:
+              - cluster.local/ns/neurologix-edge/sa/*

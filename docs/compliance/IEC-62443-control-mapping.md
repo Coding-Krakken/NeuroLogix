@@ -87,7 +87,7 @@ the Core, AI, and UI zones, and **Security Level 1 (SL-1)** for the Edge zone.
 | Req ID | Requirement | SL-2 Condition | Status | Evidence |
 |---|---|---|---|---|
 | SR 5.1 | Network segmentation | Kubernetes namespace isolation + NetworkPolicy per zone | ✅ Implemented (IaC baseline) | [ADR-003](./ADR-003-security-first-architecture.md), `infrastructure/security/network-policies/` |
-| SR 5.2 | Zone boundary protection | Istio/Linkerd AuthorizationPolicy allowlists per zone pair | ✅ Designed | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md) |
+| SR 5.2 | Zone boundary protection | Istio/Linkerd AuthorizationPolicy allowlists per zone pair | ✅ Implemented (IaC baseline) | [ADR-011](./ADR-011-mtls-zero-trust-service-mesh.md), `infrastructure/security/authorization-policies/` |
 | SR 5.3 | Security function isolation | Safety-critical code in `service/recipe-executor`; AI services isolated in AI zone | ✅ Implemented | `services/recipe-executor/` |
 | SR 5.4 | Control system backup | Helm chart state in Git (GitOps); Vault unseal keys backed up | 🔄 Planned | `infrastructure/` |
 
@@ -126,12 +126,12 @@ the Core, AI, and UI zones, and **Security Level 1 (SL-1)** for the Edge zone.
 | FR-2 UC | 9 | 2 | 1 | 12 |
 | FR-3 SI | 8 | 1 | 0 | 9 |
 | FR-4 DC | 3 | 0 | 0 | 3 |
-| FR-5 RDF | 3 | 1 | 0 | 4 |
+| FR-5 RDF | 4 | 0 | 0 | 4 |
 | FR-6 TRE | 3 | 0 | 0 | 3 |
 | FR-7 RA | 2 | 4 | 2 | 8 |
-| **Total** | **34** | **8** | **4** | **46** |
+| **Total** | **35** | **7** | **4** | **46** |
 
-**Compliance rate (designed + implemented):** 34/42 = **81%** (planned items
+**Compliance rate (designed + implemented):** 35/42 = **83%** (planned items
 are all Phase 7 implementation work items, not design gaps)
 
 ---
@@ -144,7 +144,6 @@ are all Phase 7 implementation work items, not design gaps)
 | Wire OPA authorizer into all services | FR-2 | High |
 | Implement append-only audit log with hash-chaining | FR-2, FR-3 | High |
 | Concurrent session limits in OPA | FR-2 | Medium |
-| Istio AuthorizationPolicy allowlists per zone pair | FR-5 | High |
 | Kubernetes resource requests/limits | FR-7 | Medium |
 | Helm GitOps IaC completion | FR-5, FR-7 | Medium |
 | API gateway rate limiting | FR-7 | Medium |
