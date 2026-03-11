@@ -16,6 +16,7 @@
     "dev": "tsc --build --watch",
     "test": "vitest run",
     "test:ci": "vitest run --coverage",
+    "test:contracts": "npm run build --workspace @neurologix/core && npm run build --workspace @neurologix/schemas && vitest run src/contracts/recipe-executor.contract.test.ts",
     "test:watch": "vitest",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
