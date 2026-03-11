@@ -13,7 +13,7 @@ Track quality and delivery stability signals week-over-week.
 
 | Week (UTC) | Merge Success Rate | Reopened Issue Rate | Repeat Failure Rate | Median PR Size (Net LOC) | Notes / Actions |
 | --- | --- | --- | --- | --- | --- |
-| 2026-W11 | _tbd_ | _tbd_ | _tbd_ | _tbd_ | Baseline template created. |
+| 2026-W11 | ~100% (60+ PRs merged, no rollbacks) | ~0% (no issues reopened) | 5% (1 governance phrase mismatch, fixed in same run) | ~180 LOC | Governance CI gate live. recurring-failures/KPI baseline committed. Phase 7 OPA+security stack complete. |
 
 ## Operating Rule
 
