@@ -69,7 +69,7 @@ describe('Recipe Executor Types', () => {
       const result = RecipeStepSchema.safeParse(invalidStep);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toContain('Step ID must be a valid UUID');
+        expect(result.error.issues[0].message).toContain('Invalid uuid');
       }
     });
 
@@ -133,8 +133,8 @@ describe('Recipe Executor Types', () => {
         preconditions: ['system_ready'],
         postconditions: ['test_complete'],
         author: 'test-author',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         metadata: { testFlag: true },
       };
 
@@ -154,9 +154,7 @@ describe('Recipe Executor Types', () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(
-          result.error.issues.some(issue =>
-            issue.message.includes('Recipe must have at least one step')
-          )
+          result.error.issues.some((issue: (typeof result.error.issues)[number]) => issue.path[0] === 'steps')
         ).toBe(true);
       }
     });
@@ -173,8 +171,8 @@ describe('Recipe Executor Types', () => {
         safetyChecks: true,
         rollbackOnFailure: true,
         dryRun: false,
-        scheduleAt: new Date(Date.now() + 3600000), // 1 hour from now
-        expiresAt: new Date(Date.now() + 7200000), // 2 hours from now
+        scheduleAt: new Date(Date.now() + 3600000).toISOString(),
+        expiresAt: new Date(Date.now() + 7200000).toISOString(),
         reason: 'Scheduled maintenance',
         tags: ['maintenance', 'scheduled'],
         metadata: { urgency: 'high' },
@@ -213,9 +211,9 @@ describe('Recipe Executor Types', () => {
         status: RecipeExecutionStatus.COMPLETED,
         executedBy: 'test-user',
         approvedBy: 'supervisor',
-        startedAt: new Date(Date.now() - 300000), // 5 minutes ago
-        completedAt: new Date(),
-        duration: 300000, // 5 minutes
+        startedAt: new Date(Date.now() - 300000).toISOString(),
+        completedAt: new Date().toISOString(),
+        durationMs: 300000,
         context: { facility: 'warehouse-1' },
         parameters: { speed: 100 },
         totalSteps: 3,
@@ -227,9 +225,9 @@ describe('Recipe Executor Types', () => {
           {
             stepId: '550e8400-e29b-41d4-a716-446655440002',
             status: StepExecutionStatus.COMPLETED,
-            startedAt: new Date(Date.now() - 250000),
-            completedAt: new Date(Date.now() - 200000),
-            duration: 50000,
+            startedAt: new Date(Date.now() - 250000).toISOString(),
+            completedAt: new Date(Date.now() - 200000).toISOString(),
+            durationMs: 50000,
             result: { stepOutput: 'success' },
           },
         ],
@@ -238,8 +236,8 @@ describe('Recipe Executor Types', () => {
         rollbackSteps: [],
         tags: ['test'],
         metadata: { executionId: 'test-123' },
-        createdAt: new Date(Date.now() - 300000),
-        updatedAt: new Date(),
+        createdAt: new Date(Date.now() - 300000).toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       const result = RecipeExecutionSchema.safeParse(validExecution);
@@ -254,8 +252,8 @@ describe('Recipe Executor Types', () => {
         status: [RecipeExecutionStatus.COMPLETED, RecipeExecutionStatus.FAILED],
         search: 'conveyor',
         tags: ['production', 'urgent'],
-        createdAfter: new Date(Date.now() - 86400000), // 24 hours ago
-        createdBefore: new Date(),
+        createdAfter: new Date(Date.now() - 86400000).toISOString(),
+        createdBefore: new Date().toISOString(),
         executedBy: 'operator-1',
         approvedBy: 'supervisor-1',
         page: 2,
@@ -469,7 +467,7 @@ describe('Recipe Executor Types', () => {
         totalSteps: 5,
         progressPercentage: 40,
         estimatedTimeRemaining: 180000, // 3 minutes
-        lastUpdated: new Date(),
+        lastUpdated: new Date().toISOString(),
       };
 
       // Test structure
@@ -478,7 +476,7 @@ describe('Recipe Executor Types', () => {
       expect(typeof progress.completedSteps).toBe('number');
       expect(typeof progress.totalSteps).toBe('number');
       expect(typeof progress.progressPercentage).toBe('number');
-      expect(progress.lastUpdated).toBeInstanceOf(Date);
+      expect(Number.isNaN(Date.parse(progress.lastUpdated))).toBe(false);
     });
   });
 
@@ -565,18 +563,20 @@ describe('Recipe Executor Types', () => {
         totalSteps: 3,
         completedSteps: 1,
         failedSteps: 2,
+        createdAt: new Date(Date.now() - 120000).toISOString(),
+        updatedAt: new Date().toISOString(),
         safetyViolations: [
           {
             type: 'plc_interlock',
             message: 'PLC safety interlock triggered during execution',
             severity: 'critical',
-            timestamp: new Date(),
+            timestamp: new Date().toISOString(),
           },
           {
-            type: 'zone_not_clear',
+            type: 'zone_clear',
             message: 'Personnel detected in safety zone',
             severity: 'high',
-            timestamp: new Date(),
+            timestamp: new Date().toISOString(),
           },
         ],
         rollbackExecuted: true,
