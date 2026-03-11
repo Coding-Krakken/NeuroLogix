@@ -55,6 +55,62 @@ export const BrokerTopicContractSchema = z.discriminatedUnion('backend', [
 ]);
 export type BrokerTopicContract = z.infer<typeof BrokerTopicContractSchema>;
 
+/**
+ * Canonical broker topic contracts for Phase 1 governance checks.
+ *
+ * These contracts are the runtime source of truth used by bootstrap validators
+ * to detect producer/subscriber drift before services begin message flow.
+ */
+export const BROKER_TOPIC_CONTRACTS: readonly BrokerTopicContract[] = [
+  BrokerTopicContractSchema.parse({
+    backend: 'kafka-redpanda',
+    topic: 'nlx.telemetry.asset.v1',
+    version: { major: 1, minor: 0, patch: 0 },
+    payloadSchemaId: 'telemetry.asset.v1',
+    compatibility: 'full',
+    partitions: 12,
+    retentionHours: 168,
+    deadLetterTopic: 'nlx.telemetry.asset.v1.dlq',
+  }),
+  BrokerTopicContractSchema.parse({
+    backend: 'kafka-redpanda',
+    topic: 'nlx.intents.commands.v1',
+    version: { major: 1, minor: 0, patch: 0 },
+    payloadSchemaId: 'intents.commands.v1',
+    compatibility: 'backward',
+    partitions: 6,
+    retentionHours: 72,
+    deadLetterTopic: 'nlx.intents.commands.v1.dlq',
+  }),
+  BrokerTopicContractSchema.parse({
+    backend: 'kafka-redpanda',
+    topic: 'nlx.recipes.execution.v1',
+    version: { major: 1, minor: 0, patch: 0 },
+    payloadSchemaId: 'recipes.execution.v1',
+    compatibility: 'backward',
+    partitions: 6,
+    retentionHours: 168,
+    deadLetterTopic: 'nlx.recipes.execution.v1.dlq',
+  }),
+  BrokerTopicContractSchema.parse({
+    backend: 'kafka-redpanda',
+    topic: 'nlx.api.federation.v1',
+    version: { major: 1, minor: 0, patch: 0 },
+    payloadSchemaId: 'api.federation.v1',
+    compatibility: 'backward',
+    partitions: 3,
+    retentionHours: 24,
+  }),
+  BrokerTopicContractSchema.parse({
+    backend: 'mqtt-sparkplug',
+    topic: 'spBv1.0/line-a/DDATA/plc-01/conveyor-01',
+    version: { major: 1, minor: 0, patch: 0 },
+    payloadSchemaId: 'sparkplug.telemetry.v1',
+    compatibility: 'backward',
+    qos: 'at-least-once',
+  }),
+];
+
 export const BrokerAclRuleSchema = z
   .object({
     principal: z

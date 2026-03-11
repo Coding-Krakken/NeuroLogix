@@ -12,6 +12,7 @@ export * from './federation/index.js';
 export * from './feature-flags/index.js';
 export * from './sparkplug/index.js';
 export * from './broker/index.js';
+export * from './broker/governance.js';
 export * from './intents/index.js';
 export * from './recipes/index.js';
 export * from './assets/index.js';
