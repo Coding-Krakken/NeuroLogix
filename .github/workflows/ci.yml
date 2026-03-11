@@ -38,6 +38,9 @@ jobs:
       - name: Validate documentation packets
         run: npm run validate:doc-packets
 
+      - name: Validate broker runtime wiring
+        run: npm run validate:broker-runtime
+
   # ─────────────────────────
   # Lint
   # ─────────────────────────
