@@ -243,6 +243,7 @@ results in a deny-with-log rather than an inadvertent allow.
 - [x] Implement `ai_agent.rego` with unit tests
 - [x] Implement `auditor.rego` read-only enforcement policy
 - [x] Wire `authorizer.ts` into policy-engine service
+- [x] Add explicit `strict` vs `fallback` OPA runtime mode and readiness guard in policy-engine
 - [ ] Validate OPA decision log routing to ELK audit pipeline
 - [x] Add CI gate: `opa test packages/security-core/src/policies/`
 - [ ] Penetration test: verify AI agent cannot issue `critical` commands

@@ -455,6 +455,49 @@ describe('PolicyEngineService', () => {
   });
 
   describe('OPA Authorizer Integration', () => {
+    it('should infer fallback runtime mode when local evaluation is enabled', () => {
+      const fallbackModeService = new PolicyEngineService({
+        ...mockConfig,
+        enableLocalEvaluation: true,
+      });
+
+      expect(fallbackModeService.getOpaRuntimeMode()).toBe('fallback');
+      expect(fallbackModeService.getOpaRuntimeReadiness()).toEqual({
+        ready: true,
+        mode: 'fallback',
+      });
+    });
+
+    it('should fail readiness when strict runtime mode has no OPA endpoint', async () => {
+      const strictModeService = new PolicyEngineService({
+        ...mockConfig,
+        enableLocalEvaluation: true,
+        opaRuntimeMode: 'strict',
+      });
+
+      expect(strictModeService.getOpaRuntimeMode()).toBe('strict');
+      expect(strictModeService.getOpaRuntimeReadiness()).toEqual({
+        ready: false,
+        mode: 'strict',
+        reason: 'OPA strict runtime mode requires an OPA endpoint',
+      });
+
+      await expect(
+        strictModeService.evaluateRequest({
+          requestId: '550e8400-e29b-41d4-a716-446655440029',
+          action: 'sensor.read',
+          resource: 'sensor/temperature/zone1',
+          context: {},
+          subject: {
+            userId: 'operator-ready-check',
+            roles: ['operator'],
+            permissions: ['sensor.read'],
+          },
+          timestamp: new Date(),
+        })
+      ).rejects.toThrow('Policy evaluation failed');
+    });
+
     it('should enforce OPA deny decision when local evaluation is disabled', async () => {
       vi.stubGlobal(
         'fetch',
@@ -486,6 +529,36 @@ describe('PolicyEngineService', () => {
 
       expect(result.decision).toBe('deny');
       expect(result.policyMatches.some(match => match.policyName === 'OPA Authorizer')).toBe(true);
+    });
+
+    it('should fail closed in strict mode when OPA endpoint is unavailable', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('OPA unavailable')));
+
+      const strictService = new PolicyEngineService({
+        ...mockConfig,
+        opaRuntimeMode: 'strict',
+        opaEndpoint: 'http://localhost:8181',
+      });
+
+      await expect(
+        strictService.evaluateRequest({
+          requestId: '550e8400-e29b-41d4-a716-446655440033',
+          action: 'sensor.read',
+          resource: 'sensor/temperature/zone1',
+          context: {},
+          subject: {
+            userId: 'operator-strict-mode',
+            roles: ['operator'],
+            permissions: ['sensor.read'],
+          },
+          timestamp: new Date(),
+        })
+      ).rejects.toThrow('Policy evaluation failed');
+
+      const fallbackEvents = strictService.getSecurityAuditTrail({
+        eventType: 'POLICY_AUTHZ_FALLBACK',
+      });
+      expect(fallbackEvents).toHaveLength(0);
     });
 
     it('should fall back to local evaluation when OPA is unavailable and local evaluation is enabled', async () => {

@@ -1,6 +1,20 @@
 # NeuroLogix Customer Packet
 
-This folder contains customer-facing guidance for onboarding, daily operations, and support.
+This packet provides customer-facing guidance for onboarding, secure operation, support escalation, and release visibility.
+
+## Audience
+
+- **Customer Administrators** managing access, site settings, and governance controls.
+- **Operators** running day-to-day production workflows in Mission Control.
+- **Implementation Stakeholders** coordinating rollout readiness and evidence capture.
+
+## How to Use This Packet
+
+1. Start with [SETUP](./SETUP.md) for onboarding and go-live checks.
+2. Configure access and role lifecycle in [ACCOUNTS](./ACCOUNTS.md).
+3. Use [OPERATIONS](./OPERATIONS.md) for daily checklists and incident actions.
+4. Use [SECURITY](./SECURITY.md) for vulnerability reporting and evidence handling.
+5. Review [FAQ](./FAQ.md), [BILLING](./BILLING.md), [CHANGELOG](./CHANGELOG.md), and [TODO](./TODO.md) as needed.
 
 ## Included Guides
 
@@ -13,6 +27,12 @@ This folder contains customer-facing guidance for onboarding, daily operations, 
 - [Changelog](./CHANGELOG.md)
 - [Security](./SECURITY.md)
 
-## Scope
+## Support Readiness Data
 
-These documents are written for operators, customer admins, and implementation stakeholders.
+For faster triage, include the following in all support requests:
+
+- Site ID and tenant ID
+- Environment (staging/production)
+- UTC timestamp window
+- Impacted workflow or recipe ID
+- Relevant screenshots/log extracts with secrets removed
