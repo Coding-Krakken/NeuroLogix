@@ -18,7 +18,7 @@ import path from 'path';
 import { runControlLoopBenchmark } from './scenarios/control-loop.bench';
 import { runPolicyEngineBenchmark } from './scenarios/policy-engine.bench';
 import { runCapabilityLookupBenchmark } from './scenarios/capability-lookup.bench';
-import type { BenchmarkSuite } from './types';
+import type { BenchmarkResult, BenchmarkSuite } from './types';
 
 async function runAll(): Promise<void> {
   const baseURL = process.env['BASE_URL'] ?? 'http://localhost:3100';
@@ -47,18 +47,31 @@ async function runAll(): Promise<void> {
     process.exit(2);
   }
 
-  const results = await Promise.allSettled([
-    runControlLoopBenchmark(baseURL),
-    runPolicyEngineBenchmark(baseURL),
-    runCapabilityLookupBenchmark(baseURL),
-  ]);
+  const benchmarkSteps = [
+    {
+      name: 'control-loop',
+      run: () => runControlLoopBenchmark(baseURL),
+    },
+    {
+      name: 'policy-engine',
+      run: () => runPolicyEngineBenchmark(baseURL),
+    },
+    {
+      name: 'capability-lookup',
+      run: () => runCapabilityLookupBenchmark(baseURL),
+    },
+  ];
+
+  const settled: BenchmarkResult[] = [];
+  for (const benchmarkStep of benchmarkSteps) {
+    try {
+      settled.push(await benchmarkStep.run());
+    } catch (err) {
+      console.error(`Benchmark ${benchmarkStep.name} failed: ${err}`);
+    }
+  }
 
   const completedAt = new Date().toISOString();
-  const settled = results.map((r, i) => {
-    if (r.status === 'fulfilled') return r.value;
-    console.error(`Benchmark ${i} failed: ${r.reason}`);
-    return null;
-  }).filter((r): r is NonNullable<typeof r> => r !== null);
 
   const summary = {
     total: settled.length,
