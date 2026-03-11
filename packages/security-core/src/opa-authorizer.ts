@@ -9,14 +9,24 @@ import {
   ServiceIdentity,
 } from './security-types';
 import { AuditLogger, createAuditLogger } from './audit-logger';
+import { ReplayProtectionGuard, createReplayProtectionGuard } from './replay-protection';
 
 const DEFAULT_POLICY_PATH = 'neurologix/authz/decision';
 const DEFAULT_TIMEOUT_MS = 2000;
+const DEFAULT_POLICY_NAME = 'OPA Authorizer';
+const REPLAY_PROTECTION_POLICY_PATH = 'neurologix/authz/replay_protection';
+const REPLAY_PROTECTION_POLICY_NAME = 'Session Replay Protection';
 
 export class OPAAuthorizer {
-  private readonly config: Required<OPAAuthorizerConfig>;
+  private readonly config: {
+    endpoint: string;
+    policyPath: string;
+    timeoutMs: number;
+    serviceId: string;
+  };
   private readonly auditLogger: AuditLogger;
   private readonly serviceIdentity: ServiceIdentity;
+  private readonly replayProtection: ReplayProtectionGuard | null;
 
   constructor(config: OPAAuthorizerConfig, auditLogger: AuditLogger = createAuditLogger()) {
     this.config = {
@@ -27,9 +37,17 @@ export class OPAAuthorizer {
     };
     this.auditLogger = auditLogger;
     this.serviceIdentity = { serviceId: this.config.serviceId };
+    this.replayProtection = config.replayProtection
+      ? createReplayProtectionGuard(config.replayProtection)
+      : null;
   }
 
   async authorize(input: OPAAuthorizationInput): Promise<OPAAuthorizationResult> {
+    const replayDecision = this.evaluateReplayProtection(input);
+    if (replayDecision) {
+      return replayDecision;
+    }
+
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), this.config.timeoutMs);
 
@@ -60,6 +78,7 @@ export class OPAAuthorizer {
         decision: parsedDecision.decision,
         reason: parsedDecision.reason,
         policyPath: this.config.policyPath,
+        policyName: DEFAULT_POLICY_NAME,
         evaluatedAt: new Date(),
         rawResult: payload,
       };
@@ -98,6 +117,48 @@ export class OPAAuthorizer {
     return {
       ...input,
       timestamp: input.timestamp instanceof Date ? input.timestamp.toISOString() : input.timestamp,
+    };
+  }
+
+  private evaluateReplayProtection(input: OPAAuthorizationInput): OPAAuthorizationResult | null {
+    if (!this.replayProtection) {
+      return null;
+    }
+
+    const replayResult = this.replayProtection.validate({
+      nonce: input.nonce,
+      timestamp: input.timestamp,
+      scope: `${this.config.serviceId}:${input.subject.userId}`,
+    });
+
+    if (replayResult.accepted) {
+      return null;
+    }
+
+    this.auditLogger.logEvent({
+      eventType: 'AUTHZ_REPLAY_REJECTED',
+      service: this.serviceIdentity,
+      outcome: 'BLOCKED',
+      description: `Replay protection rejected ${input.action} for ${input.resource}`,
+      metadata: {
+        action: input.action,
+        resource: input.resource,
+        userId: input.subject.userId,
+        reason: replayResult.reason,
+        replayKey: replayResult.replayKey,
+      },
+    });
+
+    return {
+      decision: 'deny',
+      reason: `Replay protection rejected request: ${replayResult.reason}`,
+      policyPath: REPLAY_PROTECTION_POLICY_PATH,
+      policyName: REPLAY_PROTECTION_POLICY_NAME,
+      evaluatedAt: new Date(),
+      rawResult: {
+        source: 'security-core',
+        replayProtection: replayResult,
+      },
     };
   }
 

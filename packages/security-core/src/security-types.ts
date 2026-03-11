@@ -207,11 +207,32 @@ export interface RequestAuthContext {
 
 export type AuthorizationDecision = 'allow' | 'deny' | 'approval_required';
 
+export interface ReplayProtectionConfig {
+  enabled?: boolean;
+  nonceTtlMs?: number;
+  maxTimestampSkewMs?: number;
+  maxEntries?: number;
+}
+
+export interface ReplayProtectionInput {
+  nonce?: string;
+  timestamp: Date | string | number;
+  scope?: string;
+}
+
+export interface ReplayProtectionResult {
+  accepted: boolean;
+  reason?: string;
+  replayKey?: string;
+  expiresAt?: Date;
+}
+
 export interface OPAAuthorizerConfig {
   endpoint: string;
   policyPath?: string;
   timeoutMs?: number;
   serviceId?: string;
+  replayProtection?: ReplayProtectionConfig;
 }
 
 export interface OPAAuthorizationInput {
@@ -225,12 +246,14 @@ export interface OPAAuthorizationInput {
     zone?: string;
   };
   timestamp: Date | string;
+  nonce?: string;
 }
 
 export interface OPAAuthorizationResult {
   decision: AuthorizationDecision;
   reason: string;
   policyPath: string;
+  policyName?: string;
   evaluatedAt: Date;
   rawResult: unknown;
 }
