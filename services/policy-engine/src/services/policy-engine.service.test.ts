@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { PolicyEngineService } from '../services/policy-engine.service.js';
 import {
   PolicyDocument,
@@ -30,6 +30,11 @@ describe('PolicyEngineService', () => {
       },
     };
     service = new PolicyEngineService(mockConfig);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.clearAllMocks();
   });
 
   describe('Policy Management', () => {
@@ -446,6 +451,107 @@ describe('PolicyEngineService', () => {
 
       expect(result.decision).toBe('allow');
       expect(result.overallReasoning).toContain('Emergency mode override');
+    });
+  });
+
+  describe('OPA Authorizer Integration', () => {
+    it('should enforce OPA deny decision when local evaluation is disabled', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({
+          ok: true,
+          status: 200,
+          json: async () => ({ result: { decision: 'deny', reason: 'zone boundary denied' } }),
+        })
+      );
+
+      const opaOnlyService = new PolicyEngineService({
+        ...mockConfig,
+        enableLocalEvaluation: false,
+        opaEndpoint: 'http://localhost:8181',
+      });
+
+      const result = await opaOnlyService.evaluateRequest({
+        requestId: '550e8400-e29b-41d4-a716-446655440030',
+        action: 'plc.direct_write',
+        resource: 'edge/plc/line1',
+        context: { zone: 'ai' },
+        subject: {
+          userId: 'ai-agent-1',
+          roles: ['ai_agent'],
+          permissions: ['plc.direct_write'],
+        },
+        timestamp: new Date(),
+      });
+
+      expect(result.decision).toBe('deny');
+      expect(result.policyMatches.some(match => match.policyName === 'OPA Authorizer')).toBe(true);
+    });
+
+    it('should fall back to local evaluation when OPA is unavailable and local evaluation is enabled', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('OPA unavailable')));
+
+      const fallbackService = new PolicyEngineService({
+        ...mockConfig,
+        enableLocalEvaluation: true,
+        opaEndpoint: 'http://localhost:8181',
+      });
+
+      const result = await fallbackService.evaluateRequest({
+        requestId: '550e8400-e29b-41d4-a716-446655440031',
+        action: 'sensor.read',
+        resource: 'sensor/temperature/zone1',
+        context: {},
+        subject: {
+          userId: 'operator-1',
+          roles: ['operator'],
+          permissions: ['sensor.read'],
+        },
+        timestamp: new Date(),
+      });
+
+      const fallbackEvents = fallbackService.getSecurityAuditTrail({ eventType: 'POLICY_AUTHZ_FALLBACK' });
+
+      expect(result.decision).toBe('allow');
+      expect(fallbackEvents.length).toBeGreaterThan(0);
+    });
+
+    it('should merge external approval requirement with local policy result', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            result: {
+              decision: 'approval_required',
+              reason: 'high risk command needs supervisor approval',
+            },
+          }),
+        })
+      );
+
+      const integratedService = new PolicyEngineService({
+        ...mockConfig,
+        enableLocalEvaluation: true,
+        opaEndpoint: 'http://localhost:8181',
+      });
+
+      const result = await integratedService.evaluateRequest({
+        requestId: '550e8400-e29b-41d4-a716-446655440032',
+        action: 'sensor.read',
+        resource: 'sensor/flow/zone4',
+        context: {},
+        subject: {
+          userId: 'operator-2',
+          roles: ['operator'],
+          permissions: ['sensor.read'],
+        },
+        timestamp: new Date(),
+      });
+
+      expect(result.decision).toBe('approval_required');
+      expect(result.policyMatches.some(match => match.policyName === 'OPA Authorizer')).toBe(true);
     });
   });
 
