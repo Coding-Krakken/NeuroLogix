@@ -186,6 +186,11 @@ docker compose logs -f capability-registry
 
 ## 📋 Development Phases
 
+## 📚 Documentation Packets
+
+- **Customer-facing packet:** [`.customer/`](./.customer/)
+- **Developer packet:** [`.developer/`](./.developer/)
+
 ### ✅ Phase 0 — Foundations (Current)
 
 - [x] Monorepo structure with Turbo

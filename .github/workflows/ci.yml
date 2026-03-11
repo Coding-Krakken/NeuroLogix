@@ -35,6 +35,9 @@ jobs:
       - name: Validate system-state model
         run: npm run validate:model:system-state
 
+      - name: Validate documentation packets
+        run: npm run validate:doc-packets
+
   # ─────────────────────────
   # Lint
   # ─────────────────────────
