@@ -1,8 +1,8 @@
 # Copilot Instructions - NeuroLogix
 
 > **Auto-generated from:** `.github/.system-state/copilot/*.{yaml,md}`  
-> **Last Updated:** March 10, 2026  
-> **Status:** Phase 1 - Data Spine & Contracts (ACTIVE)
+> **Last Updated:** March 11, 2026  
+> **Status:** Phase 7 - Security & Compliance (ACTIVE) · Phase 1 Contracts Baseline (COMPLETE)
 
 ---
 
@@ -16,9 +16,11 @@
 
 - **Monorepo:** Turborepo (TypeScript 5.3.2+, Node.js 20.10.0+)
 - **Phase 0 Foundations:** Complete — ESLint, Prettier, Husky, commitlint, Vitest wired
+- **Phase 1 Contracts:** Baseline complete — server + consumer contract test gates, broker governance baselines
 - **Phase 2 Core Runtime:** Complete — `capability-registry`, `policy-engine`, `recipe-executor`, `digital-twin`
 - **Phase 6 Mission Control UI:** Foundation shipped — command-center, line-view, SSE stream, accessibility baseline
-- **Active gaps:** CI/CD pipelines, observability stack, security hardening, ADR backlog, doc alignment
+- **Phase 7 Security/Compliance:** Active — IEC 62443 mapping, ADR-011/012, OPA policy bundle baseline, authorizer integration baseline complete
+- **Active gaps:** OPA runtime wiring completion, customer packet completion, incident/compliance evidence hardening
 
 ### Target State
 
@@ -42,7 +44,7 @@
 
 ## 📋 Development Model: STRICT MODEL-FIRST
 
-### Phase Sequence (Current: Phase 1)
+### Phase Sequence (Current: Governance baseline with active Phase 7 delivery hardening)
 
 ```
 ✅ Phase -1: Meta-Reasoning (COMPLETE)
@@ -129,7 +131,7 @@
 | 8     | 60 pts | Testing & Validation (E2E, perf benchmarks, chaos engineering)    |
 | 9     | 70 pts | Multi-Site Federation (site templates, federation arch, rollout)  |
 
-**Current Spend:** Phase 2 complete (~80 pts), partial Phase 6 (~20 pts)
+**Current Spend:** Phase 2 complete (~80 pts), Phase 6 substantial (~50 pts), Phase 7 active (~45 pts), Phase 8 baseline initiated (~10 pts)
 
 ### Complexity Tracking Rules
 
@@ -610,16 +612,16 @@ export async function GET() {
 
 ## 🚀 Next Action
 
-**Current Phase:** Phase 1 - Data Spine & Contracts (ACTIVE)  
-**Delivery Context:** Phase 2 core runtime and Phase 6 UI foundation already shipped; active work continues on Phase 1 contracts and Phase 6 enhancements
+**Current Phase:** Phase 7 - Security & Compliance (ACTIVE)  
+**Delivery Context:** Phase 1 contract baselines are complete; active work is focused on Phase 7 design-to-code closure and Phase 8 validation hardening
 
 **Immediate Priorities:**
 
-- Complete schema definitions (`packages/schemas`) — Zod + JSON Schema for all domain entities
-- Wire MQTT Sparkplug + Kafka topic governance
-- Establish contract testing framework (Pact or similar)
-- Harden CI/CD pipelines (GitHub Actions → Docker → Helm)
-- Resolve Phase 0 documentation gaps (ADR-002 through ADR-008, doc structure alignment)
+- Complete OPA runtime wiring in `policy-engine` and `security-core` using the merged authorizer integration baseline
+- Maintain governance drift checks in CI (phase/status alignment + required planning ledgers)
+- Close remaining `.customer/` packet gaps required by this instruction set
+- Expand runbook and compliance evidence from baseline to operator-ready execution artifacts
+- Maintain recurring-failure and KPI ledgers to keep autonomous execution stable under load
 
 **System State Model** (`packages/schemas` / `.github/.system-state/model/`):
 

@@ -41,6 +41,9 @@ jobs:
       - name: Validate broker runtime wiring
         run: npm run validate:broker-runtime
 
+      - name: Validate agent governance
+        run: npm run validate:agent-governance
+
   # ─────────────────────────
   # Lint
   # ─────────────────────────
