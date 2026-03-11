@@ -1,0 +1,200 @@
+# NeuroLogix — OpenTelemetry Collector Configuration
+# Risk Tier: T1 (Mission-Critical)
+# Status: Baseline stub — configure endpoints for staging/production in Phase 7
+# OTEL Collector version: >= 0.90.0
+#
+# Architecture:
+#   Services --OTLP--> otel-collector --traces--> Jaeger
+#                                    --metrics--> Prometheus
+#                                    --logs-----> ELK (Elasticsearch)
+#
+# Required environment variables:
+#   JAEGER_ENDPOINT      - Jaeger gRPC collector endpoint (default: jaeger:14317)
+#   ELASTICSEARCH_ENDPOINT - Elasticsearch HTTP endpoint
+#   ELASTICSEARCH_USERNAME - Elasticsearch username
+#   ELASTICSEARCH_PASSWORD - Elasticsearch password
+
+receivers:
+  # OTLP receiver — accepts traces, metrics, and logs from all NeuroLogix services
+  otlp:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4317"
+      http:
+        endpoint: "0.0.0.0:4318"
+
+  # Prometheus scrape receiver — pulls metrics from services that expose /metrics
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: "neurologix-capability-registry"
+          scrape_interval: 15s
+          static_configs:
+            - targets: ["capability-registry:9090"]
+              labels:
+                service: "capability-registry"
+
+        - job_name: "neurologix-policy-engine"
+          scrape_interval: 15s
+          static_configs:
+            - targets: ["policy-engine:9090"]
+              labels:
+                service: "policy-engine"
+
+        - job_name: "neurologix-recipe-executor"
+          scrape_interval: 15s
+          static_configs:
+            - targets: ["recipe-executor:9090"]
+              labels:
+                service: "recipe-executor"
+
+        - job_name: "neurologix-digital-twin"
+          scrape_interval: 15s
+          static_configs:
+            - targets: ["digital-twin:9090"]
+              labels:
+                service: "digital-twin"
+
+        - job_name: "neurologix-site-registry"
+          scrape_interval: 15s
+          static_configs:
+            - targets: ["site-registry:9090"]
+              labels:
+                service: "site-registry"
+
+        - job_name: "neurologix-mission-control"
+          scrape_interval: 15s
+          static_configs:
+            - targets: ["mission-control:9090"]
+              labels:
+                service: "mission-control"
+
+processors:
+  # Batch processor — reduces export overhead; tune flush_timeout for latency-sensitive services
+  batch:
+    send_batch_size: 1000
+    timeout: 5s
+    send_batch_max_size: 2000
+
+  # Memory limiter — prevents OOM under traffic spikes
+  memory_limiter:
+    check_interval: 5s
+    limit_percentage: 80
+    spike_limit_percentage: 20
+
+  # Resource processor — attaches standard resource attributes to all telemetry
+  resource:
+    attributes:
+      - action: insert
+        key: deployment.environment
+        value: "${DEPLOY_ENV:-staging}"
+      - action: insert
+        key: service.namespace
+        value: neurologix
+      - action: insert
+        key: cloud.region
+        value: "${CLOUD_REGION:-local}"
+
+  # Attribute processor — redact sensitive fields from logs before export
+  # IMPORTANT: credentials and PII must never reach ELK in unredacted form (IEC 62443 / ISO 27001)
+  attributes:
+    actions:
+      - action: delete
+        key: credentials
+      - action: hash
+        key: userId
+      - action: delete
+        key: password
+      - action: delete
+        key: token
+      - action: delete
+        key: secret
+
+exporters:
+  # Jaeger exporter — receives distributed traces
+  otlp/jaeger:
+    endpoint: "${JAEGER_ENDPOINT:-jaeger:14317}"
+    tls:
+      insecure: false
+      # cert_file: /etc/otel/certs/client.crt      # Enable mTLS in Phase 7
+      # key_file: /etc/otel/certs/client.key
+      # ca_file: /etc/otel/certs/ca.crt
+      insecure_skip_verify: true  # Set to false in production (Phase 7)
+    headers:
+      x-service: "neurologix-otel-collector"
+
+  # Prometheus remote-write exporter — pushes metrics to Prometheus
+  prometheusremotewrite:
+    endpoint: "${PROMETHEUS_REMOTE_WRITE_ENDPOINT:-http://prometheus:9090/api/v1/write}"
+    tls:
+      insecure: true  # Set to false in production (Phase 7)
+    resource_to_telemetry_conversion:
+      enabled: true
+
+  # Elasticsearch exporter — receives structured logs
+  elasticsearch:
+    endpoints:
+      - "${ELASTICSEARCH_ENDPOINT:-http://elasticsearch:9200}"
+    index: "neurologix-logs-%{yyyy.MM.dd}"
+    auth:
+      authenticator: basicauth/elk
+    tls:
+      insecure: true  # Set to false in production (Phase 7)
+    retry:
+      enabled: true
+      max_requests: 3
+
+  # Debug exporter — for local development only; remove in production
+  debug:
+    verbosity: basic
+
+extensions:
+  # Basic auth for Elasticsearch
+  basicauth/elk:
+    client_auth:
+      username: "${ELASTICSEARCH_USERNAME:-elastic}"
+      password: "${ELASTICSEARCH_PASSWORD:-changeme}"
+
+  # Health check endpoint for Kubernetes liveness/readiness probes
+  health_check:
+    endpoint: "0.0.0.0:13133"
+
+  # pprof for profiling (development only)
+  pprof:
+    endpoint: "0.0.0.0:1888"
+
+  # zPages for internal telemetry inspection (development only)
+  zpages:
+    endpoint: "0.0.0.0:55679"
+
+service:
+  extensions: [health_check, basicauth/elk, pprof, zpages]
+
+  pipelines:
+    # Traces pipeline: all services → Jaeger
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, attributes, batch]
+      exporters: [otlp/jaeger, debug]
+
+    # Metrics pipeline: all services + scraped Prometheus endpoints → Prometheus
+    metrics:
+      receivers: [otlp, prometheus]
+      processors: [memory_limiter, resource, batch]
+      exporters: [prometheusremotewrite, debug]
+
+    # Logs pipeline: all services → ELK (with PII redaction)
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, attributes, batch]
+      exporters: [elasticsearch, debug]
+
+  # Telemetry about the collector itself
+  telemetry:
+    logs:
+      level: info
+      development: false
+      encoding: json
+    metrics:
+      level: detailed
+      address: "0.0.0.0:8888"
