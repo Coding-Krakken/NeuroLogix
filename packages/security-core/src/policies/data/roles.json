@@ -1,0 +1,49 @@
+{
+  "neurologix": {
+    "roles": {
+      "operator": [
+        "acknowledge_alarm",
+        "execute_recipe",
+        "read_site",
+        "read_recipe",
+        "read_audit"
+      ],
+      "supervisor": [
+        "acknowledge_alarm",
+        "execute_recipe",
+        "approve_command",
+        "manage_recipe_library",
+        "read_site",
+        "read_recipe",
+        "read_audit"
+      ],
+      "admin": [
+        "acknowledge_alarm",
+        "execute_recipe",
+        "approve_command",
+        "manage_recipe_library",
+        "manage_users",
+        "update_site_config",
+        "update_feature_flag",
+        "read_site",
+        "read_recipe",
+        "read_audit"
+      ],
+      "auditor": [
+        "read_site",
+        "read_recipe",
+        "read_policy",
+        "read_audit"
+      ],
+      "ai_agent": [
+        "dispatch_inference"
+      ],
+      "system": [
+        "service_call"
+      ]
+    },
+    "ai_identities": [
+      "ai-agent.neurologix-ai.svc.cluster.local"
+    ]
+  }
+}

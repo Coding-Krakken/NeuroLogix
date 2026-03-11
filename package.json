@@ -33,6 +33,7 @@
     "test:ci": "turbo run test:ci --force",
     "test:contracts:servers": "npm run test:contracts --workspace @neurologix/site-registry && npm run test:contracts --workspace @neurologix/capability-registry && npm run test:contracts --workspace @neurologix/policy-engine && npm run test:contracts --workspace @neurologix/recipe-executor && npm run test:contracts --workspace @neurologix/digital-twin && npm run test:contracts --workspace @neurologix/mission-control",
     "test:contracts:consumers": "npm run test:contracts:consumer --workspace @neurologix/mission-control && npm run test:contracts --workspace @neurologix/adapters",
+    "test:opa": "npm run test:opa --workspace @neurologix/security-core",
     "test:e2e": "turbo run test:e2e",
     "type-check": "turbo run type-check",
     "clean": "turbo run clean && rm -rf node_modules",
