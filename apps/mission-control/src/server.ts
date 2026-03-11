@@ -821,5 +821,80 @@ export function buildMissionControlServer(
     }
   });
 
+  // SITE-005: Replace operational configuration for a site
+  app.put('/api/sites/:siteId/config', async (request, reply) => {
+    try {
+      const { siteId } = request.params as { siteId: string };
+      const updated = await siteRegistry.updateSiteConfig(
+        siteId,
+        request.body as Parameters<SiteRegistryService['updateSiteConfig']>[1],
+      );
+      return updated;
+    } catch (error) {
+      if (error instanceof Error && 'code' in error) {
+        const siteError = error as { code: string; message: string };
+        if (siteError.code === SITE_REGISTRY_ERROR_CODES.SITE_NOT_FOUND) {
+          reply.status(404);
+          return { code: siteError.code, message: siteError.message, traceId: request.id };
+        }
+        if (siteError.code === SITE_REGISTRY_ERROR_CODES.VALIDATION_ERROR) {
+          reply.status(400);
+          return { code: siteError.code, message: siteError.message, traceId: request.id };
+        }
+      }
+      const message = error instanceof Error ? error.message : 'Failed to update site config';
+      reply.status(500);
+      return { code: 'INTERNAL_ERROR', message, traceId: request.id };
+    }
+  });
+
+  // FF-002: Create or update a feature flag definition
+  app.put('/api/feature-flags/:key', async (request, reply) => {
+    try {
+      const flag = await siteRegistry.upsertFeatureFlag(
+        request.body as Parameters<SiteRegistryService['upsertFeatureFlag']>[0],
+      );
+      return flag;
+    } catch (error) {
+      if (error instanceof Error && 'code' in error) {
+        const siteError = error as { code: string; message: string };
+        if (siteError.code === SITE_REGISTRY_ERROR_CODES.VALIDATION_ERROR) {
+          reply.status(400);
+          return { code: siteError.code, message: siteError.message, traceId: request.id };
+        }
+      }
+      const message = error instanceof Error ? error.message : 'Failed to upsert feature flag';
+      reply.status(500);
+      return { code: 'INTERNAL_ERROR', message, traceId: request.id };
+    }
+  });
+
+  // FF-003: Override feature flags at site level
+  app.patch('/api/sites/:siteId/feature-flags', async (request, reply) => {
+    try {
+      const { siteId } = request.params as { siteId: string };
+      const updated = await siteRegistry.setFeatureFlagOverrides(
+        siteId,
+        request.body as Parameters<SiteRegistryService['setFeatureFlagOverrides']>[1],
+      );
+      return { siteId: updated.id, featureFlags: updated.featureFlags ?? {} };
+    } catch (error) {
+      if (error instanceof Error && 'code' in error) {
+        const siteError = error as { code: string; message: string };
+        if (siteError.code === SITE_REGISTRY_ERROR_CODES.SITE_NOT_FOUND) {
+          reply.status(404);
+          return { code: siteError.code, message: siteError.message, traceId: request.id };
+        }
+        if (siteError.code === SITE_REGISTRY_ERROR_CODES.VALIDATION_ERROR) {
+          reply.status(400);
+          return { code: siteError.code, message: siteError.message, traceId: request.id };
+        }
+      }
+      const message = error instanceof Error ? error.message : 'Failed to update feature flag overrides';
+      reply.status(500);
+      return { code: 'INTERNAL_ERROR', message, traceId: request.id };
+    }
+  });
+
   return { app, state };
 }

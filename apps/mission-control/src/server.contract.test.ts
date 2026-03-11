@@ -4,8 +4,9 @@
  * Validates that mission-control's implemented federation HTTP routes conform to
  * the canonical FEDERATION_API_CONTRACTS defined in @neurologix/schemas.
  *
- * Covered contract IDs: SITE-001, SITE-002, SITE-003, SITE-004, FF-001, FED-001
- * Explicitly uncovered (not yet implemented): SITE-005, FF-002, FF-003
+ * Covered contract IDs: SITE-001, SITE-002, SITE-003, SITE-004, SITE-005,
+ *                       FF-001, FF-002, FF-003, FED-001
+ * Explicitly uncovered: (none — all 9 federation contracts are now covered)
  *
  * Pattern: test HTTP routes via Fastify inject(), then cross-check status codes
  * and error codes against contract metadata to detect drift early.
@@ -16,6 +17,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   FEDERATION_API_CONTRACTS,
+  FeatureFlagSchema,
   FederationTopologySchema,
   SiteProfileSchema,
   getContractById,
@@ -33,7 +35,10 @@ const COVERED_PROVIDER_CONTRACT_IDS = [
   'SITE-002',
   'SITE-003',
   'SITE-004',
+  'SITE-005',
   'FF-001',
+  'FF-002',
+  'FF-003',
   'FED-001',
 ] as const;
 
@@ -81,7 +86,8 @@ describe('Mission Control Federation Provider Contract Baseline', () => {
       .sort();
 
     // Snapshot uncovered IDs so any new contract addition requires a conscious coverage decision.
-    expect(uncoveredIds).toEqual(['FF-002', 'FF-003', 'SITE-005']);
+    // All 9 federation contract endpoints are now covered.
+    expect(uncoveredIds).toEqual([]);
   });
 
   it('validates contract metadata for all covered contract IDs', () => {
@@ -245,6 +251,111 @@ describe('Mission Control Federation Provider Contract Baseline', () => {
       const response = await app.inject({ method: 'GET', url: '/api/federation' });
       expectSuccessStatus('FED-001', response.statusCode);
       FederationTopologySchema.parse(response.json());
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('PUT /api/sites/:siteId/config success (200) and SITE_NOT_FOUND (404) align with SITE-005', async () => {
+    const { app } = buildMissionControlServer({ startTicker: false, logger: false });
+    try {
+      const createResponse = await app.inject({
+        method: 'POST',
+        url: '/api/sites',
+        payload: {
+          slug: 'contract-provider-site-e',
+          name: 'Contract Provider Site E',
+          region: 'us-west-2',
+          tier: 'T2',
+          config: { timezone: 'America/Los_Angeles', locale: 'en-US' },
+        },
+      });
+      const createdSite = SiteProfileSchema.parse(createResponse.json());
+
+      const newConfig = { timezone: 'Europe/London', locale: 'en-GB', retentionDays: 180 };
+      const updated = await app.inject({
+        method: 'PUT',
+        url: `/api/sites/${createdSite.id}/config`,
+        payload: newConfig,
+      });
+      expectSuccessStatus('SITE-005', updated.statusCode);
+      const updatedSite = SiteProfileSchema.parse(updated.json());
+      expect(updatedSite.config.timezone).toBe('Europe/London');
+      expect(updatedSite.config.locale).toBe('en-GB');
+
+      const missing = await app.inject({
+        method: 'PUT',
+        url: '/api/sites/no-such-site/config',
+        payload: newConfig,
+      });
+      const missingBody = missing.json() as { code: string };
+      expect(missing.statusCode).toBe(404);
+      expect(missingBody.code).toBe('SITE_NOT_FOUND');
+      expectErrorInContract('SITE-005', missing.statusCode, missingBody.code);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('PUT /api/feature-flags/:key success (200) aligns with FF-002', async () => {
+    const { app } = buildMissionControlServer({ startTicker: false, logger: false });
+    try {
+      const flagPayload = {
+        key: 'dark-mode',
+        description: 'Enables dark mode for the operator dashboard',
+        defaultValue: false,
+      };
+      const response = await app.inject({
+        method: 'PUT',
+        url: '/api/feature-flags/dark-mode',
+        payload: flagPayload,
+      });
+      expectSuccessStatus('FF-002', response.statusCode);
+      const flag = FeatureFlagSchema.parse(response.json());
+      expect(flag.key).toBe('dark-mode');
+      expect(flag.defaultValue).toBe(false);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('PATCH /api/sites/:siteId/feature-flags success (200) and SITE_NOT_FOUND (404) align with FF-003', async () => {
+    const { app } = buildMissionControlServer({ startTicker: false, logger: false });
+    try {
+      const createResponse = await app.inject({
+        method: 'POST',
+        url: '/api/sites',
+        payload: {
+          slug: 'contract-provider-site-f',
+          name: 'Contract Provider Site F',
+          region: 'eu-north-1',
+          tier: 'T3',
+          config: { timezone: 'Europe/Stockholm', locale: 'sv-SE' },
+        },
+      });
+      const createdSite = SiteProfileSchema.parse(createResponse.json());
+
+      const overridesPayload = { 'dark-mode': true, 'beta-dashboard': false };
+      const response = await app.inject({
+        method: 'PATCH',
+        url: `/api/sites/${createdSite.id}/feature-flags`,
+        payload: overridesPayload,
+      });
+      expectSuccessStatus('FF-003', response.statusCode);
+      const result = response.json() as { siteId: string; featureFlags: Record<string, boolean> };
+      expect(result.siteId).toBe(createdSite.id);
+      expect(result.featureFlags['dark-mode']).toBe(true);
+      expect(result.featureFlags['beta-dashboard']).toBe(false);
+
+      const missing = await app.inject({
+        method: 'PATCH',
+        url: '/api/sites/no-such-site/feature-flags',
+        payload: overridesPayload,
+      });
+      const missingBody = missing.json() as { code: string };
+      expect(missing.statusCode).toBe(404);
+      expect(missingBody.code).toBe('SITE_NOT_FOUND');
+      expectErrorInContract('FF-003', missing.statusCode, missingBody.code);
     } finally {
       await app.close();
     }
