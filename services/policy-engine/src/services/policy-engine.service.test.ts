@@ -553,6 +553,101 @@ describe('PolicyEngineService', () => {
       expect(result.decision).toBe('approval_required');
       expect(result.policyMatches.some(match => match.policyName === 'OPA Authorizer')).toBe(true);
     });
+
+    it('should evaluate plc_interlocks policy branch via evaluator helper', async () => {
+      const evaluator = (
+        service as unknown as {
+          evaluatePolicy: (
+            policy: {
+              id: string;
+              name: string;
+              regoRules: string;
+              metadata: { requiredApprovals: number };
+            },
+            request: PolicyEvaluationRequest
+          ) => Promise<{ decision: 'allow' | 'deny' | 'approval_required'; reasoning: string }>;
+        }
+      ).evaluatePolicy;
+
+      const result = await evaluator(
+        {
+          id: '550e8400-e29b-41d4-a716-446655440050',
+          name: 'Direct PLC Interlock Policy',
+          regoRules: 'package safety.plc_interlocks\ndefault allow = true',
+          metadata: { requiredApprovals: 0 },
+        },
+        {
+          requestId: '550e8400-e29b-41d4-a716-446655440051',
+          action: 'recipe.execute',
+          resource: 'conveyor/line-3',
+          context: {
+            plc_interlocks: [{ active: true }],
+          },
+          subject: {
+            userId: 'operator-plc-branch',
+            roles: ['operator'],
+            permissions: ['recipe.execute'],
+          },
+          timestamp: new Date(),
+        }
+      );
+
+      expect(result.decision).toBe('deny');
+      expect(result.reasoning).toContain('PLC interlock is active');
+    });
+
+    it('should fail closed when policy evaluator throws unexpectedly', async () => {
+      const evaluator = (
+        service as unknown as {
+          evaluatePolicy: (
+            policy: {
+              id: string;
+              name: string;
+              regoRules: { includes: (value: string) => boolean };
+              metadata: { requiredApprovals: number };
+            },
+            request: PolicyEvaluationRequest
+          ) => Promise<{ decision: 'allow' | 'deny' | 'approval_required'; reasoning: string }>;
+        }
+      ).evaluatePolicy;
+
+      const result = await evaluator(
+        {
+          id: '550e8400-e29b-41d4-a716-446655440052',
+          name: 'Throwing Policy',
+          regoRules: {
+            includes: () => {
+              throw new Error('simulated evaluator failure');
+            },
+          },
+          metadata: { requiredApprovals: 0 },
+        },
+        {
+          requestId: '550e8400-e29b-41d4-a716-446655440053',
+          action: 'recipe.execute',
+          resource: 'conveyor/line-4',
+          context: {},
+          subject: {
+            userId: 'operator-fail-closed',
+            roles: ['operator'],
+            permissions: ['recipe.execute'],
+          },
+          timestamp: new Date(),
+        }
+      );
+
+      expect(result.decision).toBe('deny');
+      expect(result.reasoning).toContain('Policy evaluation error: simulated evaluator failure');
+    });
+
+    it('should map unknown audit outcomes to partial by default', () => {
+      const mapper = (service as unknown as { toCoreAuditOutcome: (outcome: string) => string })
+        .toCoreAuditOutcome;
+
+      const mapped = mapper('UNKNOWN');
+
+      expect(mapped).toBe('partial');
+    });
   });
 
   describe('Statistics and Metrics', () => {
