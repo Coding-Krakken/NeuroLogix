@@ -16,8 +16,13 @@ Foundational scaffold. Current deployment references are split across:
 Primary CI quality gates currently include:
 
 - Model State validation (`npm run validate:model:system-state`)
+- Broker runtime wiring validation (`npm run validate:broker-runtime`)
 - Lint, type check, test, and build
 - Secrets scan and dependency audit
+
+## Available Guides
+
+- [Message Broker Setup (MQTT + Kafka)](./message-broker-setup.md)
 
 ## Near-Term Contents
 
