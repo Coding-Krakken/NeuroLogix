@@ -174,3 +174,21 @@ export const HealthCheckResponseSchema = z.object({
 });
 
 export type HealthCheckResponse = z.infer<typeof HealthCheckResponseSchema>;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Federation API Contracts
+// ─────────────────────────────────────────────────────────────────────────────
+
+export {
+	FEDERATION_API_CONTRACTS,
+	FEDERATION_ERROR_SCHEMA,
+	validateEndpointAgainstContract,
+	getContractById,
+	listContractsByMethod,
+	listContractsByPath,
+	type EndpointContract,
+	type ErrorSpec,
+	type ParameterSpec,
+	type ResponseSpec,
+	type ContractValidationResult,
+} from './federation-contract.js';
