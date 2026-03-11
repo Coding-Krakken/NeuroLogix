@@ -119,7 +119,7 @@ is denied with HTTP 403 and logged.
 All authorization decisions are delegated to OPA:
 
 ```typescript
-// packages/security-core/src/authorizer.ts
+// packages/security-core/src/opa-authorizer.ts
 import { OPAClient } from './opa-client';
 
 export async function authorize(input: AuthzInput): Promise<AuthzResult> {
@@ -242,7 +242,7 @@ results in a deny-with-log rather than an inadvertent allow.
 - [x] Implement `command_risk.rego` with `data/command_risk_levels.json`
 - [x] Implement `ai_agent.rego` with unit tests
 - [x] Implement `auditor.rego` read-only enforcement policy
-- [ ] Wire `authorizer.ts` into policy-engine service
+- [x] Wire `authorizer.ts` into policy-engine service
 - [ ] Validate OPA decision log routing to ELK audit pipeline
 - [x] Add CI gate: `opa test packages/security-core/src/policies/`
 - [ ] Penetration test: verify AI agent cannot issue `critical` commands

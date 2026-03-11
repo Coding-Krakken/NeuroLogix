@@ -29,9 +29,12 @@ import {
 } from '@neurologix/core';
 import {
   createAuditLogger,
+  createOPAAuthorizer,
   type AuditChainEntry,
   type AuditEvent,
   type AuditIntegrityReport,
+  type OPAAuthorizationResult,
+  type OPAAuthorizer,
   type AuditQueryCriteria,
   type ServiceIdentity,
 } from '@neurologix/security-core';
@@ -55,6 +58,7 @@ import { z } from 'zod';
  * - Integration with OPA (Open Policy Agent)
  */
 export class PolicyEngineService {
+  private static readonly OPA_POLICY_ID = '00000000-0000-0000-0000-000000000012';
   private policies: Map<string, PolicyDocument> = new Map();
   private approvalRequests: Map<string, ApprovalRequest> = new Map();
   private violations: Map<string, PolicyViolation> = new Map();
@@ -63,6 +67,7 @@ export class PolicyEngineService {
   private config: PolicyEngineConfig;
   private readonly securityAuditLogger = createAuditLogger();
   private readonly serviceIdentity: ServiceIdentity = { serviceId: 'policy-engine' };
+  private readonly opaAuthorizer: OPAAuthorizer | null;
   private evaluationMetrics: {
     evaluationsLast24h: number;
     decisionsLast24h: { allow: number; deny: number; approval_required: number };
@@ -74,6 +79,12 @@ export class PolicyEngineService {
 
   constructor(config: Partial<PolicyEngineConfig> = {}) {
     this.config = PolicyEngineConfigSchema.parse(config);
+    this.opaAuthorizer = this.config.opaEndpoint
+      ? createOPAAuthorizer({
+          endpoint: this.config.opaEndpoint,
+          serviceId: this.serviceIdentity.serviceId,
+        })
+      : null;
     this.evaluationMetrics = {
       evaluationsLast24h: 0,
       decisionsLast24h: { allow: 0, deny: 0, approval_required: 0 },
@@ -365,6 +376,81 @@ export class PolicyEngineService {
         }
       }
 
+      if (!this.config.enableLocalEvaluation && !this.opaAuthorizer) {
+        throw new InternalServerError('No policy evaluation path configured', {
+          reason: 'Local evaluation disabled and OPA endpoint not configured',
+          requestId: validatedRequest.requestId,
+        });
+      }
+
+      if (!this.config.enableLocalEvaluation && this.opaAuthorizer) {
+        const externalDecision = await this.evaluateWithOpaAuthorizer(validatedRequest, false);
+        if (!externalDecision) {
+          throw new InternalServerError('OPA authorizer did not return a decision', {
+            requestId: validatedRequest.requestId,
+          });
+        }
+        const policyMatches = [this.toOpaPolicyMatch(externalDecision)];
+        const result: PolicyEvaluationResult = PolicyEvaluationResultSchema.parse({
+          requestId: validatedRequest.requestId,
+          decision: externalDecision.decision,
+          policyMatches,
+          overallReasoning: this.generateOverallReasoning(externalDecision.decision, policyMatches),
+          approvalWorkflow:
+            externalDecision.decision === 'approval_required'
+              ? {
+                  required: true,
+                  approvers: [],
+                  minimumApprovals: 1,
+                  emergencyOverrideEnabled: false,
+                }
+              : undefined,
+          constraints: [],
+          validUntil: this.config.cacheEnabled
+            ? new Date(Date.now() + this.config.cacheTtlMinutes * 60 * 1000)
+            : undefined,
+          evaluatedAt: new Date(),
+        });
+
+        if (result.decision === 'deny') {
+          await this.recordViolation(validatedRequest, result.policyMatches);
+        }
+
+        const evaluationTime = Date.now() - startTime;
+        this.evaluationMetrics.evaluationsLast24h++;
+        this.evaluationMetrics.decisionsLast24h[result.decision]++;
+        this.evaluationMetrics.totalEvaluationTime += evaluationTime;
+
+        this.recordSecurityAudit({
+          eventType: 'POLICY_EVALUATION',
+          action: 'policy_evaluation',
+          resource: validatedRequest.resource,
+          outcome: result.decision === 'allow' ? 'SUCCESS' : 'BLOCKED',
+          description: `Policy evaluation completed with ${result.decision} decision`,
+          severity:
+            result.decision === 'deny'
+              ? 'high'
+              : result.decision === 'approval_required'
+                ? 'medium'
+                : 'low',
+          userId: validatedRequest.subject.userId,
+          metadata: {
+            action: validatedRequest.action,
+            decision: result.decision,
+            policiesEvaluated: policyMatches.length,
+            evaluationTimeMs: evaluationTime,
+            opaIntegrated: true,
+            opaDecision: externalDecision.decision,
+          },
+        });
+
+        return result;
+      }
+
+      const externalDecision = this.opaAuthorizer
+        ? await this.evaluateWithOpaAuthorizer(validatedRequest, true)
+        : null;
+
       // Get applicable policies
       const applicablePolicies = this.getApplicablePolicies(validatedRequest);
       const policyMatches: PolicyEvaluationResult['policyMatches'] = [];
@@ -416,6 +502,15 @@ export class PolicyEngineService {
         overallDecision = this.config.defaultDecision;
       }
       // Otherwise keep 'allow' from initialization
+
+      if (externalDecision) {
+        policyMatches.push(this.toOpaPolicyMatch(externalDecision));
+        if (externalDecision.decision === 'approval_required') {
+          requiresApproval = true;
+          minApprovals = Math.max(minApprovals, 1);
+        }
+        overallDecision = this.mergeDecisions(overallDecision, externalDecision.decision);
+      }
 
       const result: PolicyEvaluationResult = PolicyEvaluationResultSchema.parse({
         requestId: validatedRequest.requestId,
@@ -475,6 +570,8 @@ export class PolicyEngineService {
           decision: overallDecision,
           policiesEvaluated: applicablePolicies.length,
           evaluationTimeMs: evaluationTime,
+          opaIntegrated: Boolean(externalDecision),
+          opaDecision: externalDecision?.decision,
         },
       });
 
@@ -578,6 +675,84 @@ export class PolicyEngineService {
   }
 
   // Private helper methods
+
+  private async evaluateWithOpaAuthorizer(
+    request: PolicyEvaluationRequest,
+    allowLocalFallback: boolean
+  ): Promise<OPAAuthorizationResult | null> {
+    if (!this.opaAuthorizer) {
+      throw new InternalServerError('OPA authorizer is not configured', {
+        requestId: request.requestId,
+      });
+    }
+
+    try {
+      return await this.opaAuthorizer.authorize({
+        action: request.action,
+        resource: request.resource,
+        context: request.context,
+        subject: request.subject,
+        timestamp: request.timestamp,
+      });
+    } catch (error) {
+      if (allowLocalFallback) {
+        this.recordSecurityAudit({
+          eventType: 'POLICY_AUTHZ_FALLBACK',
+          action: 'policy_evaluation',
+          resource: request.resource,
+          outcome: 'FAILURE',
+          description: 'OPA authorizer unavailable - falling back to local evaluation',
+          severity: 'high',
+          userId: request.subject.userId,
+          metadata: {
+            action: request.action,
+            error: error instanceof Error ? error.message : String(error),
+          },
+        });
+
+        return null;
+      }
+
+      throw new InternalServerError('OPA authorizer evaluation failed', {
+        requestId: request.requestId,
+        action: request.action,
+        resource: request.resource,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  private toOpaPolicyMatch(
+    decision: OPAAuthorizationResult
+  ): PolicyEvaluationResult['policyMatches'][number] {
+    return {
+      policyId: PolicyEngineService.OPA_POLICY_ID,
+      policyName: 'OPA Authorizer',
+      decision: decision.decision,
+      reasoning: decision.reason,
+      priority:
+        decision.decision === 'deny'
+          ? 'critical'
+          : decision.decision === 'approval_required'
+            ? 'high'
+            : 'low',
+    };
+  }
+
+  private mergeDecisions(
+    localDecision: PolicyEvaluationResult['decision'],
+    opaDecision: PolicyEvaluationResult['decision']
+  ): PolicyEvaluationResult['decision'] {
+    if (localDecision === 'deny' || opaDecision === 'deny') {
+      return 'deny';
+    }
+
+    if (localDecision === 'approval_required' || opaDecision === 'approval_required') {
+      return 'approval_required';
+    }
+
+    return 'allow';
+  }
 
   private initializeDefaultPolicies(): void {
     // Safety-critical default policies

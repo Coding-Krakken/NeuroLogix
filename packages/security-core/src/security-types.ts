@@ -205,6 +205,36 @@ export interface RequestAuthContext {
   denialReason?: string;
 }
 
+export type AuthorizationDecision = 'allow' | 'deny' | 'approval_required';
+
+export interface OPAAuthorizerConfig {
+  endpoint: string;
+  policyPath?: string;
+  timeoutMs?: number;
+  serviceId?: string;
+}
+
+export interface OPAAuthorizationInput {
+  action: string;
+  resource: string;
+  context: Record<string, unknown>;
+  subject: {
+    userId: string;
+    roles: string[];
+    permissions: string[];
+    zone?: string;
+  };
+  timestamp: Date | string;
+}
+
+export interface OPAAuthorizationResult {
+  decision: AuthorizationDecision;
+  reason: string;
+  policyPath: string;
+  evaluatedAt: Date;
+  rawResult: unknown;
+}
+
 /**
  * Security configuration for a service
  */
