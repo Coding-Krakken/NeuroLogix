@@ -1,0 +1,265 @@
+# NeuroLogix — Prometheus Alerting Rules
+# Derived from OBS-001 observability model (.github/.system-state/ops/observability_model.yaml)
+# Risk Tier: T1 (Mission-Critical)
+# Status: Baseline stub — wire into Prometheus in Phase 7
+
+groups:
+  # ─────────────────────────────────────────────────────────────────────────
+  # SLO: System Availability > 99.99%
+  # ─────────────────────────────────────────────────────────────────────────
+  - name: neurologix.availability
+    rules:
+      - alert: ServiceAvailabilityBreach
+        expr: |
+          (
+            sum by (service) (rate(http_requests_total{status=~"5.."}[5m]))
+            /
+            sum by (service) (rate(http_requests_total[5m]))
+          ) > 0.001
+        for: 2m
+        labels:
+          severity: critical
+          tier: T1
+          domain: availability
+        annotations:
+          summary: "Service {{ $labels.service }} error rate exceeds 0.1%"
+          description: |
+            Service {{ $labels.service }} has an error rate of {{ $value | humanizePercentage }}
+            over the last 5 minutes, breaching the 0.1% threshold (SLO: 99.99% availability).
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#availability-breach"
+
+      - alert: ServiceDown
+        expr: up{job=~"neurologix.*"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          tier: T1
+          domain: availability
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "Service {{ $labels.job }} has been unreachable for more than 1 minute."
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#service-down"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # SLO: Control Loop Latency p95 < 50ms, p99 < 100ms
+  # ─────────────────────────────────────────────────────────────────────────
+  - name: neurologix.control-loop-latency
+    rules:
+      - alert: ControlLoopLatencyP95Breach
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (rate(control_loop_duration_seconds_bucket[1m]))
+          ) * 1000 > 50
+        for: 2m
+        labels:
+          severity: critical
+          tier: T1
+          domain: control-loop
+        annotations:
+          summary: "Control loop p95 latency exceeds 50ms SLO"
+          description: |
+            Control loop p95 latency is {{ $value | humanizeDuration }} (threshold: 50ms).
+            This may indicate PLC command delivery delay.
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#control-loop-latency"
+
+      - alert: ControlLoopLatencyP99Breach
+        expr: |
+          histogram_quantile(
+            0.99,
+            sum by (le) (rate(control_loop_duration_seconds_bucket[1m]))
+          ) * 1000 > 100
+        for: 2m
+        labels:
+          severity: critical
+          tier: T1
+          domain: control-loop
+        annotations:
+          summary: "Control loop p99 latency exceeds 100ms SLO"
+          description: |
+            Control loop p99 latency is {{ $value | humanizeDuration }} (threshold: 100ms).
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#control-loop-latency"
+
+      - alert: ControlLoopLatencyRollbackThreshold
+        expr: |
+          histogram_quantile(
+            0.99,
+            sum by (le) (rate(control_loop_duration_seconds_bucket[1m]))
+          ) * 1000 > 200
+        for: 1m
+        labels:
+          severity: page
+          tier: T1
+          domain: control-loop
+        annotations:
+          summary: "Control loop p99 latency exceeds 200ms — AUTOMATED ROLLBACK TRIGGER"
+          description: |
+            Control loop p99 latency is {{ $value | humanizeDuration }} — exceeds automated
+            rollback threshold of 200ms. Trigger Kubernetes rollback per rollback runbook.
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/release-rollback.md"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # SLO: Recipe Execution Success Rate > 99.9%
+  # ─────────────────────────────────────────────────────────────────────────
+  - name: neurologix.recipe-execution
+    rules:
+      - alert: RecipeSuccessRateBreach
+        expr: |
+          (
+            sum(rate(recipe_executions_total{outcome="success"}[5m]))
+            /
+            sum(rate(recipe_executions_total[5m]))
+          ) < 0.999
+        for: 2m
+        labels:
+          severity: critical
+          tier: T1
+          domain: recipe-executor
+        annotations:
+          summary: "Recipe execution success rate below 99.9%"
+          description: |
+            Recipe execution success rate is {{ $value | humanizePercentage }}
+            over the last 5 minutes (SLO: 99.9%).
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#recipe-execution"
+
+      - alert: RecipeExecutionFailureSpike
+        expr: rate(recipe_executions_total{outcome="failure"}[5m]) > 0.1
+        for: 1m
+        labels:
+          severity: warning
+          tier: T1
+          domain: recipe-executor
+        annotations:
+          summary: "Recipe execution failure spike detected"
+          description: "Recipe execution failure rate is {{ $value | humanize }}/s."
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#recipe-execution"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # SLO: Audit Log Write Success 100%
+  # ─────────────────────────────────────────────────────────────────────────
+  - name: neurologix.audit-log
+    rules:
+      - alert: AuditLogWriteFailure
+        expr: rate(audit_writes_total{outcome="error"}[1m]) > 0
+        for: 0m
+        labels:
+          severity: critical
+          tier: T1
+          domain: audit
+        annotations:
+          summary: "CRITICAL: Audit log write failure detected — SLO breach"
+          description: |
+            One or more audit log writes have failed. Audit log write success
+            must remain at 100% (SLO: 100%). Investigate immediately.
+            Rate: {{ $value | humanize }}/s failed writes.
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#audit-log-write-failure"
+
+      - alert: AuditLogWriteQueueDepth
+        expr: audit_write_queue_depth > 1000
+        for: 1m
+        labels:
+          severity: warning
+          tier: T1
+          domain: audit
+        annotations:
+          summary: "Audit log write queue depth elevated"
+          description: "Audit write queue depth is {{ $value }} — may indicate downstream ELK pressure."
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#audit-log-write-failure"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # SLO: Policy Decision Latency p95 < 10ms
+  # ─────────────────────────────────────────────────────────────────────────
+  - name: neurologix.policy-engine
+    rules:
+      - alert: PolicyDecisionLatencyBreach
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (rate(policy_decision_duration_seconds_bucket[1m]))
+          ) * 1000 > 10
+        for: 2m
+        labels:
+          severity: critical
+          tier: T1
+          domain: policy-engine
+        annotations:
+          summary: "Policy engine p95 decision latency exceeds 10ms SLO"
+          description: |
+            Policy decision p95 latency is {{ $value | humanizeDuration }} (threshold: 10ms).
+            This may cause safety interlock delays.
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#policy-engine-latency"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # SLO: Digital Twin Sync Lag < 200ms
+  # ─────────────────────────────────────────────────────────────────────────
+  - name: neurologix.digital-twin
+    rules:
+      - alert: DigitalTwinSyncLagBreach
+        expr: digital_twin_sync_lag_ms > 200
+        for: 2m
+        labels:
+          severity: warning
+          tier: T1
+          domain: digital-twin
+        annotations:
+          summary: "Digital twin sync lag exceeds 200ms SLO"
+          description: "Digital twin sync lag is {{ $value }}ms (threshold: 200ms)."
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#digital-twin-sync-lag"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Safety: Safety Interlock Bypass — Zero Tolerance
+  # ─────────────────────────────────────────────────────────────────────────
+  - name: neurologix.safety
+    rules:
+      - alert: SafetyInterlockBypassAttempt
+        expr: increase(safety_interlock_bypass_attempts_total[5m]) > 0
+        for: 0m
+        labels:
+          severity: page
+          tier: T1
+          domain: safety
+        annotations:
+          summary: "CRITICAL: Safety interlock bypass attempt detected"
+          description: |
+            {{ $value }} safety interlock bypass attempt(s) detected in the last 5 minutes.
+            SLO: 0 bypass events. Immediate investigation required.
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#safety-interlock-bypass"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Tag Throughput: > 10,000 tags/s (warning on sustained drop)
+  # ─────────────────────────────────────────────────────────────────────────
+  - name: neurologix.throughput
+    rules:
+      - alert: TagThroughputDrop
+        expr: rate(tag_ingest_total[1m]) < 10000
+        for: 5m
+        labels:
+          severity: warning
+          tier: T1
+          domain: adapters
+        annotations:
+          summary: "Tag ingest throughput below 10,000 tags/s"
+          description: "Tag throughput is {{ $value | humanize }}/s (target: 10,000/s)."
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#tag-throughput"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Mission Control SSE Stream
+  # ─────────────────────────────────────────────────────────────────────────
+  - name: neurologix.mission-control
+    rules:
+      - alert: SSEStreamDown
+        expr: |
+          sum(rate(sse_connections_active[1m])) == 0
+          and
+          sum(rate(sse_connection_attempts_total[5m])) > 0
+        for: 2m
+        labels:
+          severity: critical
+          tier: T1
+          domain: mission-control
+        annotations:
+          summary: "Mission Control SSE stream has no active connections"
+          description: |
+            SSE stream active connections dropped to zero while connection attempts are being made.
+            Operators may have lost real-time visibility.
+          runbook: "https://github.com/Coding-Krakken/NeuroLogix/blob/main/docs/runbooks/observability-baseline.md#sse-stream"

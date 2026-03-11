@@ -22,6 +22,7 @@ consequences.
 
 - [ADR-005: Message Broker Selection](./ADR-005-message-broker-selection.md)
 - [ADR-006: Schema Registry and Contracts](./ADR-006-schema-registry-contracts.md)
+- [ADR-010: Contract Testing Strategy](./ADR-010-contract-testing-strategy.md)
 - [Phase 1 Topic Governance (Bounded Slice)](./phase-1-topic-governance.md)
 - [Phase 1 Definition of Ready](./phase-1-definition-of-ready.md)
 
