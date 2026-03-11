@@ -36,6 +36,10 @@ consequences.
 
 - [Phase 6 Mission Control Foundation (Bounded Slice)](./phase-6-mission-control-foundation-slice.md)
 
+### Phase 9 - Multi-Site Federation
+
+- [ADR-009: Multi-Site Federation Architecture](./ADR-009-federation-architecture.md)
+
 ## Template
 
 All ADRs should follow this template:
