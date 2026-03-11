@@ -16,6 +16,7 @@ recovery, and safe-mode procedures.
 | [recipe-executor-triage.md](./recipe-executor-triage.md) | Incident triage for recipe execution failures, stalled progress, and safety-guarded recovery | Active |
 | [digital-twin-triage.md](./digital-twin-triage.md) | Incident triage for twin state ingestion, simulation failures, and sync lag recovery | Active |
 | [site-registry-triage.md](./site-registry-triage.md) | Incident triage for provisioning, feature flags, and federation topology integrity | Active |
+| [safe-mode-activation.md](./safe-mode-activation.md) | Full platform safe-mode activation, service suspension sequence, hardware interlock verification, and controlled recovery | Active |
 
 ## Related Guidance
 
@@ -27,7 +28,6 @@ Operational guidance also lives in:
 
 ## Near-Term Contents
 
-- Safe-mode activation procedures
 - PLC interlock override checklist (Phase 7 — Security & Compliance)
 
 ## Related Architecture Evidence
