@@ -9,12 +9,13 @@ NeuroLogix platform.
 |---|---|
 | `prometheus-alerts.yml` | Prometheus alerting rules for all T1 SLOs (OBS-001) |
 | `otel-collector-config.yaml` | OpenTelemetry Collector configuration stub |
+| `grafana/*.dashboard.json` | Grafana dashboard baseline stubs aligned to OBS-001 dashboard panel intent |
 
 ## Status
 
 **Baseline stub** — these files define the target configuration. They must be
-wired into live Prometheus and the OTEL collector deployment in **Phase 7
-(Security & Compliance)**.
+wired into live Prometheus, OTEL collector deployment, and Grafana provisioning
+in **Phase 7 (Security & Compliance)**.
 
 ## Architecture
 
@@ -57,4 +58,5 @@ Derived from `.github/.system-state/ops/observability_model.yaml` (OBS-001):
 
 - [Observability Strategy (ADR-004)](../../docs/architecture/ADR-004-observability-strategy.md)
 - [Observability Baseline Runbook](../../docs/runbooks/observability-baseline.md)
+- [Grafana Dashboard Baselines](./grafana/README.md)
 - [OBS-001 Model](../../.github/.system-state/ops/observability_model.yaml)

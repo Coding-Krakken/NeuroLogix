@@ -16,6 +16,25 @@ baseline alert rules. Each section maps to one or more Prometheus alert rules.
 For release-specific rollback procedures, see
 [release-rollback.md](./release-rollback.md).
 
+## Dashboard Baselines
+
+The baseline Grafana dashboard stubs are versioned at:
+
+- `infrastructure/observability/grafana/control-plane.dashboard.json`
+- `infrastructure/observability/grafana/security-audit.dashboard.json`
+- `infrastructure/observability/grafana/mission-control-ui.dashboard.json`
+
+Use these dashboards with this runbook as follows:
+
+- `control-plane` dashboard supports control-loop latency, throughput, recipe success,
+   and safety event triage.
+- `security-audit` dashboard supports audit write failure, policy denied/blocked event,
+   and safety bypass triage.
+- `mission-control-ui` dashboard supports mission-control SLO visibility
+   (LCP p95, SSE stream uptime, error rate by route).
+
+Import and datasource wiring are environment tasks tracked in `.developer/TODO.md`.
+
 ---
 
 ## Availability Breach
@@ -308,6 +327,7 @@ direct T1 SLO breach and a compliance event under IEC 62443 / ISO 27001.
 
 - [Prometheus Alert Rules](../../infrastructure/observability/prometheus-alerts.yml)
 - [OTEL Collector Config](../../infrastructure/observability/otel-collector-config.yaml)
+- [Grafana Dashboard Baselines](../../infrastructure/observability/grafana/README.md)
 - [Release Rollback Runbook](./release-rollback.md)
 - [Observability Model (OBS-001)](../../.github/.system-state/ops/observability_model.yaml)
 - [ADR-004: Observability Strategy](../architecture/ADR-004-observability-strategy.md)
