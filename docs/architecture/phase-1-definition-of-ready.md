@@ -33,7 +33,8 @@ All gates must pass for changed behavior:
 
 1. `npm run lint`
 2. `npm test`
-3. `npm run build`
+3. `npm run test:contract`
+4. `npm run build`
 
 If any gate fails due to unrelated pre-existing issues, the evidence file must
 differentiate:

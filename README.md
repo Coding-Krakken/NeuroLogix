@@ -167,6 +167,9 @@ npm run dev
 # Run all tests
 npm test
 
+# Run contract baseline tests
+npm run test:contract
+
 # Build for production
 npm run build
 ```
@@ -205,7 +208,7 @@ docker compose logs -f capability-registry
 
 - [ ] Schema definitions (Zod + JSON Schema)
 - [ ] Message broker setup (MQTT + Kafka)
-- [ ] Contract testing framework
+- [x] Contract testing baseline (service + provider checks in CI)
 - [ ] Topic ACLs & security
 
 ### ✅ Phase 2 — Core Runtime
