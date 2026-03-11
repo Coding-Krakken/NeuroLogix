@@ -89,6 +89,42 @@ describe('auditLogger format pipeline', () => {
     expect(typeof entry.timestamp).toBe('string');
     expect(typeof entry.environment).toBe('string');
   });
+
+  it('includes hash-chain fields (audit_hash and audit_chain_id) in audit records', () => {
+    const { transport, lines } = makeCapture();
+    auditLogger.add(transport);
+    try {
+      auditLogger.info('audit hash test 1', { action: 'AUTH_LOGIN' });
+      auditLogger.info('audit hash test 2', { action: 'POLICY_DECISION' });
+    } finally {
+      auditLogger.remove(transport);
+    }
+
+    const parsed = lines.map(l => JSON.parse(l));
+    const entries = parsed.filter(e => e.message && e.message.includes('audit hash test'));
+    
+    expect(entries.length).toBeGreaterThanOrEqual(2);
+
+    // First record should have audit_hash and a valid audit_chain_id (GENESIS or previous ID)
+    const first = entries[0];
+    expect(typeof first.audit_hash).toBe('string');
+    expect(first.audit_hash.length).toBeGreaterThan(0);
+    expect(typeof first.audit_chain_id).toBe('string');
+    expect(first.audit_chain_id.length).toBeGreaterThan(0); // Either GENESIS or prev ID
+    expect(typeof first.id).toBe('string');
+    expect(first.id.startsWith('audit_')).toBe(true);
+
+    // Second record should have audit_hash and audit_chain_id pointing to first record
+    const second = entries[1];
+    expect(typeof second.audit_hash).toBe('string');
+    expect(second.audit_hash.length).toBeGreaterThan(0);
+    expect(second.audit_chain_id).toBe(first.id); // Chain link verified
+    expect(second.id).toBeDefined();
+    expect(second.id !== first.id).toBe(true); // Different IDs
+    
+    // Hashes should be different (deterministic but different input)
+    expect(second.audit_hash !== first.audit_hash).toBe(true);
+  });
 });
 
 describe('performanceLogger format pipeline', () => {

@@ -21,6 +21,7 @@ recovery, and safe-mode procedures.
 | [safe-mode-activation.md](./safe-mode-activation.md) | Full platform safe-mode activation, service suspension sequence, hardware interlock verification, and controlled recovery | Active |
 | [plc-interlock-override-checklist.md](./plc-interlock-override-checklist.md) | Temporary PLC interlock override authorization, execution guardrails, abort criteria, and audit evidence checklist | Active |
 | [mission-control-e2e-validation.md](./mission-control-e2e-validation.md) | Deterministic Playwright baseline for critical Mission Control policy-gated dispatch journey and CI E2E gate behavior | Active |
+| [audit-chain-validation.md](./audit-chain-validation.md) | Audit log hash-chain integrity validation, tampering detection, incident response, and non-repudiation assurance (IEC 62443 SR 2.12 / SR 3.9) | Active |
 
 ## Related Guidance
 

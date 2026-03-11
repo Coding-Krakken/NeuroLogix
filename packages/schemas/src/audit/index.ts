@@ -106,6 +106,10 @@ export const AuditLogEntrySchema = z.object({
   traceId: z.string().optional(),
   /** Action-specific details — arbitrary structured data */
   details: z.record(z.unknown()).optional(),
+  /** SHA-256 hash of this record (for integrity chain) */
+  audit_hash: z.string().optional(),
+  /** ID of previous audit record in chain (for chain validation) */
+  audit_chain_id: z.string().optional(),
 });
 
 export type AuditLogEntry = z.infer<typeof AuditLogEntrySchema>;

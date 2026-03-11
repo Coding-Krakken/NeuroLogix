@@ -1,0 +1,810 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\david\\Desktop\\NeuroLogix\\playwright.config.ts",
+    "rootDir": "C:/Users/david/Desktop/NeuroLogix/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/david/Desktop/NeuroLogix/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "api",
+        "name": "api",
+        "testDir": "C:/Users/david/Desktop/NeuroLogix/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report",
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/e2e-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 4,
+    "webServer": {
+      "command": "node -e \"import('./apps/mission-control/dist/index.js')\"",
+      "url": "http://localhost:3100/health",
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "env": {
+        "PORT": "3100",
+        "NODE_ENV": "test"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "mission-control\\api-endpoints.spec.ts",
+      "file": "mission-control/api-endpoints.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Mission Control — Core API Endpoints",
+          "file": "mission-control/api-endpoints.spec.ts",
+          "line": 13,
+          "column": 6,
+          "specs": [
+            {
+              "title": "GET /api/command-center returns 200 with valid snapshot",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 408,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.059Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "8aef4ca10778a7e68afc-340b6f1b0702ba6f5d47",
+              "file": "mission-control/api-endpoints.spec.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "GET /api/line-view returns 200 with limit applied",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 30,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.525Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "8aef4ca10778a7e68afc-9e94100efe48e363ea32",
+              "file": "mission-control/api-endpoints.spec.ts",
+              "line": 25,
+              "column": 7
+            },
+            {
+              "title": "GET /api/events returns 200 with events array",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 37,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.604Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "8aef4ca10778a7e68afc-c7fb2e78944539665ad5",
+              "file": "mission-control/api-endpoints.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "GET /api/events with limit=1 returns maximum 1 event",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 25,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.662Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "8aef4ca10778a7e68afc-dcd989704b7db8e2f594",
+              "file": "mission-control/api-endpoints.spec.ts",
+              "line": 45,
+              "column": 7
+            },
+            {
+              "title": "POST /api/tick advances state and returns frame",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 36,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.701Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "8aef4ca10778a7e68afc-5a3f8656210595de203a",
+              "file": "mission-control/api-endpoints.spec.ts",
+              "line": 62,
+              "column": 7
+            },
+            {
+              "title": "INV-006: sequential API calls return consistent object shapes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 41,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.760Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "8aef4ca10778a7e68afc-2ac676a982f31110c315",
+              "file": "mission-control/api-endpoints.spec.ts",
+              "line": 75,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "mission-control\\dispatch.spec.ts",
+      "file": "mission-control/dispatch.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Mission Control — Control Policy Gate",
+          "file": "mission-control/dispatch.spec.ts",
+          "line": 49,
+          "column": 6,
+          "specs": [
+            {
+              "title": "GET /api/control-policy: operator + confirmation accepted → allowed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 385,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.117Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b47748c9874cc9342b36-6f505f83a9ed40f78e5e",
+              "file": "mission-control/dispatch.spec.ts",
+              "line": 50,
+              "column": 7
+            },
+            {
+              "title": "GET /api/control-policy: missing confirmation → denied or requires_approval",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 20,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.575Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b47748c9874cc9342b36-43f77e59caa42845fdb5",
+              "file": "mission-control/dispatch.spec.ts",
+              "line": 69,
+              "column": 7
+            },
+            {
+              "title": "GET /api/control-policy: supervisor override → allowed with approval",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 15,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.624Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b47748c9874cc9342b36-1c6946c4f60096bfe11a",
+              "file": "mission-control/dispatch.spec.ts",
+              "line": 88,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Mission Control — Dispatch Command (INV-001)",
+          "file": "mission-control/dispatch.spec.ts",
+          "line": 108,
+          "column": 6,
+          "specs": [
+            {
+              "title": "INV-001: dispatch with deterministic allowed policy succeeds",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 201,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.673Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b47748c9874cc9342b36-cd84934cb8622a8454b6",
+              "file": "mission-control/dispatch.spec.ts",
+              "line": 109,
+              "column": 7
+            },
+            {
+              "title": "INV-001: dispatch without confirmation is rejected by policy gate",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 39,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.893Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b47748c9874cc9342b36-d820a9344f7e20744bb7",
+              "file": "mission-control/dispatch.spec.ts",
+              "line": 138,
+              "column": 7
+            },
+            {
+              "title": "INV-002: events list grows after successful dispatch",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 39,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.970Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b47748c9874cc9342b36-fa6abe5cbb753eb4147f",
+              "file": "mission-control/dispatch.spec.ts",
+              "line": 162,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "mission-control\\health.spec.ts",
+      "file": "mission-control/health.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Mission Control — Health",
+          "file": "mission-control/health.spec.ts",
+          "line": 12,
+          "column": 6,
+          "specs": [
+            {
+              "title": "GET /health returns 200 with status field",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 421,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.019Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "555ca39725a1e94cf9b0-39671fdaedd2f0d5ea0c",
+              "file": "mission-control/health.spec.ts",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "GET / returns 200 HTML document",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 19,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.494Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "555ca39725a1e94cf9b0-4d9de3ca08e9c6470ee9",
+              "file": "mission-control/health.spec.ts",
+              "line": 23,
+              "column": 7
+            },
+            {
+              "title": "server responds within control loop latency SLO (p95 < 50ms)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 85,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.540Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "555ca39725a1e94cf9b0-d00ea6da8ed29b2f2af7",
+              "file": "mission-control/health.spec.ts",
+              "line": 38,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "mission-control\\sse-stream.spec.ts",
+      "file": "mission-control/sse-stream.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Mission Control — SSE Stream (INV-008)",
+          "file": "mission-control/sse-stream.spec.ts",
+          "line": 15,
+          "column": 6,
+          "specs": [
+            {
+              "title": "GET /api/stream?once=true returns text/event-stream with snapshot",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 414,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.009Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "84b9ac29da79ce384214-70527b1d606ad63180ed",
+              "file": "mission-control/sse-stream.spec.ts",
+              "line": 16,
+              "column": 7
+            },
+            {
+              "title": "SSE snapshot frame contains commandCenter and lineView fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 25,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.472Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "84b9ac29da79ce384214-6355475cebf15da2b0e6",
+              "file": "mission-control/sse-stream.spec.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "INV-008: multiple consecutive SSE requests all succeed (reconnect simulation)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 57,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.520Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "84b9ac29da79ce384214-02758376401490efd4fe",
+              "file": "mission-control/sse-stream.spec.ts",
+              "line": 66,
+              "column": 7
+            },
+            {
+              "title": "SSE cache control headers prevent stale stream data",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 13,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T11:37:34.599Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "84b9ac29da79ce384214-5075f8bad89cedb264f9",
+              "file": "mission-control/sse-stream.spec.ts",
+              "line": 89,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-11T11:37:30.209Z",
+    "duration": 5260.407999999999,
+    "expected": 19,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,9 +1,29 @@
 import winston from 'winston';
+import crypto from 'crypto';
 import { APP_CONFIG } from '../constants/index.js';
 
 /**
  * Centralized logging configuration for NeuroLogix platform
  */
+
+/**
+ * Hash chain state for audit log integrity
+ */
+let lastAuditId: string | null = null;
+let lastAuditHash: string | null = null;
+
+/**
+ * Compute an audit event hash using the previous audit ID and current record
+ * HMAC-SHA256(chain_input, audit_key) where chain_input = ${previousId}:${recordJson}
+ */
+function computeAuditHash(
+  currentAuditId: string,
+  recordData: Record<string, unknown>,
+  auditKey: string = process.env.AUDIT_HASH_KEY ?? 'neurolog-audit-integrity'
+): string {
+  const chainInput = `${lastAuditId ?? 'GENESIS'}:${currentAuditId}:${JSON.stringify(recordData)}`;
+  return crypto.createHmac('sha256', auditKey).update(chainInput).digest('hex');
+}
 
 // Custom log format for structured logging
 const logFormat = winston.format.combine(
@@ -80,7 +100,9 @@ export const auditLogger = winston.createLogger({
     winston.format.timestamp(),
     winston.format.json(),
     winston.format.printf(({ timestamp, level, message, ...meta }) => {
-      const auditEntry = {
+      const currentAuditId = `audit_${crypto.randomBytes(8).toString('hex')}_${Date.now()}`;
+      const auditEntry: Record<string, unknown> = {
+        id: currentAuditId,
         timestamp,
         level,
         message,
@@ -88,6 +110,16 @@ export const auditLogger = winston.createLogger({
         environment: APP_CONFIG.ENVIRONMENT,
         ...meta,
       };
+
+      // Compute hash chain
+      const auditHash = computeAuditHash(currentAuditId, auditEntry);
+      auditEntry.audit_hash = auditHash;
+      auditEntry.audit_chain_id = lastAuditId ?? 'GENESIS';
+
+      // Update chain state
+      lastAuditId = currentAuditId;
+      lastAuditHash = auditHash;
+
       return JSON.stringify(auditEntry);
     })
   ),

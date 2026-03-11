@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-03-11T11:37:37.679Z",
+  "sourceFile": "test-results/e2e-results.json",
+  "ci": {
+    "githubRunId": null,
+    "githubRunAttempt": null,
+    "githubSha": null,
+    "githubRef": null,
+    "githubWorkflow": null
+  },
+  "stats": {
+    "total": 19,
+    "passed": 19,
+    "failed": 0,
+    "skipped": 0,
+    "timedOut": 0,
+    "interrupted": 0,
+    "flaky": 0,
+    "unknown": 0
+  },
+  "failedTests": [],
+  "hasFailures": false
+}
