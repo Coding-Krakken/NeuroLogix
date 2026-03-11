@@ -39,6 +39,11 @@ consequences.
 
 - [Phase 6 Mission Control Foundation (Bounded Slice)](./phase-6-mission-control-foundation-slice.md)
 
+### Phase 7 - Security and Compliance
+
+- [ADR-011: mTLS and Zero-Trust Service Mesh](./ADR-011-mtls-zero-trust-service-mesh.md)
+- [ADR-012: RBAC/ABAC Authorization Design](./ADR-012-rbac-abac-authorization-design.md)
+
 ### Phase 9 - Multi-Site Federation
 
 - [ADR-009: Multi-Site Federation Architecture](./ADR-009-federation-architecture.md)

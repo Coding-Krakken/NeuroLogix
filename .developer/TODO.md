@@ -27,9 +27,14 @@
 - [x] Staging observability rollout evidence scaffold (required verification template + runbook linkage)
 - [x] First staging observability rollout evidence capture — dry-run baseline record in `planning/obs-staging-rollout-evidence-2026-03-11-issue-153.md` (Phase 7)
 
+- [x] IEC 62443 control mapping baseline (`docs/compliance/IEC-62443-control-mapping.md`) — 46 controls across FR-1 to FR-7, 79% compliant (Phase 7)
+- [x] ADR-011: mTLS and Zero-Trust Service Mesh (`docs/architecture/ADR-011-mtls-zero-trust-service-mesh.md`) (Phase 7)
+- [x] ADR-012: RBAC/ABAC Authorization Design (`docs/architecture/ADR-012-rbac-abac-authorization-design.md`) (Phase 7)
+
 ## Active / Near Term
 
 - Provision live staging Kubernetes cluster and execute live `kubectl apply -k` + Helm upgrades to replace dry-run evidence record with live cluster artifacts (Phase 9 / multi-site federation)
+- Implement Phase 7 planned items from IEC 62443 control mapping: mTLS cert-manager/Vault PKI wiring, OPA authorizer integration, audit log hash-chaining, Kubernetes NetworkPolicy, session replay protection
 
 ## Quality Targets
 
