@@ -149,12 +149,73 @@ jobs:
         run: npm run test:contracts:consumers
 
   # ─────────────────────────
+  # Lighthouse CI (Mission Control UX SLO gate)
+  # ─────────────────────────
+  lighthouse-ci:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    needs: [model-state]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build workspace artifacts
+        run: npm run build
+
+      - name: Start mission-control server
+        run: |
+          node -e "import('./apps/mission-control/dist/index.js')" > mission-control.log 2>&1 &
+          echo $! > mission-control.pid
+
+          for i in {1..60}; do
+            if curl -fsS http://localhost:3100/health > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Mission Control did not become healthy in time."
+          cat mission-control.log || true
+          exit 1
+        env:
+          PORT: '3100'
+          HOST: '127.0.0.1'
+          NODE_ENV: test
+
+      - name: Run Lighthouse CI gate
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:3100/
+          budgetPath: ./.lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: false
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Stop mission-control server
+        if: always()
+        run: |
+          if [ -f mission-control.pid ]; then
+            kill "$(cat mission-control.pid)" || true
+          fi
+
+  # ─────────────────────────
   # Build
   # ─────────────────────────
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [model-state, lint, typecheck, test, contract-tests]
+    needs: [model-state, lint, typecheck, test, contract-tests, lighthouse-ci]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
