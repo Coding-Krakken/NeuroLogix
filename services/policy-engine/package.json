@@ -16,7 +16,7 @@
     "dev": "tsc --build --watch",
     "test": "vitest run",
     "test:ci": "vitest run --coverage",
-    "test:contracts": "vitest run src/contracts/policy-engine.contract.test.ts",
+    "test:contracts": "npm run build --workspace @neurologix/core && npm run build --workspace @neurologix/security-core && npm run build --workspace @neurologix/schemas && vitest run src/contracts/policy-engine.contract.test.ts",
     "test:watch": "vitest",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
