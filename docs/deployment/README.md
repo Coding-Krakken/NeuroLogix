@@ -13,6 +13,12 @@ Foundational scaffold. Current deployment references are split across:
 - repository root `README.md`
 - CI workflow definitions in `.github/workflows/`
 
+Primary CI quality gates currently include:
+
+- Model State validation (`npm run validate:model:system-state`)
+- Lint, type check, test, and build
+- Secrets scan and dependency audit
+
 ## Near-Term Contents
 
 - Environment topology and prerequisites
