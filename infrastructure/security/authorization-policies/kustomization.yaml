@@ -1,6 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  # PeerAuthentication STRICT must be applied before AuthorizationPolicy
+  # to enable principal-based enforcement.
+  - peer-authentication-strict.yaml
   - deny-all-default.yaml
   - allow-core-ingress-from-ui-ai-edge.yaml
   - allow-ai-ingress-from-core.yaml

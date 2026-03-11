@@ -29,8 +29,8 @@ Baseline principals are represented as SPIFFE identity patterns per namespace:
 - `cluster.local/ns/neurologix-ui/sa/*`
 - `cluster.local/ns/istio-system/sa/*`
 
-This keeps the baseline merge-safe while establishing explicit allowlists.
-As namespace service accounts are finalized in deployment manifests, wildcard
+This keeps the baseline merge-safe while establishing explicit allowlists. As
+namespace service accounts are finalized in deployment manifests, wildcard
 patterns should be tightened to exact service-account principals.
 
 ## Apply
@@ -43,5 +43,5 @@ kubectl apply -k infrastructure/security/authorization-policies
 
 - This baseline complements, and does not replace, Kubernetes `NetworkPolicy`
   controls in `infrastructure/security/network-policies/`.
-- Live cluster rollout evidence is captured separately in staging and
-  production runbooks.
+- Live cluster rollout evidence is captured separately in staging and production
+  runbooks.

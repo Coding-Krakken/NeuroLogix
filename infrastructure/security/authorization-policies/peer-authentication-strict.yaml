@@ -1,0 +1,78 @@
+# PeerAuthentication — STRICT mTLS for all NeuroLogix trust zones
+#
+# Companion to the AuthorizationPolicy baseline in this directory.
+# STRICT mode is a prerequisite for principal-based AuthorizationPolicy
+# enforcement: without it, Istio cannot verify the caller identity embedded
+# in each AuthorizationPolicy rule's `principals` field.
+#
+# IEC 62443 Reference: SR 1.2 (Software Process Identification), SR 3.1
+# (Communication Integrity)
+# ADR Reference: ADR-011 (mTLS Zero-Trust Service Mesh)
+#
+# All inbound connections to each zone namespace must present a valid Istio
+# mTLS certificate. Plain-text (non-mTLS) connections are rejected at the
+# Envoy sidecar before reaching the workload.
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: neurologix-core
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: core
+    security.neurologix.io/sl: "sl-2"
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 1.2, SR 3.1"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: neurologix-ai
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: ai
+    security.neurologix.io/sl: "sl-2"
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 1.2, SR 3.1"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: neurologix-edge
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: edge
+    security.neurologix.io/sl: "sl-1"
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 1.2, SR 3.1"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: neurologix-ui
+  labels:
+    app.kubernetes.io/part-of: neurologix
+    security.neurologix.io/zone: ui
+    security.neurologix.io/sl: "sl-2"
+  annotations:
+    security.neurologix.io/iec62443-sr: "SR 1.2, SR 3.1"
+    security.neurologix.io/adr: "ADR-011"
+spec:
+  mtls:
+    mode: STRICT
