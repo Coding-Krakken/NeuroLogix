@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config';
 import path from 'path';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -27,7 +27,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '@neurologix/core': path.resolve(__dirname, '../../packages/core/src/index.ts'),
       '@neurologix/schemas': path.resolve(__dirname, '../../packages/schemas/src/index.ts'),
+      '@neurologix/site-registry': path.resolve(__dirname, '../../services/site-registry/src/index.ts'),
+      '@neurologix/ui': path.resolve(__dirname, '../../packages/ui/src/index.ts'),
     },
   },
 });
