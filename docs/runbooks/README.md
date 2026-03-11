@@ -5,18 +5,25 @@
 This directory contains operational runbooks for incident response, service
 recovery, and safe-mode procedures.
 
-## Current Status
+## Runbooks
 
-Foundational scaffold. Existing operational guidance also lives in:
+| Runbook | Scope | Status |
+|---------|-------|--------|
+| [release-rollback.md](./release-rollback.md) | Production + staging Helm rollback, automated and manual rollback procedures | Active |
 
-- `.developer/RUNBOOKS/`
+## Related Guidance
+
+Operational guidance also lives in:
+
+- `.developer/RUNBOOKS/` — service-specific runbooks
+- `.developer/RELEASE.md` — full release checklist and rollback triggers
 - planning validation and closure records under `planning/`
 
 ## Near-Term Contents
 
 - Service incident triage playbooks
-- Rollback and safe-state activation steps
-- Validation checklist references for critical paths
+- Safe-mode activation procedures
+- PLC interlock override checklist (Phase 7 — Security & Compliance)
 
 ## Related Architecture Evidence
 
