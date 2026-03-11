@@ -203,9 +203,10 @@ docker compose logs -f capability-registry
 
 ### 🔄 Phase 1 — Data Spine & Contracts
 
-- [ ] Schema definitions (Zod + JSON Schema)
-- [ ] Message broker setup (MQTT + Kafka)
-- [ ] Contract testing framework
+- [x] Schema definitions (Zod + JSON Schema) — federation, broker, feature-flags, telemetry, audit schemas in `packages/schemas`
+- [x] Broker topic governance — runtime enforcement via `BrokerTopicValidator` and `TopicGovernanceRegistry` (#103)
+- [x] Contract testing framework — server contract baselines for site-registry (#109) and mission-control (#113); `npm run test:contracts:servers` CI gate active
+- [ ] Message broker setup (MQTT + Kafka) — Sparkplug schema defined; runtime broker wiring pending
 - [ ] Topic ACLs & security
 
 ### ✅ Phase 2 — Core Runtime
