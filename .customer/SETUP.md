@@ -2,19 +2,30 @@
 
 ## Prerequisites
 
-- Provisioned NeuroLogix environment
-- Customer administrator account
-- Approved network and browser access to Mission Control
+- Provisioned NeuroLogix environment and approved change window
+- Customer administrator account with least-privilege assignment
+- Approved network/browser access to Mission Control
+- Confirmed escalation contacts for operations and security
 
-## Initial Steps
+## Onboarding Workflow
 
-1. Confirm site and tenant identifiers provided by your implementation team.
-2. Sign in to Mission Control with your administrator credentials.
-3. Verify line topology, equipment map, and policy defaults.
-4. Confirm alert contacts and escalation channels.
+1. Confirm provided **site ID** and **tenant ID** with your implementation lead.
+2. Sign in to Mission Control with administrator credentials.
+3. Validate line topology and equipment mapping against your physical line layout.
+4. Review safety policy defaults and confirm approved recipe catalog visibility.
+5. Configure alert recipients and escalation channels.
+6. Verify audit logging visibility in dashboards and export path access.
 
-## Go-Live Checks
+## Go-Live Acceptance Checks
 
-- Verify safety policy defaults are loaded.
-- Confirm audit logging is visible in dashboard and exports.
-- Execute a controlled non-production recipe test.
+- Execute one controlled non-production recipe run and verify expected state transitions.
+- Confirm command path enforces approved recipes (no direct unsafe actuation path).
+- Validate alerting pipeline by triggering a test alert and confirming acknowledgement flow.
+- Confirm incident runbook links are available to shift leads.
+
+## Day-1 Handoff Checklist
+
+- Customer Admin and Operator roles assigned and validated
+- Support and security contact pathways confirmed
+- Baseline metrics view shared with operations team
+- Evidence of successful dry-run captured for audit records
