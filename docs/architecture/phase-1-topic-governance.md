@@ -42,6 +42,10 @@ compatibility policy.
 - Backend-specific topic pattern guards:
   - Sparkplug ACL patterns must start with `spBv1.0/`
   - Kafka/Redpanda ACL patterns must start with `nlx.`
+- Runtime authorization path: `authorizeBrokerTopicAccess` in
+  `packages/schemas/src/broker/acl.ts`
+- Bootstrap coverage gate: `assertBrokerAclCoverage` for startup-time validation
+  that each required registration is covered by at least one ACL rule
 
 ## Partitioning, Retention, and Dead-Letter Strategy
 
