@@ -127,6 +127,28 @@ security: implement rate limiting
    - Ensure CI/CD passes
    - Delete feature branch after merge
 
+### Agent Handoff Dispatch
+
+Use the repository helper script to dispatch planner/builder/validator handoffs
+from repo root:
+
+```powershell
+.\.utils\dispatch-code-chat.ps1 -Mode ask -TargetAgent "validator-merger" -PromptFile "planning/handoff-to-validator-issue-87.md" -AddFile "README.md,CONTRIBUTING.md"
+```
+
+Parameters:
+
+- `-Mode`: Dispatch mode (`ask`)
+- `-TargetAgent`: Copilot chat agent/model name
+- `-PromptFile`: Path to markdown/text prompt file consumed as chat prompt
+- `-AddFile`: Comma-separated list of context files added to the chat request
+
+Failure behavior:
+
+- Missing prompt/context files return non-zero exit status
+- Missing required parameters return non-zero exit status
+- VS Code CLI dispatch failures return non-zero exit status with actionable errors
+
 ## Code Review Guidelines
 
 ### What to Look For
