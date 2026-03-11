@@ -205,7 +205,7 @@ docker compose logs -f capability-registry
 
 - [x] Schema definitions (Zod + JSON Schema) — federation, broker, feature-flags, telemetry, audit schemas in `packages/schemas`
 - [x] Broker topic governance — runtime enforcement via `BrokerTopicValidator` and `TopicGovernanceRegistry` (#103)
-- [x] Contract testing framework — server contract baselines for site-registry (#109) and mission-control (#113); `npm run test:contracts:servers` CI gate active
+- [x] Contract testing framework — server contract baselines for site-registry (#109), mission-control (#113), and capability-registry (#119); `npm run test:contracts:servers` CI gate active
 - [x] Message broker setup (MQTT + Kafka) — dev runtime baseline wired in `infrastructure/docker/docker-compose.dev.yml` with committed Mosquitto config and CI validation (`npm run validate:broker-runtime`) (#117)
 - [x] Topic ACLs & security — runtime ACL authorization + bootstrap coverage guard in `packages/schemas/src/broker/acl.ts` (#115)
 
