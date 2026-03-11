@@ -9,6 +9,12 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'dist/', '**/*.d.ts', '**/*.test.ts', 'vitest.config.ts'],
+      thresholds: {
+        statements: 90,
+        branches: 80,
+        functions: 95,
+        lines: 90,
+      },
     },
   },
   resolve: {
