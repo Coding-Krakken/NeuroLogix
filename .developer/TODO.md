@@ -21,12 +21,12 @@
 - [x] ADR index and phase-0 gap-report reconciled
 - [x] Lighthouse CI gate for mission-control in mainline CI
 - [x] Safe-mode activation procedure runbook (Phase 7)
+- [x] PLC interlock override checklist runbook (Phase 7)
 
 ## Active / Near Term
 
 - Wire Prometheus alert rules into staging Prometheus instance (Phase 7)
 - Deploy OTEL collector config to staging (Phase 7)
-- PLC interlock override checklist (Phase 7 — Security & Compliance)
 - Expand observability to include Grafana dashboard baselines
 
 ## Quality Targets
