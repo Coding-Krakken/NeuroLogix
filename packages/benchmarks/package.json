@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "typescript": "^5.9.3",
-    "@types/node": "^20.19.37",
+    "@types/node": "^20.19.39",
     "autocannon": "^7.15.0"
   },
   "engines": {
