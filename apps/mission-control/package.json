@@ -25,10 +25,10 @@
     "@neurologix/site-registry": "*",
     "@neurologix/ui": "*",
     "@neurologix/schemas": "*",
-    "fastify": "^5.8.2"
+    "fastify": "^5.8.5"
   },
   "devDependencies": {
-    "@types/node": "^20.19.37",
+    "@types/node": "^20.19.40",
     "@vitest/coverage-v8": "^3.2.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
